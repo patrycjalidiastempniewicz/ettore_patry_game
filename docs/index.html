@@ -529,7 +529,6 @@
         </g>
       </g>
 
-      <!-- (Gift layer omitted here on purpose — kept in your previous versions if you want it) -->
       <g id="giftLayer" opacity="0"></g>
 
       <style>
@@ -692,8 +691,20 @@
   function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
   function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
-  function rectsOverlap(a,b){
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  // HITBOX: tolleranza -> hitbox più stretta (collisione più "diretta")
+  // padA/padB: quanti px togliere dai lati (shrink). Aumenta per rendere più permissivo.
+  function rectsOverlap(a,b, padA=0, padB=0){
+    const ax = a.x + padA;
+    const ay = a.y + padA;
+    const aw = Math.max(0, a.w - padA*2);
+    const ah = Math.max(0, a.h - padA*2);
+
+    const bx = b.x + padB;
+    const by = b.y + padB;
+    const bw = Math.max(0, b.w - padB*2);
+    const bh = Math.max(0, b.h - padB*2);
+
+    return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
   }
 
   // Audio
@@ -771,6 +782,11 @@
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
+  // padding hitbox (collisioni più "dirette")
+  const HIT_PLAYER = 18;   // quanto stringere Ettore
+  const HIT_OLD    = 14;   // quanto stringere i vecchi
+  const HIT_BAG    = 6;    // quanto stringere le baguette
+
   const player = { x: 110, y: 490, w: 72, h: 128, speed: 600 };
   const girl   = { x: 860, y: 75,  w: 125, h: 125 };
 
@@ -833,13 +849,11 @@
     baguettesG.innerHTML = '';
     baguetteSpawn = 0.35;
 
-    // Old smokers spawn (more of them)
+    // Old smokers spawn (SOLO 3 + più lenti)
     const spawns = [
       {x: 260, y: 320},
       {x: 520, y: 520},
       {x: 780, y: 360},
-      {x: 420, y: 120},
-      {x: 140, y: 140},
     ];
     olds = [];
     for(let i=0;i<spawns.length;i++){
@@ -848,7 +862,7 @@
         x: spawns[i].x,
         y: spawns[i].y,
         w: 68, h: 110,
-        speed: rand(80, 110),
+        speed: rand(45, 65),  // rallentati
         wob: rand(0, 10),
         el: null,
       });
@@ -1044,7 +1058,6 @@
       if(qIndex >= questions.length){
         qRunning = false;
         showToast("Quiz completato! 🎉", 1400);
-        // qui puoi collegare la tua schermata regalo se vuoi
         setState(State.TITLE);
       }else{
         setupQuestion();
@@ -1122,7 +1135,9 @@
       const pCy = player.y + player.h/2;
 
       for(const o of olds){
-        o.wob += dt * 3.4;
+        // wob più lento (prima 3.4) -> movimenti meno "nervosi"
+        o.wob += dt * 2.0;
+
         const oCx = o.x + o.w/2;
         const oCy = o.y + o.h/2;
         let vx = (pCx - oCx);
@@ -1142,7 +1157,8 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        if(rectsOverlap(player, o)){
+        // TRY AGAIN SOLO se collisione diretta (hitbox più stretta)
+        if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
         }
@@ -1177,10 +1193,10 @@
         return true;
       });
 
-      // Hit by baguette -> TRY AGAIN
+      // Hit by baguette -> TRY AGAIN (hitbox più stretta)
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
-        if(rectsOverlap(player, bBox)){
+        if(rectsOverlap(player, bBox, HIT_PLAYER, HIT_BAG)){
           showTryAgain();
           return;
         }
@@ -1198,7 +1214,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win condition
+      // Win condition (lasciata standard)
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
