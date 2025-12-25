@@ -247,6 +247,22 @@
     .quizHead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
     .quizHead h2{margin:0; font-size:18px; letter-spacing:.2px;}
     .quizHead .meta{color:var(--muted); font-weight:850; font-size:13px;}
+
+    /* NEW: subtitle under title */
+    .quizTitleWrap{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:220px;
+    }
+    .qsub{
+      font-size:12px;
+      font-weight:850;
+      color:var(--muted);
+      opacity:.95;
+      letter-spacing:.2px;
+    }
+
     .qtext{margin:10px 0 12px; font-size:16px; font-weight:900; line-height:1.35;}
     .options{display:grid; grid-template-columns:1fr; gap:10px;}
     @media (min-width: 760px){ .options{grid-template-columns: 1fr 1fr 1fr;} }
@@ -472,8 +488,8 @@
             <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">PRIMO DATE</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">dove tutto è iniziato…</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Primo Date</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">nessuna traccia, solo ricordo…</text>
         </g>
 
         <g id="qbg1" opacity="0">
@@ -482,8 +498,8 @@
             <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">MOOD CHECK</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">Allarme Rosso</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">attenzione: segnali sottili…</text>
         </g>
 
         <g id="qbg2" opacity="0">
@@ -497,8 +513,8 @@
             </g>
           </g>
           <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">PARKING PANIC</text>
-          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quasi-bloccati: storia vera</text>
+          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Rottura scampata</text>
+          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">una timeline che non vogliamo…</text>
         </g>
 
         <g id="qbg3" opacity="0">
@@ -512,8 +528,8 @@
             <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT COCCOLA</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando siete giù…</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Tiramisù</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">cura rapida: livello amore +1</text>
         </g>
 
         <g id="qbg4" opacity="0">
@@ -524,8 +540,8 @@
             <g transform="translate(560 460) scale(3.4)"><use href="#heartPath" fill="rgba(255,77,109,.28)"/></g>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">NICKNAME QUEST</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">come vi chiamate di solito?</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Nickname del cuore</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">parola chiave: non divulgare…</text>
         </g>
       </g>
 
@@ -587,7 +603,10 @@
       <div id="quiz">
         <div class="quizCard">
           <div class="quizHead">
-            <h2 id="qtitle">QUIZ A TEMPO — 10s</h2>
+            <div class="quizTitleWrap">
+              <h2 id="qtitle">—</h2>
+              <div id="qsub" class="qsub">—</div>
+            </div>
             <div class="meta">Domanda <span id="qindex">1</span>/5 • ⏱ <span id="tleft">10</span>s</div>
           </div>
           <div class="qtext" id="qtext"></div>
@@ -665,6 +684,7 @@
 
   // Quiz UI
   const qtitle = document.getElementById('qtitle');
+  const qsub   = document.getElementById('qsub');
   const qindexEl = document.getElementById('qindex');
   const qtextEl = document.getElementById('qtext');
   const optionsEl = document.getElementById('options');
@@ -692,7 +712,6 @@
   function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
   // HITBOX: tolleranza -> hitbox più stretta (collisione più "diretta")
-  // padA/padB: quanti px togliere dai lati (shrink). Aumenta per rendere più permissivo.
   function rectsOverlap(a,b, padA=0, padB=0){
     const ax = a.x + padA;
     const ay = a.y + padA;
@@ -782,10 +801,10 @@
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // padding hitbox (collisioni più "dirette")
-  const HIT_PLAYER = 18;   // quanto stringere Ettore
-  const HIT_OLD    = 14;   // quanto stringere i vecchi
-  const HIT_BAG    = 6;    // quanto stringere le baguette
+  // hitbox tighten (aumenta per rendere più permissivo)
+  const HIT_PLAYER = 18;
+  const HIT_OLD    = 14;
+  const HIT_BAG    = 6;
 
   const player = { x: 110, y: 490, w: 72, h: 128, speed: 600 };
   const girl   = { x: 860, y: 75,  w: 125, h: 125 };
@@ -849,7 +868,7 @@
     baguettesG.innerHTML = '';
     baguetteSpawn = 0.35;
 
-    // Old smokers spawn (SOLO 3 + più lenti)
+    // SOLO 3 vecchi + rallentati
     const spawns = [
       {x: 260, y: 320},
       {x: 520, y: 520},
@@ -862,7 +881,7 @@
         x: spawns[i].x,
         y: spawns[i].y,
         w: 68, h: 110,
-        speed: rand(45, 65),  // rallentati
+        speed: rand(45, 65),
         wob: rand(0, 10),
         el: null,
       });
@@ -998,16 +1017,52 @@
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
     "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
   ];
+
   const questions = [
-    { bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
-    { bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
-    { bg:2, q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?", opts:[
-      "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
-      "Quando non ho prenotato l'albergo in Grecia",
-      "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
-    ], correct:0 },
-    { bg:3, q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
-    { bg:4, q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
+    {
+      title:"Primo Date",
+      sub:"Coordinate segrete: solo noi due",
+      bg:0,
+      q:"Il posto del primo date?",
+      opts:["Casa del popolo","Carmentown","Bar dell'ombra"],
+      correct:1
+    },
+    {
+      title:"Allarme Rosso",
+      sub:"Protocollo attivo: sangue freddo",
+      bg:1,
+      q:"Cosa fa Patry quando è scocciata da qualcosa?",
+      opts:["Sbuffino","Agita i pugni in aria","Fa bibi"],
+      correct:0
+    },
+    {
+      title:"Rottura scampata",
+      sub:"Timeline alternativa evitata ✅",
+      bg:2,
+      q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
+      opts:[
+        "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
+        "Quando non ho prenotato l'albergo in Grecia",
+        "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
+      ],
+      correct:0
+    },
+    {
+      title:"Tiramisù",
+      sub:"Buff dolce: morale +10",
+      bg:3,
+      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?",
+      opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"],
+      correct:0
+    },
+    {
+      title:"Nickname del cuore",
+      sub:"Codice privato: non divulgare",
+      bg:4,
+      q:"Il nomignolo più usato per chiamarci?",
+      opts:["Bubo/a","Cucci","Tesoro"],
+      correct:0
+    },
   ];
 
   let qIndex = 0;
@@ -1025,7 +1080,10 @@
   }
   function setupQuestion(){
     const item = questions[qIndex];
-    qtitle.textContent = "QUIZ A TEMPO — 10s";
+
+    qtitle.textContent = `${item.title} — 10s`;
+    qsub.textContent = item.sub;
+
     qindexEl.textContent = (qIndex+1).toString();
     qtextEl.textContent = item.q;
 
@@ -1107,10 +1165,10 @@
         hideOverlay();
         enterQuiz();
       }
-      return; // freeze game behind overlay
+      return;
     }
     if(overlayMode === 'try'){
-      return; // freeze game behind overlay
+      return;
     }
 
     if(state === State.CHASE){
@@ -1126,7 +1184,7 @@
       player.x += dx;
       player.y += dy;
 
-      // Bounds only (no metro, no other obstacles)
+      // Bounds only
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
@@ -1135,7 +1193,7 @@
       const pCy = player.y + player.h/2;
 
       for(const o of olds){
-        // wob più lento (prima 3.4) -> movimenti meno "nervosi"
+        // wob più lento = movimento più morbido
         o.wob += dt * 2.0;
 
         const oCx = o.x + o.w/2;
@@ -1157,7 +1215,7 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        // TRY AGAIN SOLO se collisione diretta (hitbox più stretta)
+        // TRY AGAIN solo collisione "diretta" (hitbox più stretta)
         if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
@@ -1214,7 +1272,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win condition (lasciata standard)
+      // Win condition (standard)
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
