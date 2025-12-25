@@ -33,10 +33,7 @@
     }
 
     #app{position:fixed; inset:0; height:100dvh;}
-    #sceneWrap{
-      position:relative; width:100%; height:100%;
-      touch-action:none;
-    }
+    #sceneWrap{position:relative; width:100%; height:100%; touch-action:none;}
     svg{width:100%; height:100%; display:block;}
 
     .ui{
@@ -224,11 +221,7 @@
     .blink90{ animation: blink 0.38s steps(2,end) infinite; }
 
     /* Quiz overlay */
-    #quiz{
-      position:absolute; inset:0;
-      display:none;
-      pointer-events:auto;
-    }
+    #quiz{position:absolute; inset:0; display:none; pointer-events:auto;}
     body.state-quiz #quiz{display:block}
 
     .quizCard{
@@ -248,20 +241,8 @@
     .quizHead h2{margin:0; font-size:18px; letter-spacing:.2px;}
     .quizHead .meta{color:var(--muted); font-weight:850; font-size:13px;}
 
-    /* NEW: subtitle under title */
-    .quizTitleWrap{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      min-width:220px;
-    }
-    .qsub{
-      font-size:12px;
-      font-weight:850;
-      color:var(--muted);
-      opacity:.95;
-      letter-spacing:.2px;
-    }
+    .quizTitleWrap{display:flex; flex-direction:column; gap:4px; min-width:220px;}
+    .qsub{font-size:12px; font-weight:850; color:var(--muted); opacity:.95; letter-spacing:.2px;}
 
     .qtext{margin:10px 0 12px; font-size:16px; font-weight:900; line-height:1.35;}
     .options{display:grid; grid-template-columns:1fr; gap:10px;}
@@ -422,7 +403,6 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- Personaggi in title screen (più piccoli) -->
         <g filter="url(#softShadow)">
           <g transform="translate(210 330) scale(0.62)">
             <use href="#ettoreDef"/>
@@ -456,12 +436,11 @@
         </g>
       </g>
 
-      <!-- CHASE LAYER (NO METRO) -->
+      <!-- CHASE LAYER -->
       <g id="chaseLayer" opacity="0">
         <g id="olds"></g>
         <g id="baguettes"></g>
 
-        <!-- Patry -->
         <g id="patry" filter="url(#softShadow)">
           <use href="#patryDef"/>
           <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
@@ -471,7 +450,6 @@
           </g>
         </g>
 
-        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <use href="#ettoreDef"/>
         </g>
@@ -545,7 +523,72 @@
         </g>
       </g>
 
-      <g id="giftLayer" opacity="0"></g>
+      <!-- GIFT LAYER -->
+      <g id="giftLayer" opacity="0">
+        <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+        <g opacity=".18">
+          <circle cx="200" cy="220" r="140" fill="rgba(70,255,210,.38)"/>
+          <circle cx="820" cy="260" r="180" fill="rgba(255,77,109,.28)"/>
+        </g>
+
+        <g text-anchor="middle" filter="url(#softShadow)">
+          <text x="500" y="92" font-size="34" font-weight="1000" fill="rgba(255,255,255,.92)">PACCHETTO SEGRETO</text>
+          <text x="500" y="122" font-size="14" font-weight="900" fill="rgba(183,194,230,.95)">clicca per aprire 🎁</text>
+        </g>
+
+        <!-- Closed gift (clickable) -->
+        <g id="giftClosed" class="clickable" filter="url(#softShadow)">
+          <g transform="translate(390 250)">
+            <rect x="0" y="70" width="220" height="160" rx="20" fill="rgba(255,209,102,.22)" stroke="rgba(255,209,102,.55)" stroke-width="2"/>
+            <rect x="0" y="40" width="220" height="54" rx="18" fill="rgba(255,77,109,.28)" stroke="rgba(255,77,109,.55)" stroke-width="2"/>
+            <rect x="100" y="40" width="20" height="190" rx="10" fill="rgba(255,77,109,.70)"/>
+            <rect x="0" y="112" width="220" height="20" rx="10" fill="rgba(255,77,109,.70)"/>
+            <path d="M110 34 C 92 8 70 10 56 24 C 40 40 60 62 96 58 C 100 48 106 40 110 34 Z" fill="rgba(255,77,109,.78)"/>
+            <path d="M110 34 C 128 8 150 10 164 24 C 180 40 160 62 124 58 C 120 48 114 40 110 34 Z" fill="rgba(255,77,109,.78)"/>
+          </g>
+        </g>
+
+        <!-- Open gift -->
+        <g id="giftOpen" opacity="0" filter="url(#softShadow)">
+          <g transform="translate(390 260)">
+            <path d="M0 58 L80 12 L96 32 L18 82 Z" fill="rgba(255,77,109,.18)" stroke="rgba(255,77,109,.45)" stroke-width="2"/>
+            <path d="M220 58 L140 12 L124 32 L202 82 Z" fill="rgba(255,77,109,.18)" stroke="rgba(255,77,109,.45)" stroke-width="2"/>
+            <rect x="0" y="70" width="220" height="160" rx="20" fill="rgba(255,209,102,.22)" stroke="rgba(255,209,102,.55)" stroke-width="2"/>
+            <rect x="100" y="70" width="20" height="160" rx="10" fill="rgba(255,77,109,.70)"/>
+            <rect x="0" y="112" width="220" height="20" rx="10" fill="rgba(255,77,109,.70)"/>
+          </g>
+        </g>
+
+        <!-- Scroll / certificate -->
+        <g id="giftScroll" opacity="0" filter="url(#softShadow)">
+          <g transform="translate(155 150)">
+            <rect x="0" y="0" width="690" height="210" rx="22" fill="rgba(248,234,208,.95)" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
+            <rect x="18" y="18" width="654" height="174" rx="18" fill="rgba(255,255,255,.55)" stroke="rgba(0,0,0,.10)" stroke-width="1.5"/>
+            <text x="345" y="58" text-anchor="middle" font-size="18" font-weight="1000" fill="#111">
+              <tspan x="345" dy="0">Certificato di sopravvivenza</tspan>
+              <tspan x="345" dy="28">conferito a <tspan font-weight="1000">ETTORE GORNI</tspan>,</tspan>
+              <tspan x="345" dy="26">in qualità di moroso più paziente</tspan>
+              <tspan x="345" dy="26">e bubo più adorabile che ci sia.</tspan>
+            </text>
+          </g>
+        </g>
+
+        <!-- Couple + heart -->
+        <g id="giftCouple" opacity="0">
+          <g id="giftEttore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
+          <g id="giftPatry" filter="url(#softShadow)"><use href="#patryDef"/></g>
+        </g>
+
+        <g id="giftHeart" opacity="0" filter="url(#glowPink)">
+          <g transform="translate(500 402) scale(7.6)">
+            <use href="#heartPath" fill="#FF1F3D"/>
+          </g>
+        </g>
+
+        <g id="giftEnd" opacity="0" text-anchor="middle" filter="url(#softShadow)">
+          <text x="500" y="560" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)">TO BE CONTINUED...</text>
+        </g>
+      </g>
 
       <style>
         .blink{ animation: blink 0.38s steps(2,end) infinite; }
@@ -631,7 +674,7 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // Responsive camera (fit viewBox)
+  // Responsive camera
   function fitViewBox(){
     if(!svg) return;
     const baseW = 1000, baseH = 600;
@@ -702,6 +745,16 @@
     document.getElementById('qbg4'),
   ];
 
+  // Gift DOM
+  const giftClosed = document.getElementById('giftClosed');
+  const giftOpen   = document.getElementById('giftOpen');
+  const giftScroll = document.getElementById('giftScroll');
+  const giftCouple = document.getElementById('giftCouple');
+  const giftEttore = document.getElementById('giftEttore');
+  const giftPatry  = document.getElementById('giftPatry');
+  const giftHeart  = document.getElementById('giftHeart');
+  const giftEnd    = document.getElementById('giftEnd');
+
   // Helpers
   const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
   const rand = (a,b) => a + Math.random()*(b-a);
@@ -711,7 +764,7 @@
   function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
   function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
-  // HITBOX: tolleranza -> hitbox più stretta (collisione più "diretta")
+  // HITBOX: tolleranza -> hitbox più stretta
   function rectsOverlap(a,b, padA=0, padB=0){
     const ax = a.x + padA;
     const ay = a.y + padA;
@@ -796,12 +849,11 @@
   buildStars(stars, 110);
 
   // -------------------------------
-  // CHASE GAME (ONLY olds + baguettes)
+  // CHASE
   // -------------------------------
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // hitbox tighten (aumenta per rendere più permissivo)
   const HIT_PLAYER = 18;
   const HIT_OLD    = 14;
   const HIT_BAG    = 6;
@@ -969,7 +1021,7 @@
     }
   }, {passive:false});
 
-  // Game flow
+  // Flow
   function restartChase(){
     hideOverlay();
     buildLevel();
@@ -1019,50 +1071,15 @@
   ];
 
   const questions = [
-    {
-      title:"Primo Date",
-      sub:"Coordinate segrete: solo noi due",
-      bg:0,
-      q:"Il posto del primo date?",
-      opts:["Casa del popolo","Carmentown","Bar dell'ombra"],
-      correct:1
-    },
-    {
-      title:"Allarme Rosso",
-      sub:"Protocollo attivo: sangue freddo",
-      bg:1,
-      q:"Cosa fa Patry quando è scocciata da qualcosa?",
-      opts:["Sbuffino","Agita i pugni in aria","Fa bibi"],
-      correct:0
-    },
-    {
-      title:"Rottura scampata",
-      sub:"Timeline alternativa evitata ✅",
-      bg:2,
-      q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
-      opts:[
-        "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
-        "Quando non ho prenotato l'albergo in Grecia",
-        "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
-      ],
-      correct:0
-    },
-    {
-      title:"Tiramisù",
-      sub:"Buff dolce: morale +10",
-      bg:3,
-      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?",
-      opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"],
-      correct:0
-    },
-    {
-      title:"Nickname del cuore",
-      sub:"Codice privato: non divulgare",
-      bg:4,
-      q:"Il nomignolo più usato per chiamarci?",
-      opts:["Bubo/a","Cucci","Tesoro"],
-      correct:0
-    },
+    { title:"Primo Date", sub:"Coordinate segrete: solo noi due", bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
+    { title:"Allarme Rosso", sub:"Protocollo attivo: sangue freddo", bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
+    { title:"Rottura scampata", sub:"Timeline alternativa evitata ✅", bg:2, q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?", opts:[
+      "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
+      "Quando non ho prenotato l'albergo in Grecia",
+      "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
+    ], correct:0 },
+    { title:"Tiramisù", sub:"Buff dolce: morale +10", bg:3, q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
+    { title:"Nickname del cuore", sub:"Codice privato: non divulgare", bg:4, q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
   ];
 
   let qIndex = 0;
@@ -1080,10 +1097,8 @@
   }
   function setupQuestion(){
     const item = questions[qIndex];
-
     qtitle.textContent = `${item.title} — 10s`;
     qsub.textContent = item.sub;
-
     qindexEl.textContent = (qIndex+1).toString();
     qtextEl.textContent = item.q;
 
@@ -1115,8 +1130,8 @@
       qIndex++;
       if(qIndex >= questions.length){
         qRunning = false;
-        showToast("Quiz completato! 🎉", 1400);
-        setState(State.TITLE);
+        showToast("Quiz completato! 🎉 Regalo sbloccato 🎁", 1600);
+        enterGift();
       }else{
         setupQuestion();
       }
@@ -1143,6 +1158,68 @@
   }
 
   // -------------------------------
+  // GIFT
+  // -------------------------------
+  let giftStage = 0;  // 0=closed, 1=opened+approach, 2=kiss+heart, 3=done
+  let heartPulse = 0;
+
+  const GIFT_SCALE_E = 0.62;
+  const GIFT_SCALE_P = 0.62;
+
+  const couple = {
+    eX: 220, eY: 355,
+    pX: 650, pY: 355,
+    eTargetX: 390,
+    pTargetX: 470,
+    speed: 260
+  };
+
+  function resetGift(){
+    giftStage = 0;
+    heartPulse = 0;
+
+    setOpacity(giftClosed, 1);
+    setOpacity(giftOpen, 0);
+    setOpacity(giftScroll, 0);
+    setOpacity(giftCouple, 0);
+    setOpacity(giftHeart, 0);
+    setOpacity(giftEnd, 0);
+
+    couple.eX = 220; couple.eY = 355;
+    couple.pX = 650; couple.pY = 355;
+
+    // place off (still safe)
+    setTransformScale(giftEttore, couple.eX, couple.eY, GIFT_SCALE_E);
+    setTransformScale(giftPatry, couple.pX, couple.pY, GIFT_SCALE_P);
+  }
+
+  function enterGift(){
+    setState(State.GIFT);
+    resetGift();
+    showToast("Clicca il pacchetto 🎁", 1400);
+    beep(740, .07, 'triangle', .03);
+  }
+
+  function openGift(){
+    if(state !== State.GIFT) return;
+    if(giftStage !== 0) return;
+
+    giftStage = 1;
+    setOpacity(giftClosed, 0);
+    setOpacity(giftOpen, 1);
+    setOpacity(giftScroll, 1);
+    setOpacity(giftCouple, 1);
+
+    beep(520, .08, 'triangle', .04);
+    beep(660, .08, 'triangle', .03);
+  }
+
+  giftClosed?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    openGift();
+  });
+
+  // -------------------------------
   // Main loop
   // -------------------------------
   let t = 0;
@@ -1158,7 +1235,7 @@
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
-    // Handle overlay win timing
+    // Freeze behind overlays
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
@@ -1184,18 +1261,15 @@
       player.x += dx;
       player.y += dy;
 
-      // Bounds only
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
-      // Old smokers chase Ettore
+      // Old smokers chase
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
       for(const o of olds){
-        // wob più lento = movimento più morbido
         o.wob += dt * 2.0;
-
         const oCx = o.x + o.w/2;
         const oCy = o.y + o.h/2;
         let vx = (pCx - oCx);
@@ -1215,7 +1289,6 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        // TRY AGAIN solo collisione "diretta" (hitbox più stretta)
         if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
@@ -1251,7 +1324,7 @@
         return true;
       });
 
-      // Hit by baguette -> TRY AGAIN (hitbox più stretta)
+      // Baguette hit
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox, HIT_PLAYER, HIT_BAG)){
@@ -1272,7 +1345,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win condition (standard)
+      // Win
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
@@ -1292,6 +1365,37 @@
         }
       }
     }
+
+    if(state === State.GIFT){
+      // Stage 1: couple approaches after gift opened
+      if(giftStage === 1){
+        const eDx = couple.eTargetX - couple.eX;
+        const pDx = couple.pTargetX - couple.pX;
+
+        const step = couple.speed * dt;
+        if(Math.abs(eDx) > 0.8) couple.eX += Math.sign(eDx) * Math.min(step, Math.abs(eDx));
+        if(Math.abs(pDx) > 0.8) couple.pX += Math.sign(pDx) * Math.min(step, Math.abs(pDx));
+
+        setTransformScale(giftEttore, couple.eX, couple.eY, GIFT_SCALE_E);
+        setTransformScale(giftPatry,  couple.pX, couple.pY, GIFT_SCALE_P);
+
+        if(Math.abs(eDx) <= 0.8 && Math.abs(pDx) <= 0.8){
+          giftStage = 2;
+          setOpacity(giftHeart, 1);
+          setOpacity(giftEnd, 1);
+          heartPulse = 0.0001;
+          beep(920, .10, 'triangle', .05);
+          beep(740, .08, 'triangle', .04);
+        }
+      }
+
+      // Stage 2: heart pulse
+      if(giftStage >= 2){
+        heartPulse += dt;
+        const s = 1 + Math.sin(heartPulse * 6.5) * 0.045;
+        giftHeart.setAttribute('transform', `scale(${s})`);
+      }
+    }
   }
 
   function frame(){
@@ -1306,6 +1410,25 @@
   // Init
   setState(State.TITLE);
   requestAnimationFrame(frame);
+
+  // Enter chase from title
+  function enterChaseFromTitle(){
+    ensureAudioContext();
+    enterChase();
+  }
+
+  // Hook title interactions (after init so functions exist)
+  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(state===State.TITLE) enterChaseFromTitle(); });
+  pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); if(state===State.TITLE) enterChaseFromTitle(); }, {passive:false});
+  startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); if(state===State.TITLE) enterChaseFromTitle(); }, {passive:false});
+  window.addEventListener('keydown', (e)=>{
+    if(state !== State.TITLE) return;
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      enterChaseFromTitle();
+    }
+  }, {passive:false});
+
 })();
 </script>
 </body>
