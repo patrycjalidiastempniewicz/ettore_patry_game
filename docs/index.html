@@ -13,7 +13,6 @@
     :root{
       --bg0:#070A16;
       --bg1:#0B1230;
-      --ink:#0b1020;
       --text:#F4F7FF;
       --muted:#B7C2E6;
       --aqua:#46FFD2;
@@ -30,20 +29,23 @@
       color:var(--text);
       background: radial-gradient(1000px 600px at 50% 25%, #1A2A66 0%, var(--bg1) 40%, var(--bg0) 100%);
       overflow:hidden;
-      touch-action:none;
-      /* aiuta su mobile (barra browser dinamica) */
       min-height: 100dvh;
     }
 
     #app{position:fixed; inset:0; display:grid; place-items:stretch; height:100dvh;}
-    #sceneWrap{position:relative; width:100%; height:100%;}
+    #sceneWrap{
+      position:relative; width:100%; height:100%;
+      touch-action:none; /* blocca scroll durante il gameplay */
+    }
     svg{width:100%; height:100%; display:block;}
 
+    /* FIX 1: niente pointer-events:none sul contenitore UI */
     .ui{
       position:absolute; inset:0;
-      pointer-events:none;
+      pointer-events:auto;
       display:flex; flex-direction:column;
     }
+
     .topbar{
       display:flex; gap:10px; align-items:center;
       padding:12px;
@@ -134,6 +136,7 @@
       box-shadow: 0 16px 40px rgba(0,0,0,.30);
       transition: transform .08s ease, filter .08s ease;
       pointer-events:auto;
+      touch-action: manipulation;
     }
     button:hover{filter:brightness(1.07)}
     button:active{transform:translateY(2px)}
@@ -143,17 +146,19 @@
       font-weight:850;
     }
 
+    /* FIX 1: controls devono poter ricevere eventi (dpad) */
     .controls{
       position:absolute;
       left:0; right:0;
       bottom: calc(88px + env(safe-area-inset-bottom));
       padding:0 14px;
       display:flex; justify-content:space-between; align-items:flex-end;
-      pointer-events:none;
+      pointer-events:auto;
       opacity:0; transform:translateY(8px);
       transition:.2s ease;
     }
     body.state-chase .controls{opacity:1; transform:none;}
+
     .dpad{
       pointer-events:auto;
       display:grid;
@@ -191,9 +196,10 @@
     #quiz{
       position:absolute; inset:0;
       display:none;
-      pointer-events:none;
+      pointer-events:auto; /* FIX 1: interattivo */
     }
     body.state-quiz #quiz{display:block}
+
     .quizCard{
       pointer-events:auto;
       position:absolute;
@@ -295,7 +301,6 @@
   <div id="sceneWrap">
 
     <!-- SVG SCENE -->
-    <!-- CAMBIATO: preserveAspectRatio meet (no crop) -->
     <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -393,6 +398,24 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
+        <!-- FIX 4: personaggi nella schermata iniziale -->
+        <g id="titleChars" filter="url(#softShadow)">
+          <!-- Ettore a sinistra -->
+          <g transform="translate(180 310) scale(1.1)">
+            <use href="#ettoreBodyClone"/>
+          </g>
+          <!-- Patry a destra + cartello -->
+          <g transform="translate(720 310) scale(1.1)">
+            <use href="#patryBodyClone"/>
+            <g transform="translate(-150 26)">
+              <rect x="0" y="0" width="140" height="60" rx="14" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
+              <text x="70" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PROVA A</text>
+              <text x="70" y="46" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PRENDERMI!</text>
+            </g>
+          </g>
+        </g>
+
+        <!-- Title text -->
         <g id="titleText" font-weight="900" text-anchor="middle">
           <text x="500" y="68" font-size="44" fill="rgba(255,255,255,.92)" filter="url(#softShadow)">
             5 YEARS: SURVIVAL
@@ -448,6 +471,7 @@
         <g id="beggars"></g>
         <g id="baguettes"></g>
 
+        <!-- Patry -->
         <g id="patry" class="floaty" filter="url(#softShadow)">
           <g id="patryBody" transform="translate(0 0)">
             <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
@@ -470,6 +494,7 @@
           </g>
         </g>
 
+        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <g id="ettoreBody">
             <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
@@ -491,6 +516,7 @@
 
       <!-- QUIZ BACKGROUND LAYER -->
       <g id="quizBgLayer" opacity="0">
+        <!-- FIX 3: titoli sfondi quiz senza "spoiler" -->
         <g id="qbg0" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".22">
@@ -498,8 +524,8 @@
             <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">CARMENTOWN</text>
-          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">PRIMO DATE ZONE</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">PRIMO DATE</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">dove tutto è iniziato…</text>
         </g>
 
         <g id="qbg1" opacity="0">
@@ -508,8 +534,8 @@
             <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">SBUFFINO MODE</text>
-          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">MOOD CHECK</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
         </g>
 
         <g id="qbg2" opacity="0">
@@ -523,8 +549,8 @@
             </g>
           </g>
           <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="220" text-anchor="middle" font-size="30" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">ALMACUBE</text>
-          <text x="500" y="260" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">parking survival story</text>
+          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">PARKING PANIC</text>
+          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quasi-bloccati: storia vera</text>
         </g>
 
         <g id="qbg3" opacity="0">
@@ -538,8 +564,8 @@
             <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT SHOP</text>
-          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">coccola quando siete giù</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT COCCOLA</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando siete giù…</text>
         </g>
 
         <g id="qbg4" opacity="0">
@@ -556,8 +582,8 @@
             </g>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">BUBO POWER</text>
-          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">nomignolo leggendario</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">NICKNAME QUEST</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">come vi chiamate di solito?</text>
         </g>
       </g>
 
@@ -573,7 +599,6 @@
           <rect x="0" y="30" width="160" height="120" rx="22" fill="rgba(255,77,109,.55)" stroke="rgba(255,255,255,.18)"/>
           <rect x="72" y="30" width="16" height="120" rx="8" fill="rgba(70,255,210,.55)"/>
           <rect x="0" y="82" width="160" height="16" rx="8" fill="rgba(70,255,210,.55)"/>
-
           <g id="giftLid">
             <rect x="-6" y="0" width="172" height="40" rx="18" fill="rgba(255,77,109,.70)" stroke="rgba(255,255,255,.18)"/>
             <text x="80" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="rgba(255,255,255,.85)">CLICK!</text>
@@ -606,7 +631,7 @@
                 fill="rgba(255,255,255,.88)" opacity="0">TO BE CONTINUED...</text>
         </g>
 
-        <!-- clones -->
+        <!-- CLONI RIUSABILI -->
         <g opacity="0" pointer-events="none">
           <g id="ettoreBodyClone">
             <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
@@ -652,6 +677,7 @@
       </style>
     </svg>
 
+    <!-- UI overlay -->
     <div class="ui">
       <div class="topbar">
         <div class="pill">🎮 <span>5 YEARS</span> <small id="levelLbl">— CHASE</small></div>
@@ -666,8 +692,8 @@
           <div class="hint" style="opacity:.9">Poi: <b>quiz a tempo</b> (10s per domanda) → premio finale 🎁</div>
         </div>
         <div class="btnRow">
-          <button id="startBtn">START</button>
-          <button id="muteBtn" class="secondary">Audio: ON</button>
+          <button id="startBtn" type="button">START</button>
+          <button id="muteBtn" type="button" class="secondary">Audio: ON</button>
         </div>
       </div>
 
@@ -698,23 +724,23 @@
             <div class="meter"><div class="fill" id="tfill"></div></div>
             <div id="retry">
               <p class="msg" id="retryMsg"></p>
-              <button id="retryBtn">Ritenta il quiz</button>
+              <button id="retryBtn" type="button">Ritenta il quiz</button>
             </div>
           </div>
         </div>
       </div>
 
     </div>
+
   </div>
 </div>
 
 <script>
 (() => {
-  // ---- DOM ----
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // --- Responsive camera (fit viewBox): evita zoom/ritagli su PC e mobile ---
+  // --- Responsive camera (fit viewBox) ---
   function fitViewBox(){
     if(!svg) return;
 
@@ -734,10 +760,8 @@
       vbW = baseH * screenAR;
       vbX = (baseW - vbW) / 2;
     }
-
     svg.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
   }
-
   fitViewBox();
   window.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   window.addEventListener('orientationchange', () => setTimeout(fitViewBox, 150));
@@ -745,6 +769,7 @@
     window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   }
 
+  // ---- DOM ----
   const stars = document.getElementById('stars');
   const giftStars = document.getElementById('giftStars');
 
@@ -879,14 +904,14 @@
   buildStars(stars, 110);
   buildStars(giftStars, 140);
 
-  // ---- World (SVG coords) ----
-  const player = { x: 80, y: 320, w: 120, h: 220, speed: 300 };
+  // ---- World ----
+  // FIX 2: velocità aumentata
+  const player = { x: 80, y: 320, w: 120, h: 220, speed: 520 };
   const girl   = { x: 820, y: 300, w: 220, h: 220 };
 
   let obstacles = [];
   let beggars = [];
   let baguettes = [];
-
   let metro = { x: 460, y: 255, w: 180, h: 54, t: 0, open: false, phase: 0 };
 
   function roundRectPath(x,y,w,h,r){
@@ -978,8 +1003,7 @@
     metro.x = 460; metro.y = 255; metro.t=0; metro.open=false; metro.phase=0;
     setTransform(metroGate, metro.x, metro.y);
 
-    const bCount = 3;
-    for(let i=0;i<bCount;i++){
+    for(let i=0;i<3;i++){
       beggars.push({
         id: 'b'+i,
         x: rand(300, 720),
@@ -998,13 +1022,19 @@
 
   // ---- Input ----
   const keys = {up:false,down:false,left:false,right:false};
+
+  // FIX 2: preveniamo scroll su frecce/spazio e rendiamo input più affidabile
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()) || ['arrowup','arrowdown','arrowleft','arrowright'].includes(k)){
+      e.preventDefault();
+    }
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
     if(k==='arrowright'|| k==='d') keys.right=true;
-  });
+  }, {passive:false});
+
   window.addEventListener('keyup', (e)=>{
     const k = e.key.toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
@@ -1019,10 +1049,10 @@
     if(!dir) return;
     const on = (e)=>{ e.preventDefault(); activeDirs.add(dir); syncDirs(); };
     const off = (e)=>{ e.preventDefault(); activeDirs.delete(dir); syncDirs(); };
-    btn.addEventListener('pointerdown', on);
-    btn.addEventListener('pointerup', off);
-    btn.addEventListener('pointercancel', off);
-    btn.addEventListener('pointerleave', off);
+    btn.addEventListener('pointerdown', on, {passive:false});
+    btn.addEventListener('pointerup', off, {passive:false});
+    btn.addEventListener('pointercancel', off, {passive:false});
+    btn.addEventListener('pointerleave', off, {passive:false});
   });
   function syncDirs(){
     keys.up = activeDirs.has('up');
@@ -1031,7 +1061,7 @@
     keys.right = activeDirs.has('right');
   }
 
-  // ---- Quiz data ----
+  // ---- Quiz ----
   const wrongMessages = [
     "❌ NOPE. Per farti perdonare: offrire il sushi. Ora ritenta il quiz!",
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
@@ -1068,6 +1098,7 @@
     item.opts.forEach((txt, idx)=>{
       const b = document.createElement('button');
       b.className = 'opt';
+      b.type = 'button';
       b.textContent = txt;
       b.addEventListener('click', ()=>answer(idx));
       optionsEl.appendChild(b);
@@ -1157,7 +1188,7 @@
       beep(980, .10, 'triangle', .04);
       showToast("✨ Certificato sbloccato!", 1400);
     }
-  });
+  }, {passive:false});
 
   // ---- Chase ----
   let baguetteSpawn = 0;
@@ -1205,9 +1236,10 @@
     enterChase();
   }
 
-  startBtn.addEventListener('click', () => startFromTitle());
-  if(pressStart) pressStart.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
-  if(startButton) startButton.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
+  // FIX 1: bottoni sicuramente cliccabili
+  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
+  pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
+  startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
 
   window.addEventListener('keydown', (e)=>{
     if(state !== State.TITLE) return;
@@ -1215,9 +1247,10 @@
       e.preventDefault();
       startFromTitle();
     }
-  });
+  }, {passive:false});
 
-  muteBtn.addEventListener('click', ()=>{
+  muteBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
     audioOn = !audioOn;
     muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
     beep(audioOn ? 600 : 200, .06, 'triangle', .03);
@@ -1242,7 +1275,6 @@
       const cycle = 2.8;
       const ph = metro.t % cycle;
       metro.open = ph > 1.6;
-      metro.phase = ph;
 
       const wob = Math.sin(ph*5.2)*2.5;
       metroBody.setAttribute('transform', `translate(0 ${wob})`);
@@ -1261,7 +1293,6 @@
         b.y += b.vy*dt;
         if(b.x < 240 || b.x > 760) b.vx *= -1;
         if(b.y < 200 || b.y > 500) b.vy *= -1;
-
         const el = document.getElementById(b.id);
         if(el) setTransform(el, b.x, b.y);
       }
@@ -1290,10 +1321,7 @@
         bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
       }
       baguettes = baguettes.filter(bq=>{
-        if(bq.x < -160){
-          bq.el.remove();
-          return false;
-        }
+        if(bq.x < -160){ bq.el.remove(); return false; }
         return true;
       });
 
@@ -1327,18 +1355,11 @@
       const pBox = {x:player.x, y:player.y, w:player.w, h:player.h};
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
-        if(rectsOverlap(pBox, bBox)){
-          resetChase();
-          return;
-        }
+        if(rectsOverlap(pBox, bBox)){ resetChase(); return; }
       }
 
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
-      if(rectsOverlap(pBox, gBox)){
-        showToast("🎉 Presa! Ora quiz a tempo!", 1200);
-        enterQuiz();
-        return;
-      }
+      if(rectsOverlap(pBox, gBox)){ showToast("🎉 Presa! Ora quiz a tempo!", 1200); enterQuiz(); return; }
     }
 
     if(state === State.QUIZ){
@@ -1348,9 +1369,7 @@
           qTime = 0;
           updateQuizMeter();
           failQuiz();
-        }else{
-          updateQuizMeter();
-        }
+        }else updateQuizMeter();
       }
     }
 
@@ -1373,14 +1392,14 @@
 
   function frame(){
     const n = now();
-    const dt = Math.min(0.033, (n-last)/1000);
+    // FIX 2: dt cap più alto (prima rallentava a fps bassi)
+    const dt = Math.min(0.06, (n-last)/1000);
     last = n;
     t = n;
     update(dt);
     requestAnimationFrame(frame);
   }
 
-  // ---- Init ----
   setState(State.TITLE);
   requestAnimationFrame(frame);
 })();
