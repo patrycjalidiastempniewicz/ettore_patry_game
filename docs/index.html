@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>5 YEARS: SURVIVAL ANNIVERSARY MODE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg0:#070A16;
+      --bg1:#0B1230;
+      --ink:#0b1020;
+      --text:#F4F7FF;
+      --muted:#B7C2E6;
+      --aqua:#46FFD2;
+      --pink:#FF4D6D;
+      --amber:#FFD166;
+      --stroke: rgba(255,255,255,.16);
+      --shadow: rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1000px 600px at 50% 25%, #1A2A66 0%, var(--bg1) 40%, var(--bg0) 100%);
+      overflow:hidden;
+      touch-action:none;
+    }
+
+    #app{position:fixed; inset:0; display:grid; place-items:stretch;}
+    #sceneWrap{position:relative; width:100%; height:100%;}
+    svg{width:100%; height:100%; display:block;}
+
+    .ui{
+      position:absolute; inset:0;
+      pointer-events:none;
+      display:flex; flex-direction:column;
+    }
+    .topbar{
+      display:flex; gap:10px; align-items:center;
+      padding:12px;
+      pointer-events:none;
+      opacity:0;
+      transform:translateY(-8px);
+      transition:.2s ease;
+    }
+    body.state-chase .topbar{opacity:1; transform:none;}
+
+    .pill{
+      pointer-events:none;
+      padding:10px 12px;
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      box-shadow: 0 14px 40px var(--shadow);
+      backdrop-filter: blur(10px);
+      font-weight:800;
+      font-size:13px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .pill small{font-weight:700; color:var(--muted)}
+
+    .toast{
+      position:absolute; left:50%; bottom:18px;
+      transform:translateX(-50%);
+      width:min(920px, 92vw);
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(18,26,52,.55), rgba(10,14,28,.55));
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      pointer-events:none;
+      opacity:0;
+      transition:.18s ease;
+      font-weight:800;
+      font-size:13px;
+      text-align:center;
+    }
+    .toast.show{opacity:1}
+
+    .titleCard{
+      position:absolute;
+      left:50%; bottom:18px;
+      transform:translateX(-50%);
+      width:min(980px, 92vw);
+      padding:16px 16px 14px;
+      border-radius:18px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(18,26,52,.62), rgba(10,14,28,.62));
+      box-shadow: 0 24px 80px rgba(0,0,0,.40);
+      backdrop-filter: blur(12px);
+      pointer-events:auto;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    body.state-title .titleCard{display:flex}
+    body:not(.state-title) .titleCard{display:none}
+
+    .titleCard .left{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 0;
+    }
+    .titleCard .left .hint{
+      font-weight:700;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .btnRow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+
+    button{
+      font: inherit;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(70,255,210,.18), rgba(70,255,210,.06));
+      color:var(--text);
+      font-weight:900;
+      box-shadow: 0 16px 40px rgba(0,0,0,.30);
+      transition: transform .08s ease, filter .08s ease;
+      pointer-events:auto;
+    }
+    button:hover{filter:brightness(1.07)}
+    button:active{transform:translateY(2px)}
+    .secondary{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      color:var(--muted);
+      font-weight:850;
+    }
+
+    .controls{
+      position:absolute;
+      left:0; right:0; bottom:88px;
+      padding:0 14px;
+      display:flex; justify-content:space-between; align-items:flex-end;
+      pointer-events:none;
+      opacity:0; transform:translateY(8px);
+      transition:.2s ease;
+    }
+    body.state-chase .controls{opacity:1; transform:none;}
+    .dpad{
+      pointer-events:auto;
+      display:grid;
+      grid-template-columns: 56px 56px 56px;
+      grid-template-rows: 56px 56px 56px;
+      gap:10px;
+      filter: drop-shadow(0 20px 44px rgba(0,0,0,.45));
+    }
+    .pad{
+      width:56px; height:56px;
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      display:grid; place-items:center;
+      color:var(--text);
+      font-weight:900;
+      user-select:none;
+      touch-action:none;
+    }
+    .pad:active{transform:translateY(2px)}
+    .padGhost{opacity:0}
+
+    .sideHint{
+      pointer-events:none;
+      max-width: 260px;
+      text-align:right;
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      line-height:1.35;
+      text-shadow: 0 2px 0 rgba(0,0,0,.25);
+    }
+
+    /* Quiz overlay */
+    #quiz{
+      position:absolute; inset:0;
+      display:none;
+      pointer-events:none;
+    }
+    body.state-quiz #quiz{display:block}
+    .quizCard{
+      pointer-events:auto;
+      position:absolute;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      width:min(980px, 92vw);
+      border-radius:20px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(18,26,52,.70), rgba(10,14,28,.70));
+      box-shadow: 0 28px 90px rgba(0,0,0,.45);
+      backdrop-filter: blur(14px);
+      padding:16px;
+    }
+    .quizHead{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      flex-wrap:wrap;
+    }
+    .quizHead h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .quizHead .meta{
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+    }
+    .qtext{
+      margin:10px 0 12px;
+      font-size:16px;
+      font-weight:850;
+      line-height:1.35;
+    }
+    .options{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    @media (min-width: 760px){
+      .options{grid-template-columns: 1fr 1fr 1fr;}
+    }
+    .opt{
+      text-align:left;
+      font-weight:900;
+      border-radius:16px;
+      padding:14px 14px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      color:var(--text);
+    }
+    .opt:hover{filter:brightness(1.06)}
+    .bar{
+      margin-top:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      color:var(--muted);
+      font-weight:850;
+      font-size:13px;
+      flex-wrap:wrap;
+    }
+    .meter{
+      width:min(280px, 60vw);
+      height:12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:100%;
+      transform-origin:left center;
+      background: linear-gradient(90deg, rgba(70,255,210,.9), rgba(255,209,102,.9), rgba(255,77,109,.9));
+    }
+    .danger{color:var(--pink)}
+    #retry{
+      display:none;
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.12);
+      text-align:center;
+      width:100%;
+    }
+    #retry .msg{
+      color:var(--amber);
+      font-weight:900;
+      margin: 0 0 10px;
+      line-height:1.35;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .toast, .topbar, .controls{transition:none}
+      svg .blink, svg .floaty, svg .pulse {animation:none !important}
+    }
+  </style>
+</head>
+
+<body class="state-title">
+<div id="app">
+  <div id="sceneWrap">
+
+    <!-- SVG SCENE -->
+    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-label="Ettore & Patry game">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1B2C6A"/>
+          <stop offset=".55" stop-color="#0B1230"/>
+          <stop offset="1" stop-color="#070A16"/>
+        </linearGradient>
+
+        <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(0,0,0,.45)"/>
+        </filter>
+
+        <filter id="glowAqua" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(70,255,210,.45)"/>
+        </filter>
+
+        <filter id="glowPink" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(255,77,109,.45)"/>
+        </filter>
+
+        <!-- Plaid pattern for lumberjack shirt -->
+        <pattern id="plaid" width="24" height="24" patternUnits="userSpaceOnUse">
+          <rect width="24" height="24" fill="#B12B3B"/>
+          <rect x="0" y="9" width="24" height="4" fill="rgba(255,255,255,.14)"/>
+          <rect x="9" y="0" width="4" height="24" fill="rgba(255,255,255,.14)"/>
+          <rect x="0" y="16" width="24" height="3" fill="rgba(0,0,0,.12)"/>
+          <rect x="16" y="0" width="3" height="24" fill="rgba(0,0,0,.12)"/>
+        </pattern>
+
+        <!-- Heart path -->
+        <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
+      </defs>
+
+      <!-- BACKGROUND -->
+      <g id="bg">
+        <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+        <g id="stars" opacity=".45"></g>
+
+        <g id="skylineFar" opacity=".22">
+          <path d="M0 440 L0 420 L40 420 L40 398 L70 398 L70 430 L110 430 L110 410 L145 410 L145 392 L190 392 L190 430 L240 430 L240 402 L270 402 L270 430 L320 430 L320 390 L360 390 L360 440 Z" fill="#000"/>
+          <path d="M360 440 L360 410 L400 410 L400 380 L430 380 L430 420 L470 420 L470 400 L510 400 L510 360 L540 360 L540 420 L585 420 L585 398 L620 398 L620 430 L660 430 L660 390 L710 390 L710 440 Z" fill="#000"/>
+          <path d="M710 440 L710 410 L750 410 L750 380 L790 380 L790 420 L830 420 L830 395 L880 395 L880 430 L920 430 L920 390 L970 390 L970 440 Z" fill="#000"/>
+        </g>
+
+        <rect x="0" y="430" width="1000" height="170" fill="rgba(0,0,0,.25)"/>
+      </g>
+
+      <!-- TITLE LAYER -->
+      <g id="titleLayer">
+        <!-- Two Towers -->
+        <g id="twoTowers" filter="url(#softShadow)">
+          <path d="M160 510 C 280 470 420 458 500 458 C 580 458 720 470 840 510 L840 560 L160 560 Z"
+                fill="rgba(0,0,0,.25)"/>
+          <g transform="translate(430 140)">
+            <path d="M40 0 L100 0 L120 360 L20 360 Z" fill="#1A1F2E"/>
+            <path d="M40 0 L100 0" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+            <g fill="#1A1F2E">
+              <rect x="38" y="-14" width="16" height="14" rx="3"/>
+              <rect x="60" y="-14" width="16" height="14" rx="3"/>
+              <rect x="82" y="-14" width="16" height="14" rx="3"/>
+            </g>
+            <g opacity=".55" fill="rgba(70,255,210,.35)">
+              <rect x="52" y="40" width="10" height="18" rx="3"/>
+              <rect x="78" y="40" width="10" height="18" rx="3"/>
+              <rect x="52" y="85" width="10" height="18" rx="3"/>
+              <rect x="78" y="85" width="10" height="18" rx="3"/>
+              <rect x="52" y="130" width="10" height="18" rx="3"/>
+              <rect x="78" y="130" width="10" height="18" rx="3"/>
+              <rect x="52" y="175" width="10" height="18" rx="3"/>
+              <rect x="78" y="175" width="10" height="18" rx="3"/>
+              <rect x="52" y="220" width="10" height="18" rx="3"/>
+              <rect x="78" y="220" width="10" height="18" rx="3"/>
+            </g>
+          </g>
+
+          <g transform="translate(575 220) rotate(-6)">
+            <path d="M0 0 L72 0 L92 280 L-18 280 Z" fill="#171C2A"/>
+            <g fill="#171C2A">
+              <rect x="-2" y="-14" width="16" height="14" rx="3"/>
+              <rect x="18" y="-14" width="16" height="14" rx="3"/>
+              <rect x="38" y="-14" width="16" height="14" rx="3"/>
+              <rect x="58" y="-14" width="16" height="14" rx="3"/>
+            </g>
+            <g opacity=".45" fill="rgba(70,255,210,.30)">
+              <rect x="10" y="50" width="10" height="18" rx="3"/>
+              <rect x="32" y="50" width="10" height="18" rx="3"/>
+              <rect x="54" y="50" width="10" height="18" rx="3"/>
+              <rect x="10" y="100" width="10" height="18" rx="3"/>
+              <rect x="32" y="100" width="10" height="18" rx="3"/>
+              <rect x="54" y="100" width="10" height="18" rx="3"/>
+              <rect x="10" y="150" width="10" height="18" rx="3"/>
+              <rect x="32" y="150" width="10" height="18" rx="3"/>
+              <rect x="54" y="150" width="10" height="18" rx="3"/>
+            </g>
+          </g>
+
+          <path d="M200 510 C 310 485 420 476 500 476 C 580 476 690 485 800 510"
+                stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
+        </g>
+
+        <!-- Title text -->
+        <g id="titleText" font-weight="900" text-anchor="middle">
+          <text x="500" y="68" font-size="44" fill="rgba(255,255,255,.92)" filter="url(#softShadow)">
+            5 YEARS: SURVIVAL
+          </text>
+          <text x="500" y="112" font-size="36" fill="rgba(255,255,255,.86)" filter="url(#softShadow)">
+            ANNIVERSARY MODE
+          </text>
+
+          <text id="glitchA" class="blink" x="500" y="68" font-size="44" fill="rgba(70,255,210,.50)" filter="url(#glowAqua)">
+            5 YEARS: SURVIVAL
+          </text>
+          <text id="glitchB" class="blink" x="500" y="68" font-size="44" fill="rgba(255,77,109,.45)" filter="url(#glowPink)">
+            5 YEARS: SURVIVAL
+          </text>
+        </g>
+
+        <!-- Press start (cliccabile) -->
+        <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#glowPink)">
+          <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="900">
+            PRESS START
+          </text>
+        </g>
+
+        <!-- START button (cliccabile e sempre visibile nella schermata titolo) -->
+        <g id="startButton" class="clickable pulse" filter="url(#softShadow)">
+          <rect x="360" y="420" width="280" height="74" rx="22"
+                fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+          <text x="500" y="468" text-anchor="middle" font-size="30" font-weight="900"
+                fill="rgba(255,255,255,.92)">START</text>
+        </g>
+      </g>
+
+      <!-- CHASE LAYER -->
+      <g id="chaseLayer" opacity="0">
+        <g id="rivers">
+          <path id="river1" d="" fill="rgba(70,160,255,.30)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
+          <path id="river2" d="" fill="rgba(70,160,255,.30)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
+        </g>
+
+        <g id="walls" opacity=".95"></g>
+
+        <g id="metroGate" filter="url(#softShadow)">
+          <g id="metroBody">
+            <rect x="0" y="0" width="180" height="54" rx="16" fill="rgba(240,242,255,.12)" stroke="rgba(255,255,255,.18)"/>
+            <rect x="16" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
+            <rect x="56" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
+            <rect x="96" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
+            <rect x="136" y="14" width="28" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
+            <text x="90" y="-10" text-anchor="middle" font-size="16" font-weight="900" fill="rgba(255,255,255,.72)">METRO</text>
+          </g>
+          <text id="metroHint" x="90" y="76" text-anchor="middle" font-size="14" font-weight="900"
+                fill="rgba(255,255,255,.75)">PASSAGGIO</text>
+        </g>
+
+        <g id="beggars"></g>
+        <g id="baguettes"></g>
+
+        <!-- Patry -->
+        <g id="patry" class="floaty" filter="url(#softShadow)">
+          <g id="patryBody" transform="translate(0 0)">
+            <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
+                  fill="#1A1A1D"/>
+            <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
+            <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+            <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+            <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
+            <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
+            <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
+            <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
+            <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+            <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+          </g>
+
+          <g id="sign" transform="translate(-150 26)" filter="url(#softShadow)">
+            <rect x="0" y="0" width="140" height="60" rx="14" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
+            <text x="70" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PROVA A</text>
+            <text x="70" y="46" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PRENDERMI!</text>
+          </g>
+        </g>
+
+        <!-- Ettore -->
+        <g id="ettore" filter="url(#softShadow)">
+          <g id="ettoreBody">
+            <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
+            <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
+            <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
+            <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+            <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+            <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
+            <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
+            <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
+            <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
+            <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+            <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.18)" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- QUIZ BACKGROUND LAYER -->
+      <g id="quizBgLayer" opacity="0">
+        <g id="qbg0" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".22">
+            <circle cx="170" cy="210" r="90" fill="rgba(70,255,210,.45)"/>
+            <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">CARMENTOWN</text>
+          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">PRIMO DATE ZONE</text>
+        </g>
+
+        <g id="qbg1" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".18">
+            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">SBUFFINO MODE</text>
+          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
+        </g>
+
+        <g id="qbg2" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".22">
+            <rect x="120" y="340" width="760" height="180" rx="26" fill="rgba(255,255,255,.08)"/>
+            <g stroke="rgba(255,255,255,.20)" stroke-width="6">
+              <line x1="160" y1="380" x2="840" y2="380"/>
+              <line x1="160" y1="430" x2="840" y2="430"/>
+              <line x1="160" y1="480" x2="840" y2="480"/>
+            </g>
+          </g>
+          <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="220" text-anchor="middle" font-size="30" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">ALMACUBE</text>
+          <text x="500" y="260" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">parking survival story</text>
+        </g>
+
+        <g id="qbg3" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".28">
+            <circle cx="260" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="240" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+            <circle cx="500" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="480" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+            <circle cx="740" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT SHOP</text>
+          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">coccola quando siete giù</text>
+        </g>
+
+        <g id="qbg4" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".25">
+            <g transform="translate(180 240) scale(2.2)">
+              <use href="#heartPath" fill="rgba(255,77,109,.55)"/>
+            </g>
+            <g transform="translate(820 300) scale(2.8)">
+              <use href="#heartPath" fill="rgba(255,77,109,.35)"/>
+            </g>
+            <g transform="translate(560 460) scale(3.4)">
+              <use href="#heartPath" fill="rgba(255,77,109,.28)"/>
+            </g>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">BUBO POWER</text>
+          <text x="500" y="275" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">nomignolo leggendario</text>
+        </g>
+      </g>
+
+      <!-- GIFT LAYER -->
+      <g id="giftLayer" opacity="0">
+        <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+        <g opacity=".55" id="giftStars"></g>
+
+        <text x="500" y="56" text-anchor="middle" font-size="28" font-weight="900"
+              fill="rgba(70,255,210,.90)" filter="url(#glowAqua)">MISSIONE COMPLETATA!</text>
+
+        <g id="giftBox" filter="url(#softShadow)" transform="translate(420 290)" style="cursor:pointer">
+          <rect x="0" y="30" width="160" height="120" rx="22" fill="rgba(255,77,109,.55)" stroke="rgba(255,255,255,.18)"/>
+          <rect x="72" y="30" width="16" height="120" rx="8" fill="rgba(70,255,210,.55)"/>
+          <rect x="0" y="82" width="160" height="16" rx="8" fill="rgba(70,255,210,.55)"/>
+
+          <g id="giftLid">
+            <rect x="-6" y="0" width="172" height="40" rx="18" fill="rgba(255,77,109,.70)" stroke="rgba(255,255,255,.18)"/>
+            <text x="80" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="rgba(255,255,255,.85)">CLICK!</text>
+          </g>
+        </g>
+
+        <g id="parchment" opacity="0" filter="url(#softShadow)">
+          <rect x="120" y="120" width="760" height="320" rx="22" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
+          <text x="500" y="160" text-anchor="middle" font-size="26" font-weight="900" fill="#1A1A1A">CERTIFICATO</text>
+          <g font-size="16" font-weight="900" fill="#1A1A1A" text-anchor="middle">
+            <text x="500" y="205">Certificato di sopravvivenza quinquennale</text>
+            <text x="500" y="235">conferito a</text>
+            <text x="500" y="270" font-size="20">ETTORE GORNI,</text>
+            <text x="500" y="305">in qualità di moroso più paziente</text>
+            <text x="500" y="335">e bubo più adorabile che ci sia.</text>
+          </g>
+        </g>
+
+        <g id="kissScene" opacity="0">
+          <g id="ettoreK" transform="translate(200 455) scale(0.9)">
+            <use href="#ettoreBodyClone"/>
+          </g>
+          <g id="patryK" transform="translate(740 455) scale(0.9)">
+            <use href="#patryBodyClone"/>
+          </g>
+          <g id="bigHeart" opacity="0" transform="translate(500 500) scale(2.2)">
+            <use href="#heartPath" fill="rgba(255,77,109,.85)" filter="url(#glowPink)"/>
+          </g>
+          <text id="tbc" x="500" y="570" text-anchor="middle" font-size="26" font-weight="900"
+                fill="rgba(255,255,255,.88)" opacity="0">TO BE CONTINUED...</text>
+        </g>
+
+        <!-- clones -->
+        <g opacity="0" pointer-events="none">
+          <g id="ettoreBodyClone">
+            <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
+            <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
+            <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
+            <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+            <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+            <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
+            <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
+            <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
+            <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
+            <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+            <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+          </g>
+
+          <g id="patryBodyClone">
+            <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
+                  fill="#1A1A1D"/>
+            <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
+            <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+            <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+            <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
+            <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
+            <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
+            <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
+            <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+            <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- SVG animations & clickable behavior -->
+      <style>
+        .blink{ animation: blink 0.38s steps(2,end) infinite; }
+        #glitchA{ animation-duration: 0.65s; transform: translate(2px, -1px); opacity:.65; }
+        #glitchB{ animation-duration: 0.65s; animation-delay: 0.12s; transform: translate(-2px, 1px); opacity:.55; }
+        .floaty{ animation: floaty 2.2s ease-in-out infinite; }
+        .pulse{ animation: pulse 1.25s ease-in-out infinite; transform-origin: 500px 457px; }
+        .clickable{ cursor:pointer; pointer-events: all; }
+        #startButton:hover rect{ filter: brightness(1.14); }
+        @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+        @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+        @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.03) } }
+      </style>
+    </svg>
+
+    <!-- UI overlay -->
+    <div class="ui">
+      <div class="topbar">
+        <div class="pill">🎮 <span>5 YEARS</span> <small id="levelLbl">— CHASE</small></div>
+        <div class="pill">Obiettivo: <span style="color:var(--aqua); font-weight:900;">raggiungi Patry</span></div>
+      </div>
+
+      <div id="toast" class="toast"></div>
+
+      <!-- Title card (rimane, ma non è più l’unico modo per avviare) -->
+      <div class="titleCard">
+        <div class="left">
+          <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso • Schiva baguette e metro!</div>
+          <div class="hint" style="opacity:.9">Poi: <b>quiz a tempo</b> (10s per domanda) → premio finale 🎁</div>
+        </div>
+        <div class="btnRow">
+          <button id="startBtn">START</button>
+          <button id="muteBtn" class="secondary">Audio: ON</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="dpad">
+          <div class="pad padGhost"></div>
+          <div class="pad" data-dir="up">▲</div>
+          <div class="pad padGhost"></div>
+          <div class="pad" data-dir="left">◀</div>
+          <div class="pad" data-dir="down">▼</div>
+          <div class="pad" data-dir="right">▶</div>
+          <div class="pad padGhost"></div>
+          <div class="pad padGhost"></div>
+          <div class="pad padGhost"></div>
+        </div>
+        <div class="sideHint">Suggerimento: la <b>metro</b> alterna chiuso/aperto. Aspetta l’apertura per passare.</div>
+      </div>
+
+      <!-- QUIZ -->
+      <div id="quiz">
+        <div class="quizCard">
+          <div class="quizHead">
+            <h2 id="qtitle">QUIZ A TEMPO — 10s</h2>
+            <div class="meta">Domanda <span id="qindex">1</span>/5 • ⏱ <span id="tleft">10</span>s</div>
+          </div>
+          <div class="qtext" id="qtext"></div>
+          <div class="options" id="options"></div>
+          <div class="bar">
+            <div class="meter"><div class="fill" id="tfill"></div></div>
+            <div id="retry">
+              <p class="msg" id="retryMsg"></p>
+              <button id="retryBtn">Ritenta il quiz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---- DOM ----
+  const body = document.body;
+  const svg = document.getElementById('svg');
+
+  const stars = document.getElementById('stars');
+  const giftStars = document.getElementById('giftStars');
+
+  const titleLayer = document.getElementById('titleLayer');
+  const chaseLayer = document.getElementById('chaseLayer');
+  const quizBgLayer = document.getElementById('quizBgLayer');
+  const giftLayer = document.getElementById('giftLayer');
+
+  const river1 = document.getElementById('river1');
+  const river2 = document.getElementById('river2');
+  const wallsG = document.getElementById('walls');
+  const beggarsG = document.getElementById('beggars');
+  const baguettesG = document.getElementById('baguettes');
+
+  const metroGate = document.getElementById('metroGate');
+  const metroBody = document.getElementById('metroBody');
+  const metroHint = document.getElementById('metroHint');
+
+  const ettore = document.getElementById('ettore');
+  const patry = document.getElementById('patry');
+  const targetLine = document.getElementById('targetLine');
+
+  // NEW: clickable title controls
+  const pressStart = document.getElementById('pressStart');
+  const startButton = document.getElementById('startButton');
+
+  const toast = document.getElementById('toast');
+  const startBtn = document.getElementById('startBtn');
+  const muteBtn = document.getElementById('muteBtn');
+
+  // Quiz UI
+  const qtitle = document.getElementById('qtitle');
+  const qindexEl = document.getElementById('qindex');
+  const qtextEl = document.getElementById('qtext');
+  const optionsEl = document.getElementById('options');
+  const tleftEl = document.getElementById('tleft');
+  const tfillEl = document.getElementById('tfill');
+  const retryBox = document.getElementById('retry');
+  const retryMsg = document.getElementById('retryMsg');
+  const retryBtn = document.getElementById('retryBtn');
+
+  // Gift
+  const giftBox = document.getElementById('giftBox');
+  const giftLid = document.getElementById('giftLid');
+  const parchment = document.getElementById('parchment');
+  const kissScene = document.getElementById('kissScene');
+  const ettoreK = document.getElementById('ettoreK');
+  const patryK = document.getElementById('patryK');
+  const bigHeart = document.getElementById('bigHeart');
+  const tbc = document.getElementById('tbc');
+
+  // Quiz BG groups
+  const qbg = [
+    document.getElementById('qbg0'),
+    document.getElementById('qbg1'),
+    document.getElementById('qbg2'),
+    document.getElementById('qbg3'),
+    document.getElementById('qbg4'),
+  ];
+
+  // ---- Helpers ----
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+  const rand = (a,b) => a + Math.random()*(b-a);
+  const pick = (arr) => arr[(Math.random()*arr.length)|0];
+  const now = () => performance.now();
+
+  function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
+  function setTransform(el, x, y){ el.setAttribute('transform', `translate(${x} ${y})`); }
+  function rectsOverlap(a,b){
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+
+  // ---- Audio ----
+  let audioOn = true;
+  let audioCtx = null;
+  function beep(freq=440, dur=0.08, type='sine', gain=0.03){
+    if(!audioOn) return;
+    try{
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+      g.gain.value = gain;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + dur);
+    }catch(_){}
+  }
+
+  // ---- Toast ----
+  let toastTimer = 0;
+  function showToast(msg, ms=1400){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    toastTimer = ms;
+  }
+
+  // ---- State ----
+  const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
+  let state = State.TITLE;
+
+  function setState(s){
+    state = s;
+    body.classList.remove('state-title','state-chase','state-quiz','state-gift');
+    body.classList.add(`state-${s}`);
+
+    if(s === State.TITLE){
+      setOpacity(titleLayer, 1); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
+    }else if(s === State.CHASE){
+      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 1); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
+    }else if(s === State.QUIZ){
+      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 1); setOpacity(giftLayer, 0);
+    }else if(s === State.GIFT){
+      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 1);
+    }
+  }
+
+  // ---- Stars ----
+  function buildStars(group, count){
+    group.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const cx = rand(0, 1000), cy = rand(0, 420);
+      const r = rand(0.7, 1.8);
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute('cx', cx);
+      c.setAttribute('cy', cy);
+      c.setAttribute('r', r);
+      c.setAttribute('fill', 'rgba(255,255,255,.85)');
+      c.setAttribute('opacity', String(rand(0.25, 0.9)));
+      group.appendChild(c);
+    }
+  }
+  buildStars(stars, 110);
+  buildStars(giftStars, 140);
+
+  // ---- World (SVG coords) ----
+  const player = { x: 80, y: 320, w: 120, h: 220, speed: 300 };
+  const girl   = { x: 820, y: 300, w: 220, h: 220 };
+
+  let obstacles = [];
+  let beggars = [];
+  let baguettes = [];
+
+  let metro = { x: 460, y: 255, w: 180, h: 54, t: 0, open: false, phase: 0 };
+
+  function roundRectPath(x,y,w,h,r){
+    r = Math.min(r, w/2, h/2);
+    return `M ${x+r} ${y} H ${x+w-r} Q ${x+w} ${y} ${x+w} ${y+r} V ${y+h-r} Q ${x+w} ${y+h} ${x+w-r} ${y+h} H ${x+r} Q ${x} ${y+h} ${x} ${y+h-r} V ${y+r} Q ${x} ${y} ${x+r} ${y} Z`;
+  }
+
+  function drawWalls(walls){
+    wallsG.innerHTML='';
+    for(const w of walls){
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+      g.setAttribute('transform', `translate(${w.x} ${w.y})`);
+      const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      r.setAttribute('width', w.w);
+      r.setAttribute('height', w.h);
+      r.setAttribute('rx', 18);
+      r.setAttribute('fill', 'rgba(255,255,255,.07)');
+      r.setAttribute('stroke', 'rgba(255,255,255,.14)');
+      r.setAttribute('stroke-width', '2');
+      g.appendChild(r);
+      wallsG.appendChild(g);
+    }
+  }
+
+  function drawBeggars(){
+    beggarsG.innerHTML='';
+    for(const b of beggars){
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+      g.setAttribute('id', b.id);
+      g.setAttribute('filter','url(#softShadow)');
+      g.innerHTML = `
+        <rect x="0" y="0" width="${b.w}" height="${b.h}" rx="22"
+              fill="rgba(255,209,102,.18)" stroke="rgba(255,209,102,.35)" stroke-width="2"/>
+        <circle cx="${b.w/2}" cy="${b.h/2-6}" r="18" fill="rgba(255,255,255,.12)"/>
+        <text x="${b.w/2}" y="${b.h/2+10}" text-anchor="middle" font-size="18"
+              font-weight="900" fill="rgba(255,255,255,.75)">€?</text>
+      `;
+      setTransform(g, b.x, b.y);
+      beggarsG.appendChild(g);
+    }
+  }
+
+  function makeBaguette(){
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute('filter','url(#softShadow)');
+    g.innerHTML = `
+      <g transform="rotate(-8)">
+        <rect x="0" y="0" width="90" height="26" rx="13" fill="#E7C178"/>
+        <path d="M16 8 L24 18 M34 8 L42 18 M52 8 L60 18 M70 8 L78 18"
+              stroke="rgba(120,70,20,.35)" stroke-width="4" stroke-linecap="round"/>
+      </g>`;
+    return g;
+  }
+
+  function buildLevel(){
+    player.x = 90; player.y = 320;
+    girl.x = 820; girl.y = 300;
+
+    obstacles = [];
+    beggars = [];
+    baguettes = [];
+    baguettesG.innerHTML = '';
+
+    const riverH = 62;
+
+    const gapW1 = 160;
+    const gapX1 = 520;
+    const r1a = {type:'river', x: 230, y: 150, w: (gapX1-230-gapW1*0.15), h: riverH};
+    const r1b = {type:'river', x: (gapX1+gapW1*0.85), y: 150, w: (850-(gapX1+gapW1*0.85)), h: riverH};
+
+    const gapW2 = 190;
+    const gapX2 = 400;
+    const r2a = {type:'river', x: 180, y: 400, w: (gapX2-180-gapW2*0.10), h: riverH};
+    const r2b = {type:'river', x: (gapX2+gapW2*0.90), y: 400, w: (880-(gapX2+gapW2*0.90)), h: riverH};
+
+    obstacles.push(r1a,r1b,r2a,r2b);
+
+    river1.setAttribute('d', roundRectPath(r1a.x, r1a.y, r1a.w, r1a.h, 22) + ' ' + roundRectPath(r1b.x, r1b.y, r1b.w, r1b.h, 22));
+    river2.setAttribute('d', roundRectPath(r2a.x, r2a.y, r2a.w, r2a.h, 22) + ' ' + roundRectPath(r2b.x, r2b.y, r2b.w, r2b.h, 22));
+
+    const walls = [
+      {type:'wall', x: 110, y: 245, w: 90, h: 120},
+      {type:'wall', x: 220, y: 500, w: 160, h: 60},
+      {type:'wall', x: 710, y: 500, w: 190, h: 60},
+    ];
+    obstacles.push(...walls);
+    drawWalls(walls);
+
+    metro.x = 460; metro.y = 255; metro.t=0; metro.open=false; metro.phase=0;
+    setTransform(metroGate, metro.x, metro.y);
+
+    const bCount = 3;
+    for(let i=0;i<bCount;i++){
+      beggars.push({
+        id: 'b'+i,
+        x: rand(300, 720),
+        y: rand(220, 460),
+        w: 84, h: 84,
+        vx: rand(-45,45),
+        vy: rand(-35,35),
+        t: rand(0,1)
+      });
+    }
+    drawBeggars();
+
+    setTransform(ettore, player.x, player.y);
+    setTransform(patry, girl.x, girl.y);
+  }
+
+  // ---- Input ----
+  const keys = {up:false,down:false,left:false,right:false};
+  window.addEventListener('keydown', (e)=>{
+    const k = e.key.toLowerCase();
+    if(k==='arrowup' || k==='w') keys.up=true;
+    if(k==='arrowdown'|| k==='s') keys.down=true;
+    if(k==='arrowleft'|| k==='a') keys.left=true;
+    if(k==='arrowright'|| k==='d') keys.right=true;
+  });
+  window.addEventListener('keyup', (e)=>{
+    const k = e.key.toLowerCase();
+    if(k==='arrowup' || k==='w') keys.up=false;
+    if(k==='arrowdown'|| k==='s') keys.down=false;
+    if(k==='arrowleft'|| k==='a') keys.left=false;
+    if(k==='arrowright'|| k==='d') keys.right=false;
+  });
+
+  const activeDirs = new Set();
+  document.querySelectorAll('.pad').forEach(btn=>{
+    const dir = btn.dataset.dir;
+    if(!dir) return;
+    const on = (e)=>{ e.preventDefault(); activeDirs.add(dir); syncDirs(); };
+    const off = (e)=>{ e.preventDefault(); activeDirs.delete(dir); syncDirs(); };
+    btn.addEventListener('pointerdown', on);
+    btn.addEventListener('pointerup', off);
+    btn.addEventListener('pointercancel', off);
+    btn.addEventListener('pointerleave', off);
+  });
+  function syncDirs(){
+    keys.up = activeDirs.has('up');
+    keys.down = activeDirs.has('down');
+    keys.left = activeDirs.has('left');
+    keys.right = activeDirs.has('right');
+  }
+
+  // ---- Quiz data ----
+  const wrongMessages = [
+    "❌ NOPE. Per farti perdonare: offrire il sushi. Ora ritenta il quiz!",
+    "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
+    "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
+  ];
+
+  const questions = [
+    { bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
+    { bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
+    { bg:2, q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?", opts:[
+      "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
+      "Quando non ho prenotato l'albergo in Grecia",
+      "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
+    ], correct:0 },
+    { bg:3, q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
+    { bg:4, q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
+  ];
+
+  let qIndex = 0;
+  let qTime = 10.0;
+  let qRunning = false;
+
+  function showQuizBg(i){
+    qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0'));
+  }
+
+  function setupQuestion(){
+    const item = questions[qIndex];
+    qtitle.textContent = "QUIZ A TEMPO — 10s";
+    qindexEl.textContent = (qIndex+1).toString();
+    qtextEl.textContent = item.q;
+
+    optionsEl.innerHTML = '';
+    item.opts.forEach((txt, idx)=>{
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.textContent = txt;
+      b.addEventListener('click', ()=>answer(idx));
+      optionsEl.appendChild(b);
+    });
+
+    qTime = 10.0;
+    updateQuizMeter();
+    showQuizBg(item.bg);
+  }
+
+  function updateQuizMeter(){
+    tleftEl.textContent = Math.ceil(qTime).toString();
+    const ratio = clamp(qTime/10, 0, 1);
+    tfillEl.style.transform = `scaleX(${ratio})`;
+    tleftEl.classList.toggle('danger', qTime <= 3.2);
+  }
+
+  function failQuiz(){
+    qRunning = false;
+    retryMsg.textContent = pick(wrongMessages);
+    retryBox.style.display = 'block';
+    beep(180, .14, 'square', .05);
+  }
+
+  function answer(idx){
+    if(!qRunning) return;
+    const item = questions[qIndex];
+    if(idx === item.correct){
+      beep(880, .08, 'triangle', .04);
+      qIndex++;
+      if(qIndex >= questions.length){
+        qRunning = false;
+        enterGift();
+      }else{
+        setupQuestion();
+      }
+    }else{
+      failQuiz();
+    }
+  }
+
+  retryBtn.addEventListener('click', ()=>{
+    qIndex = 0;
+    retryBox.style.display = 'none';
+    setupQuestion();
+    qRunning = true;
+    beep(520, .07, 'triangle', .03);
+  });
+
+  function enterQuiz(){
+    setState(State.QUIZ);
+    qIndex = 0;
+    retryBox.style.display = 'none';
+    setupQuestion();
+    qRunning = true;
+    showToast("Quiz a tempo! 10 secondi per domanda ⏱", 1400);
+    beep(660, .08, 'triangle', .03);
+  }
+
+  // ---- Gift ----
+  let giftOpened = false;
+  let kissT = 0;
+
+  function enterGift(){
+    setState(State.GIFT);
+    giftOpened = false;
+    kissT = 0;
+
+    parchment.setAttribute('opacity','0');
+    kissScene.setAttribute('opacity','0');
+    bigHeart.setAttribute('opacity','0');
+    tbc.setAttribute('opacity','0');
+
+    giftLid.setAttribute('transform','translate(0 0) rotate(0 80 20)');
+    showToast("Hai vinto! Clicca/tocca il pacco regalo 🎁", 1600);
+    beep(740, .08, 'triangle', .04);
+  }
+
+  giftBox.addEventListener('pointerdown', (e)=>{
+    if(state !== State.GIFT) return;
+    e.preventDefault();
+    if(!giftOpened){
+      giftOpened = true;
+      giftLid.setAttribute('transform','translate(18 -20) rotate(-22 80 20)');
+      parchment.setAttribute('opacity','1');
+      kissScene.setAttribute('opacity','1');
+      beep(980, .10, 'triangle', .04);
+      showToast("✨ Certificato sbloccato!", 1400);
+    }
+  });
+
+  // ---- Chase ----
+  let baguetteSpawn = 0;
+
+  function moveWithCollisions(ent, dx, dy, blocks){
+    ent.x += dx;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dx>0) ent.x = b.x - ent.w;
+        else if(dx<0) ent.x = b.x + b.w;
+      }
+    }
+    ent.y += dy;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dy>0) ent.y = b.y - ent.h;
+        else if(dy<0) ent.y = b.y + b.h;
+      }
+    }
+  }
+
+  function resetChase(){
+    buildLevel();
+    showToast("💥 Colpito da baguette! Respawn…", 1400);
+    beep(160, .12, 'square', .05);
+  }
+
+  function enterChase(){
+    buildLevel();
+    setState(State.CHASE);
+    showToast("Vai Ettore! Raggiungi Patry (schiva baguette e metro)!", 1600);
+    beep(520, .07, 'triangle', .03);
+  }
+
+  // ---- Start / Mute ----
+  function ensureAudioContext(){
+    if(audioOn && !audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(_){}
+    }
+  }
+
+  function startFromTitle(){
+    if(state !== State.TITLE) return;
+    ensureAudioContext();
+    enterChase();
+  }
+
+  // HTML button
+  startBtn.addEventListener('click', () => startFromTitle());
+
+  // SVG controls
+  if(pressStart) pressStart.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
+  if(startButton) startButton.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
+
+  // Keyboard start (Enter / Space)
+  window.addEventListener('keydown', (e)=>{
+    if(state !== State.TITLE) return;
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      startFromTitle();
+    }
+  });
+
+  muteBtn.addEventListener('click', ()=>{
+    audioOn = !audioOn;
+    muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
+    beep(audioOn ? 600 : 200, .06, 'triangle', .03);
+  });
+
+  // ---- Loop ----
+  let t = 0;
+  let last = now();
+
+  function update(dt){
+    if(toastTimer > 0){
+      toastTimer -= dt*1000;
+      if(toastTimer <= 0) toast.classList.remove('show');
+    }
+
+    // parallax skyline
+    const drift = Math.sin(t*0.0002)*6;
+    const skylineFar = document.getElementById('skylineFar');
+    if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
+
+    if(state === State.CHASE){
+      // metro open/close cycle
+      metro.t += dt;
+      const cycle = 2.8;
+      const ph = metro.t % cycle;
+      metro.open = ph > 1.6;
+      metro.phase = ph;
+
+      const wob = Math.sin(ph*5.2)*2.5;
+      metroBody.setAttribute('transform', `translate(0 ${wob})`);
+      metroHint.textContent = metro.open ? "APERTA!" : "PASSAGGIO";
+      metroHint.setAttribute('fill', metro.open ? 'rgba(70,255,210,.85)' : 'rgba(255,255,255,.75)');
+      metroGate.setAttribute('opacity', metro.open ? '0.38' : '1');
+
+      // update beggars
+      for(const b of beggars){
+        b.t += dt;
+        if(b.t > 1.4){
+          b.t = 0;
+          b.vx = rand(-55,55);
+          b.vy = rand(-45,45);
+        }
+        b.x += b.vx*dt;
+        b.y += b.vy*dt;
+        if(b.x < 240 || b.x > 760) b.vx *= -1;
+        if(b.y < 200 || b.y > 500) b.vy *= -1;
+
+        const el = document.getElementById(b.id);
+        if(el) setTransform(el, b.x, b.y);
+      }
+
+      // baguette spawn
+      baguetteSpawn -= dt;
+      if(baguetteSpawn <= 0){
+        baguetteSpawn = rand(0.9, 1.35);
+        const obj = {
+          x: 1040,
+          y: rand(120, 520),
+          w: 90,
+          h: 26,
+          vx: rand(-520, -380),
+          vy: rand(-30, 30),
+          wob: rand(0, 10),
+          el: makeBaguette()
+        };
+        baguettes.push(obj);
+        baguettesG.appendChild(obj.el);
+      }
+
+      for(const bq of baguettes){
+        bq.wob += dt*6.0;
+        bq.x += bq.vx*dt;
+        bq.y += bq.vy*dt + Math.sin(bq.wob)*18*dt;
+        bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
+      }
+      baguettes = baguettes.filter(bq=>{
+        if(bq.x < -160){
+          bq.el.remove();
+          return false;
+        }
+        return true;
+      });
+
+      const blocks = [];
+      for(const o of obstacles) blocks.push(o);
+      for(const b of beggars) blocks.push(b);
+      if(!metro.open) blocks.push({x:metro.x, y:metro.y, w:metro.w, h:metro.h});
+
+      // movement
+      let dx=0, dy=0;
+      const sp = player.speed;
+      if(keys.left) dx -= sp*dt;
+      if(keys.right) dx += sp*dt;
+      if(keys.up) dy -= sp*dt;
+      if(keys.down) dy += sp*dt;
+      if(dx && dy){ dx*=0.7071; dy*=0.7071; }
+
+      moveWithCollisions(player, dx, dy, blocks);
+      player.x = clamp(player.x, 10, 900);
+      player.y = clamp(player.y, 70, 520);
+
+      setTransform(ettore, player.x, player.y);
+      setTransform(patry, girl.x, girl.y);
+
+      const px = player.x + 60, py = player.y + 110;
+      const gx = girl.x + 110, gy = girl.y + 110;
+      targetLine.setAttribute('x1', px);
+      targetLine.setAttribute('y1', py);
+      targetLine.setAttribute('x2', gx);
+      targetLine.setAttribute('y2', gy);
+
+      // hit test baguettes
+      const pBox = {x:player.x, y:player.y, w:player.w, h:player.h};
+      for(const bq of baguettes){
+        const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
+        if(rectsOverlap(pBox, bBox)){
+          resetChase();
+          return;
+        }
+      }
+
+      // reach Patry
+      const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
+      if(rectsOverlap(pBox, gBox)){
+        showToast("🎉 Presa! Ora quiz a tempo!", 1200);
+        enterQuiz();
+        return;
+      }
+    }
+
+    if(state === State.QUIZ){
+      if(qRunning){
+        qTime -= dt;
+        if(qTime <= 0){
+          qTime = 0;
+          updateQuizMeter();
+          failQuiz();
+        }else{
+          updateQuizMeter();
+        }
+      }
+    }
+
+    if(state === State.GIFT){
+      if(giftOpened){
+        kissT += dt;
+        const k = clamp(kissT/1.6, 0, 1);
+        const ex = 200 + k*180;
+        const px = 740 - k*180;
+        ettoreK.setAttribute('transform', `translate(${ex} 455) scale(0.9)`);
+        patryK.setAttribute('transform', `translate(${px} 455) scale(0.9)`);
+
+        const h = clamp((kissT-0.8)/0.7, 0, 1);
+        bigHeart.setAttribute('opacity', String(h));
+        bigHeart.setAttribute('transform', `translate(500 500) scale(${2.2 + h*1.2})`);
+        if(h >= 1) tbc.setAttribute('opacity', '1');
+      }
+    }
+  }
+
+  function frame(){
+    const n = now();
+    const dt = Math.min(0.033, (n-last)/1000);
+    last = n;
+    t = n;
+    update(dt);
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Init ----
+  setState(State.TITLE);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
