@@ -32,14 +32,13 @@
       min-height: 100dvh;
     }
 
-    #app{position:fixed; inset:0; display:grid; place-items:stretch; height:100dvh;}
+    #app{position:fixed; inset:0; height:100dvh;}
     #sceneWrap{
       position:relative; width:100%; height:100%;
-      touch-action:none; /* blocca scroll durante il gameplay */
+      touch-action:none;
     }
     svg{width:100%; height:100%; display:block;}
 
-    /* FIX 1: niente pointer-events:none sul contenitore UI */
     .ui{
       position:absolute; inset:0;
       pointer-events:auto;
@@ -84,7 +83,7 @@
       pointer-events:none;
       opacity:0;
       transition:.18s ease;
-      font-weight:800;
+      font-weight:900;
       font-size:13px;
       text-align:center;
     }
@@ -111,12 +110,9 @@
     body.state-title .titleCard{display:flex}
     body:not(.state-title) .titleCard{display:none}
 
-    .titleCard .left{
-      display:flex; flex-direction:column; gap:6px;
-      min-width: 0;
-    }
+    .titleCard .left{display:flex; flex-direction:column; gap:6px; min-width:0;}
     .titleCard .left .hint{
-      font-weight:700;
+      font-weight:750;
       color:var(--muted);
       font-size:13px;
       line-height:1.35;
@@ -146,7 +142,6 @@
       font-weight:850;
     }
 
-    /* FIX 1: controls devono poter ricevere eventi (dpad) */
     .controls{
       position:absolute;
       left:0; right:0;
@@ -183,20 +178,56 @@
 
     .sideHint{
       pointer-events:none;
-      max-width: 260px;
+      max-width: 280px;
       text-align:right;
       font-size:12px;
-      font-weight:800;
+      font-weight:850;
       color:var(--muted);
       line-height:1.35;
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
     }
 
+    /* Center overlay for TRY AGAIN / FINALLY TOGETHER */
+    #centerOverlay{
+      position:absolute; inset:0;
+      display:none;
+      place-items:center;
+      pointer-events:auto;
+      background: radial-gradient(600px 380px at 50% 45%, rgba(0,0,0,.55), rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%);
+    }
+    #centerOverlay.show{display:grid;}
+    .centerText{
+      text-align:center;
+      padding:14px 18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(18,26,52,.65), rgba(10,14,28,.65));
+      box-shadow: 0 28px 90px rgba(0,0,0,.45);
+      backdrop-filter: blur(14px);
+      cursor:pointer;
+      user-select:none;
+    }
+    .centerText .big{
+      font-size: clamp(40px, 8vw, 92px);
+      font-weight: 1000;
+      letter-spacing: 1.5px;
+      line-height: 1;
+      text-transform: uppercase;
+      text-shadow: 0 10px 28px rgba(0,0,0,.45);
+    }
+    .centerText .sub{
+      margin-top:10px;
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--muted);
+    }
+    .blink90{ animation: blink 0.38s steps(2,end) infinite; }
+
     /* Quiz overlay */
     #quiz{
       position:absolute; inset:0;
       display:none;
-      pointer-events:auto; /* FIX 1: interattivo */
+      pointer-events:auto;
     }
     body.state-quiz #quiz{display:block}
 
@@ -213,34 +244,12 @@
       backdrop-filter: blur(14px);
       padding:16px;
     }
-    .quizHead{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-      flex-wrap:wrap;
-    }
-    .quizHead h2{
-      margin:0;
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-    .quizHead .meta{
-      color:var(--muted);
-      font-weight:800;
-      font-size:13px;
-    }
-    .qtext{
-      margin:10px 0 12px;
-      font-size:16px;
-      font-weight:850;
-      line-height:1.35;
-    }
-    .options{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-    }
-    @media (min-width: 760px){
-      .options{grid-template-columns: 1fr 1fr 1fr;}
-    }
+    .quizHead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+    .quizHead h2{margin:0; font-size:18px; letter-spacing:.2px;}
+    .quizHead .meta{color:var(--muted); font-weight:850; font-size:13px;}
+    .qtext{margin:10px 0 12px; font-size:16px; font-weight:900; line-height:1.35;}
+    .options{display:grid; grid-template-columns:1fr; gap:10px;}
+    @media (min-width: 760px){ .options{grid-template-columns: 1fr 1fr 1fr;} }
     .opt{
       text-align:left;
       font-weight:900;
@@ -251,45 +260,17 @@
       color:var(--text);
     }
     .opt:hover{filter:brightness(1.06)}
-    .bar{
-      margin-top:12px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      color:var(--muted);
-      font-weight:850;
-      font-size:13px;
-      flex-wrap:wrap;
-    }
-    .meter{
-      width:min(280px, 60vw);
-      height:12px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.22);
-      overflow:hidden;
-    }
-    .fill{
-      height:100%;
-      width:100%;
-      transform-origin:left center;
-      background: linear-gradient(90deg, rgba(70,255,210,.9), rgba(255,209,102,.9), rgba(255,77,109,.9));
-    }
+    .bar{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-weight:850; font-size:13px; flex-wrap:wrap;}
+    .meter{width:min(280px, 60vw); height:12px; border-radius:999px; border:1px solid var(--stroke); background: rgba(0,0,0,.22); overflow:hidden;}
+    .fill{height:100%; width:100%; transform-origin:left center; background: linear-gradient(90deg, rgba(70,255,210,.9), rgba(255,209,102,.9), rgba(255,77,109,.9));}
     .danger{color:var(--pink)}
-    #retry{
-      display:none;
-      margin-top:12px;
-      padding-top:12px;
-      border-top:1px solid rgba(255,255,255,.12);
-      text-align:center;
-      width:100%;
-    }
-    #retry .msg{
-      color:var(--amber);
-      font-weight:900;
-      margin: 0 0 10px;
-      line-height:1.35;
-    }
+    #retry{display:none; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.12); text-align:center; width:100%;}
+    #retry .msg{color:var(--amber); font-weight:900; margin: 0 0 10px; line-height:1.35;}
+
+    @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
 
     @media (prefers-reduced-motion: reduce){
+      #centerOverlay .blink90{animation:none}
       .toast, .topbar, .controls{transition:none}
       svg .blink, svg .floaty, svg .pulse {animation:none !important}
     }
@@ -300,7 +281,6 @@
 <div id="app">
   <div id="sceneWrap">
 
-    <!-- SVG SCENE -->
     <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -330,6 +310,36 @@
         </pattern>
 
         <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
+
+        <!-- Reusable Ettore body -->
+        <g id="ettoreDef">
+          <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
+          <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
+          <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
+          <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+          <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+          <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
+          <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
+          <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
+          <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
+          <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+          <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+        </g>
+
+        <!-- Reusable Patry body -->
+        <g id="patryDef">
+          <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
+                fill="#1A1A1D"/>
+          <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
+          <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+          <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+          <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
+          <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
+          <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
+          <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
+          <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+          <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+        </g>
       </defs>
 
       <!-- BACKGROUND -->
@@ -398,50 +408,36 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- FIX 4: personaggi nella schermata iniziale -->
-        <g id="titleChars" filter="url(#softShadow)">
-          <!-- Ettore a sinistra -->
-          <g transform="translate(180 310) scale(1.1)">
-            <use href="#ettoreBodyClone"/>
+        <!-- Personaggi in title screen (più piccoli) -->
+        <g filter="url(#softShadow)">
+          <g transform="translate(210 330) scale(0.62)">
+            <use href="#ettoreDef"/>
           </g>
-          <!-- Patry a destra + cartello -->
-          <g transform="translate(720 310) scale(1.1)">
-            <use href="#patryBodyClone"/>
-            <g transform="translate(-150 26)">
-              <rect x="0" y="0" width="140" height="60" rx="14" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
-              <text x="70" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PROVA A</text>
-              <text x="70" y="46" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PRENDERMI!</text>
+          <g transform="translate(760 330) scale(0.62)">
+            <use href="#patryDef"/>
+            <g transform="translate(-180 18) scale(1.35)">
+              <rect x="0" y="0" width="160" height="66" rx="14" fill="rgba(255,255,255,.95)" stroke="rgba(0,0,0,.18)"/>
+              <text x="80" y="28" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PROVA A</text>
+              <text x="80" y="50" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PRENDERMI</text>
             </g>
           </g>
         </g>
 
-        <!-- Title text -->
-        <g id="titleText" font-weight="900" text-anchor="middle">
-          <text x="500" y="68" font-size="44" fill="rgba(255,255,255,.92)" filter="url(#softShadow)">
-            5 YEARS: SURVIVAL
-          </text>
-          <text x="500" y="112" font-size="36" fill="rgba(255,255,255,.86)" filter="url(#softShadow)">
-            ANNIVERSARY MODE
-          </text>
-
-          <text id="glitchA" class="blink" x="500" y="68" font-size="44" fill="rgba(70,255,210,.50)" filter="url(#glowAqua)">
-            5 YEARS: SURVIVAL
-          </text>
-          <text id="glitchB" class="blink" x="500" y="68" font-size="44" fill="rgba(255,77,109,.45)" filter="url(#glowPink)">
-            5 YEARS: SURVIVAL
-          </text>
+        <g id="titleText" font-weight="900" text-anchor="middle" filter="url(#softShadow)">
+          <text x="500" y="70" font-size="44" fill="rgba(255,255,255,.92)">5 YEARS: SURVIVAL</text>
+          <text x="500" y="114" font-size="36" fill="rgba(255,255,255,.86)">ANNIVERSARY MODE</text>
+          <text id="glitchA" class="blink" x="500" y="70" font-size="44" fill="rgba(70,255,210,.50)" filter="url(#glowAqua)">5 YEARS: SURVIVAL</text>
+          <text id="glitchB" class="blink" x="500" y="70" font-size="44" fill="rgba(255,77,109,.45)" filter="url(#glowPink)">5 YEARS: SURVIVAL</text>
         </g>
 
         <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#glowPink)">
-          <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="900">
-            PRESS START
-          </text>
+          <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="1000">PRESS START</text>
         </g>
 
         <g id="startButton" class="clickable pulse" filter="url(#softShadow)">
           <rect x="360" y="420" width="280" height="74" rx="22"
                 fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-          <text x="500" y="468" text-anchor="middle" font-size="30" font-weight="900"
+          <text x="500" y="468" text-anchor="middle" font-size="30" font-weight="1000"
                 fill="rgba(255,255,255,.92)">START</text>
         </g>
       </g>
@@ -449,66 +445,44 @@
       <!-- CHASE LAYER -->
       <g id="chaseLayer" opacity="0">
         <g id="rivers">
-          <path id="river1" d="" fill="rgba(70,160,255,.30)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
-          <path id="river2" d="" fill="rgba(70,160,255,.30)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
+          <path id="river1" d="" fill="rgba(70,160,255,.28)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
+          <path id="river2" d="" fill="rgba(70,160,255,.28)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
         </g>
 
         <g id="walls" opacity=".95"></g>
 
+        <!-- Metro barrier with multiple doors -->
         <g id="metroGate" filter="url(#softShadow)">
-          <g id="metroBody">
-            <rect x="0" y="0" width="180" height="54" rx="16" fill="rgba(240,242,255,.12)" stroke="rgba(255,255,255,.18)"/>
-            <rect x="16" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
-            <rect x="56" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
-            <rect x="96" y="14" width="32" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
-            <rect x="136" y="14" width="28" height="20" rx="8" fill="rgba(70,255,210,.20)"/>
-            <text x="90" y="-10" text-anchor="middle" font-size="16" font-weight="900" fill="rgba(255,255,255,.72)">METRO</text>
+          <rect id="metroShell" x="0" y="0" width="760" height="64" rx="18" fill="rgba(240,242,255,.10)" stroke="rgba(255,255,255,.18)"/>
+          <text x="380" y="-10" text-anchor="middle" font-size="16" font-weight="1000" fill="rgba(255,255,255,.72)">METRO</text>
+          <g id="metroDoors">
+            <rect id="metroDoor0" x="70"  y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
+            <rect id="metroDoor1" x="240" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
+            <rect id="metroDoor2" x="410" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
+            <rect id="metroDoor3" x="580" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
           </g>
-          <text id="metroHint" x="90" y="76" text-anchor="middle" font-size="14" font-weight="900"
-                fill="rgba(255,255,255,.75)">PASSAGGIO</text>
+          <text id="metroHint" x="380" y="86" text-anchor="middle" font-size="14" font-weight="1000" fill="rgba(255,255,255,.75)">PASSAGGI ALTERNATI</text>
         </g>
 
-        <g id="beggars"></g>
+        <!-- Old smokers -->
+        <g id="olds"></g>
+
         <g id="baguettes"></g>
 
-        <!-- Patry -->
-        <g id="patry" class="floaty" filter="url(#softShadow)">
-          <g id="patryBody" transform="translate(0 0)">
-            <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
-                  fill="#1A1A1D"/>
-            <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
-            <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-            <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-            <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
-            <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
-            <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
-            <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
-            <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
-            <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
-          </g>
-
-          <g id="sign" transform="translate(-150 26)" filter="url(#softShadow)">
-            <rect x="0" y="0" width="140" height="60" rx="14" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
-            <text x="70" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PROVA A</text>
-            <text x="70" y="46" text-anchor="middle" font-size="14" font-weight="900" fill="#1A1A1A">PRENDERMI!</text>
+        <!-- Patry (smaller) -->
+        <g id="patry" filter="url(#softShadow)">
+          <use href="#patryDef"/>
+          <!-- Sign: counter-scale so it's readable even if Patry is small -->
+          <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
+            <rect x="0" y="0" width="170" height="70" rx="14" fill="rgba(255,255,255,.96)" stroke="rgba(0,0,0,.18)"/>
+            <text x="85" y="30" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PROVA A</text>
+            <text x="85" y="54" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PRENDERMI</text>
           </g>
         </g>
 
-        <!-- Ettore -->
+        <!-- Ettore (smaller) -->
         <g id="ettore" filter="url(#softShadow)">
-          <g id="ettoreBody">
-            <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
-            <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
-            <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
-            <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-            <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-            <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
-            <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
-            <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
-            <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
-            <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
-            <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
-          </g>
+          <use href="#ettoreDef"/>
         </g>
 
         <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.18)" stroke-width="3" stroke-linecap="round"/>
@@ -516,7 +490,6 @@
 
       <!-- QUIZ BACKGROUND LAYER -->
       <g id="quizBgLayer" opacity="0">
-        <!-- FIX 3: titoli sfondi quiz senza "spoiler" -->
         <g id="qbg0" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".22">
@@ -524,7 +497,7 @@
             <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">PRIMO DATE</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">PRIMO DATE</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">dove tutto è iniziato…</text>
         </g>
 
@@ -534,7 +507,7 @@
             <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">MOOD CHECK</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">MOOD CHECK</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
         </g>
 
@@ -549,7 +522,7 @@
             </g>
           </g>
           <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">PARKING PANIC</text>
+          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">PARKING PANIC</text>
           <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quasi-bloccati: storia vera</text>
         </g>
 
@@ -564,35 +537,29 @@
             <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT COCCOLA</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT COCCOLA</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando siete giù…</text>
         </g>
 
         <g id="qbg4" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".25">
-            <g transform="translate(180 240) scale(2.2)">
-              <use href="#heartPath" fill="rgba(255,77,109,.55)"/>
-            </g>
-            <g transform="translate(820 300) scale(2.8)">
-              <use href="#heartPath" fill="rgba(255,77,109,.35)"/>
-            </g>
-            <g transform="translate(560 460) scale(3.4)">
-              <use href="#heartPath" fill="rgba(255,77,109,.28)"/>
-            </g>
+            <g transform="translate(180 240) scale(2.2)"><use href="#heartPath" fill="rgba(255,77,109,.55)"/></g>
+            <g transform="translate(820 300) scale(2.8)"><use href="#heartPath" fill="rgba(255,77,109,.35)"/></g>
+            <g transform="translate(560 460) scale(3.4)"><use href="#heartPath" fill="rgba(255,77,109,.28)"/></g>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="900" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">NICKNAME QUEST</text>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">NICKNAME QUEST</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">come vi chiamate di solito?</text>
         </g>
       </g>
 
-      <!-- GIFT LAYER -->
+      <!-- GIFT LAYER (come prima: lo lasciamo) -->
       <g id="giftLayer" opacity="0">
         <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
         <g opacity=".55" id="giftStars"></g>
 
-        <text x="500" y="56" text-anchor="middle" font-size="28" font-weight="900"
+        <text x="500" y="56" text-anchor="middle" font-size="28" font-weight="1000"
               fill="rgba(70,255,210,.90)" filter="url(#glowAqua)">MISSIONE COMPLETATA!</text>
 
         <g id="giftBox" filter="url(#softShadow)" transform="translate(420 290)" style="cursor:pointer">
@@ -601,14 +568,14 @@
           <rect x="0" y="82" width="160" height="16" rx="8" fill="rgba(70,255,210,.55)"/>
           <g id="giftLid">
             <rect x="-6" y="0" width="172" height="40" rx="18" fill="rgba(255,77,109,.70)" stroke="rgba(255,255,255,.18)"/>
-            <text x="80" y="26" text-anchor="middle" font-size="14" font-weight="900" fill="rgba(255,255,255,.85)">CLICK!</text>
+            <text x="80" y="26" text-anchor="middle" font-size="14" font-weight="1000" fill="rgba(255,255,255,.85)">CLICK!</text>
           </g>
         </g>
 
         <g id="parchment" opacity="0" filter="url(#softShadow)">
           <rect x="120" y="120" width="760" height="320" rx="22" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
-          <text x="500" y="160" text-anchor="middle" font-size="26" font-weight="900" fill="#1A1A1A">CERTIFICATO</text>
-          <g font-size="16" font-weight="900" fill="#1A1A1A" text-anchor="middle">
+          <text x="500" y="160" text-anchor="middle" font-size="26" font-weight="1000" fill="#1A1A1A">CERTIFICATO</text>
+          <g font-size="16" font-weight="1000" fill="#1A1A1A" text-anchor="middle">
             <text x="500" y="205">Certificato di sopravvivenza quinquennale</text>
             <text x="500" y="235">conferito a</text>
             <text x="500" y="270" font-size="20">ETTORE GORNI,</text>
@@ -618,48 +585,13 @@
         </g>
 
         <g id="kissScene" opacity="0">
-          <g id="ettoreK" transform="translate(200 455) scale(0.9)">
-            <use href="#ettoreBodyClone"/>
-          </g>
-          <g id="patryK" transform="translate(740 455) scale(0.9)">
-            <use href="#patryBodyClone"/>
-          </g>
+          <g id="ettoreK" transform="translate(200 455) scale(0.9)"><use href="#ettoreDef"/></g>
+          <g id="patryK"  transform="translate(740 455) scale(0.9)"><use href="#patryDef"/></g>
           <g id="bigHeart" opacity="0" transform="translate(500 500) scale(2.2)">
             <use href="#heartPath" fill="rgba(255,77,109,.85)" filter="url(#glowPink)"/>
           </g>
-          <text id="tbc" x="500" y="570" text-anchor="middle" font-size="26" font-weight="900"
+          <text id="tbc" x="500" y="570" text-anchor="middle" font-size="26" font-weight="1000"
                 fill="rgba(255,255,255,.88)" opacity="0">TO BE CONTINUED...</text>
-        </g>
-
-        <!-- CLONI RIUSABILI -->
-        <g opacity="0" pointer-events="none">
-          <g id="ettoreBodyClone">
-            <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
-            <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
-            <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
-            <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-            <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-            <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
-            <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
-            <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
-            <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
-            <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
-            <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
-          </g>
-
-          <g id="patryBodyClone">
-            <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
-                  fill="#1A1A1D"/>
-            <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
-            <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-            <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-            <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
-            <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
-            <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
-            <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
-            <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
-            <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
-          </g>
         </g>
       </g>
 
@@ -667,12 +599,9 @@
         .blink{ animation: blink 0.38s steps(2,end) infinite; }
         #glitchA{ animation-duration: 0.65s; transform: translate(2px, -1px); opacity:.65; }
         #glitchB{ animation-duration: 0.65s; animation-delay: 0.12s; transform: translate(-2px, 1px); opacity:.55; }
-        .floaty{ animation: floaty 2.2s ease-in-out infinite; }
         .pulse{ animation: pulse 1.25s ease-in-out infinite; transform-origin: 500px 457px; }
         .clickable{ cursor:pointer; pointer-events: all; }
         #startButton:hover rect{ filter: brightness(1.14); }
-        @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-        @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
         @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.03) } }
       </style>
     </svg>
@@ -681,15 +610,15 @@
     <div class="ui">
       <div class="topbar">
         <div class="pill">🎮 <span>5 YEARS</span> <small id="levelLbl">— CHASE</small></div>
-        <div class="pill">Obiettivo: <span style="color:var(--aqua); font-weight:900;">raggiungi Patry</span></div>
+        <div class="pill">Obiettivo: <span style="color:var(--aqua); font-weight:1000;">raggiungi Patry</span></div>
       </div>
 
       <div id="toast" class="toast"></div>
 
       <div class="titleCard">
         <div class="left">
-          <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso • Schiva baguette e metro!</div>
-          <div class="hint" style="opacity:.9">Poi: <b>quiz a tempo</b> (10s per domanda) → premio finale 🎁</div>
+          <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso</div>
+          <div class="hint" style="opacity:.9">Schiva baguette e vecchi fumatori • Attraversa la <b>metro</b> quando c’è un passaggio aperto</div>
         </div>
         <div class="btnRow">
           <button id="startBtn" type="button">START</button>
@@ -709,7 +638,14 @@
           <div class="pad padGhost"></div>
           <div class="pad padGhost"></div>
         </div>
-        <div class="sideHint">Suggerimento: la <b>metro</b> alterna chiuso/aperto. Aspetta l’apertura per passare.</div>
+        <div class="sideHint"><b>TIP:</b> i passaggi della metro si aprono/chiudono a turni. Aspetta e passa!</div>
+      </div>
+
+      <div id="centerOverlay">
+        <div id="centerText" class="centerText">
+          <div id="centerBig" class="big blink90">TRY AGAIN</div>
+          <div id="centerSub" class="sub">Clicca per ricominciare</div>
+        </div>
       </div>
 
       <div id="quiz">
@@ -740,19 +676,16 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // --- Responsive camera (fit viewBox) ---
+  // Responsive camera (fit viewBox)
   function fitViewBox(){
     if(!svg) return;
-
     const baseW = 1000, baseH = 600;
     const baseAR = baseW / baseH;
-
     const vw = (window.visualViewport && window.visualViewport.width)  ? window.visualViewport.width  : window.innerWidth;
     const vh = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
     const screenAR = vw / vh;
 
     let vbX = 0, vbY = 0, vbW = baseW, vbH = baseH;
-
     if(screenAR < baseAR){
       vbH = baseW / screenAR;
       vbY = (baseH - vbH) / 2;
@@ -769,7 +702,7 @@
     window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   }
 
-  // ---- DOM ----
+  // DOM
   const stars = document.getElementById('stars');
   const giftStars = document.getElementById('giftStars');
 
@@ -781,12 +714,17 @@
   const river1 = document.getElementById('river1');
   const river2 = document.getElementById('river2');
   const wallsG = document.getElementById('walls');
-  const beggarsG = document.getElementById('beggars');
+  const oldsG = document.getElementById('olds');
   const baguettesG = document.getElementById('baguettes');
 
   const metroGate = document.getElementById('metroGate');
-  const metroBody = document.getElementById('metroBody');
   const metroHint = document.getElementById('metroHint');
+  const metroDoorsEls = [
+    document.getElementById('metroDoor0'),
+    document.getElementById('metroDoor1'),
+    document.getElementById('metroDoor2'),
+    document.getElementById('metroDoor3'),
+  ];
 
   const ettore = document.getElementById('ettore');
   const patry = document.getElementById('patry');
@@ -794,10 +732,14 @@
 
   const pressStart = document.getElementById('pressStart');
   const startButton = document.getElementById('startButton');
-
   const toast = document.getElementById('toast');
   const startBtn = document.getElementById('startBtn');
   const muteBtn = document.getElementById('muteBtn');
+
+  // Center overlay
+  const centerOverlay = document.getElementById('centerOverlay');
+  const centerBig = document.getElementById('centerBig');
+  const centerSub = document.getElementById('centerSub');
 
   // Quiz UI
   const qtitle = document.getElementById('qtitle');
@@ -810,16 +752,6 @@
   const retryMsg = document.getElementById('retryMsg');
   const retryBtn = document.getElementById('retryBtn');
 
-  // Gift
-  const giftBox = document.getElementById('giftBox');
-  const giftLid = document.getElementById('giftLid');
-  const parchment = document.getElementById('parchment');
-  const kissScene = document.getElementById('kissScene');
-  const ettoreK = document.getElementById('ettoreK');
-  const patryK = document.getElementById('patryK');
-  const bigHeart = document.getElementById('bigHeart');
-  const tbc = document.getElementById('tbc');
-
   const qbg = [
     document.getElementById('qbg0'),
     document.getElementById('qbg1'),
@@ -828,7 +760,7 @@
     document.getElementById('qbg4'),
   ];
 
-  // ---- Helpers ----
+  // Helpers
   const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
   const rand = (a,b) => a + Math.random()*(b-a);
   const pick = (arr) => arr[(Math.random()*arr.length)|0];
@@ -836,11 +768,13 @@
 
   function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
   function setTransform(el, x, y){ el.setAttribute('transform', `translate(${x} ${y})`); }
+  function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
+
   function rectsOverlap(a,b){
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
-  // ---- Audio ----
+  // Audio
   let audioOn = true;
   let audioCtx = null;
   function beep(freq=440, dur=0.08, type='sine', gain=0.03){
@@ -857,8 +791,13 @@
       o.stop(audioCtx.currentTime + dur);
     }catch(_){}
   }
+  function ensureAudioContext(){
+    if(audioOn && !audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(_){}
+    }
+  }
 
-  // ---- Toast ----
+  // Toast
   let toastTimer = 0;
   function showToast(msg, ms=1400){
     toast.textContent = msg;
@@ -866,7 +805,7 @@
     toastTimer = ms;
   }
 
-  // ---- State ----
+  // State
   const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
   let state = State.TITLE;
 
@@ -886,8 +825,9 @@
     }
   }
 
-  // ---- Stars ----
+  // Stars
   function buildStars(group, count){
+    if(!group) return;
     group.innerHTML = '';
     for(let i=0;i<count;i++){
       const cx = rand(0, 1000), cy = rand(0, 420);
@@ -904,22 +844,35 @@
   buildStars(stars, 110);
   buildStars(giftStars, 140);
 
-  // ---- World ----
-  // FIX 2: velocità aumentata
-  const player = { x: 80, y: 320, w: 120, h: 220, speed: 520 };
-  const girl   = { x: 820, y: 300, w: 220, h: 220 };
+  // -------------------------------
+  // CHASE GAME (smaller characters)
+  // -------------------------------
+  const SCALE_E = 0.55;  // Ettore smaller
+  const SCALE_P = 0.55;  // Patry smaller
+
+  // collision boxes tuned for scaled drawings
+  const player = { x: 90, y: 470, w: 72, h: 128, speed: 560 };
+  const girl   = { x: 860, y: 70,  w: 125, h: 125 };
 
   let obstacles = [];
-  let beggars = [];
+  let walls = [];
+  let olds = [];
   let baguettes = [];
-  let metro = { x: 460, y: 255, w: 180, h: 54, t: 0, open: false, phase: 0 };
+
+  // Metro: barrier with 4 alternating doors (more passages)
+  let metro = {
+    x: 120, y: 285, w: 760, h: 64,
+    doorX: [70, 240, 410, 580], doorW: 120,
+    t: 0,
+    open: [false,false,false,false],
+  };
 
   function roundRectPath(x,y,w,h,r){
     r = Math.min(r, w/2, h/2);
     return `M ${x+r} ${y} H ${x+w-r} Q ${x+w} ${y} ${x+w} ${y+r} V ${y+h-r} Q ${x+w} ${y+h} ${x+w-r} ${y+h} H ${x+r} Q ${x} ${y+h} ${x} ${y+h-r} V ${y+r} Q ${x} ${y} ${x+r} ${y} Z`;
   }
 
-  function drawWalls(walls){
+  function drawWalls(){
     wallsG.innerHTML='';
     for(const w of walls){
       const g = document.createElementNS("http://www.w3.org/2000/svg","g");
@@ -927,30 +880,51 @@
       const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
       r.setAttribute('width', w.w);
       r.setAttribute('height', w.h);
-      r.setAttribute('rx', 18);
+      r.setAttribute('rx', 22);
       r.setAttribute('fill', 'rgba(255,255,255,.07)');
-      r.setAttribute('stroke', 'rgba(255,255,255,.14)');
+      r.setAttribute('stroke', 'rgba(255,255,255,.16)');
       r.setAttribute('stroke-width', '2');
       g.appendChild(r);
       wallsG.appendChild(g);
     }
   }
 
-  function drawBeggars(){
-    beggarsG.innerHTML='';
-    for(const b of beggars){
-      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-      g.setAttribute('id', b.id);
-      g.setAttribute('filter','url(#softShadow)');
-      g.innerHTML = `
-        <rect x="0" y="0" width="${b.w}" height="${b.h}" rx="22"
+  function oldManSVG(){
+    // "vecchio con vestiti strappati e sigaretta"
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute('filter','url(#softShadow)');
+    g.innerHTML = `
+      <g>
+        <rect x="18" y="20" width="56" height="54" rx="18" fill="#EBC6A1"/>
+        <path d="M18 44 C 22 16 74 16 74 44" fill="#B9B9B9"/>
+        <circle cx="32" cy="44" r="3" fill="#111"/>
+        <circle cx="60" cy="44" r="3" fill="#111"/>
+        <path d="M36 58 C 44 64 54 64 62 58" stroke="#6B3B2A" stroke-width="6" stroke-linecap="round"/>
+        <!-- clothes -->
+        <path d="M10 74 C 10 60 82 60 82 74 L82 118 C 82 130 74 140 60 140 L32 140 C 18 140 10 130 10 118 Z"
               fill="rgba(255,209,102,.18)" stroke="rgba(255,209,102,.35)" stroke-width="2"/>
-        <circle cx="${b.w/2}" cy="${b.h/2-6}" r="18" fill="rgba(255,255,255,.12)"/>
-        <text x="${b.w/2}" y="${b.h/2+10}" text-anchor="middle" font-size="18"
-              font-weight="900" fill="rgba(255,255,255,.75)">€?</text>
-      `;
-      setTransform(g, b.x, b.y);
-      beggarsG.appendChild(g);
+        <path d="M18 104 L30 90 L38 110 L48 92 L58 112 L68 96 L76 112"
+              stroke="rgba(0,0,0,.22)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <!-- arm + cigarette -->
+        <path d="M6 88 C -2 98 2 116 12 126" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
+        <path d="M80 90 C 92 92 98 104 94 116 C 92 124 86 130 78 134" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
+        <rect x="92" y="100" width="18" height="5" rx="2.5" fill="#F2F2F2"/>
+        <rect x="108" y="100" width="5" height="5" rx="2.5" fill="#FF4D6D"/>
+        <path d="M110 92 C 116 86 120 78 116 70" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </g>
+    `;
+    return g;
+  }
+
+  function drawOlds(){
+    oldsG.innerHTML='';
+    for(const o of olds){
+      const el = oldManSVG();
+      el.setAttribute('id', o.id);
+      oldsG.appendChild(el);
+      o.el = el;
+      // old men slightly bigger than Ettore
+      setTransformScale(o.el, o.x, o.y, 0.62);
     }
   }
 
@@ -967,66 +941,78 @@
   }
 
   function buildLevel(){
-    player.x = 90; player.y = 320;
-    girl.x = 820; girl.y = 300;
+    // Smaller characters
+    player.x = 110; player.y = 490;
+    girl.x = 860; girl.y = 75;
 
-    obstacles = [];
-    beggars = [];
     baguettes = [];
     baguettesG.innerHTML = '';
 
-    const riverH = 62;
+    // Bigger obstacles relative to characters
+    obstacles = [];
+    walls = [];
 
-    const gapW1 = 160;
-    const gapX1 = 520;
-    const r1a = {type:'river', x: 230, y: 150, w: (gapX1-230-gapW1*0.15), h: riverH};
-    const r1b = {type:'river', x: (gapX1+gapW1*0.85), y: 150, w: (850-(gapX1+gapW1*0.85)), h: riverH};
+    // Rivers: thicker + wider
+    const rH = 92;
+    const r1 = {x: 80, y: 150, w: 840, h: rH, gapX: 470, gapW: 170};
+    const r2 = {x: 80, y: 425, w: 840, h: rH, gapX: 300, gapW: 210};
 
-    const gapW2 = 190;
-    const gapX2 = 400;
-    const r2a = {type:'river', x: 180, y: 400, w: (gapX2-180-gapW2*0.10), h: riverH};
-    const r2b = {type:'river', x: (gapX2+gapW2*0.90), y: 400, w: (880-(gapX2+gapW2*0.90)), h: riverH};
+    const r1a = {type:'river', x:r1.x, y:r1.y, w:(r1.gapX - r1.x), h:r1.h};
+    const r1b = {type:'river', x:(r1.gapX + r1.gapW), y:r1.y, w:(r1.x + r1.w - (r1.gapX + r1.gapW)), h:r1.h};
+    const r2a = {type:'river', x:r2.x, y:r2.y, w:(r2.gapX - r2.x), h:r2.h};
+    const r2b = {type:'river', x:(r2.gapX + r2.gapW), y:r2.y, w:(r2.x + r2.w - (r2.gapX + r2.gapW)), h:r2.h};
 
     obstacles.push(r1a,r1b,r2a,r2b);
+    river1.setAttribute('d', roundRectPath(r1a.x, r1a.y, r1a.w, r1a.h, 26) + ' ' + roundRectPath(r1b.x, r1b.y, r1b.w, r1b.h, 26));
+    river2.setAttribute('d', roundRectPath(r2a.x, r2a.y, r2a.w, r2a.h, 26) + ' ' + roundRectPath(r2b.x, r2b.y, r2b.w, r2b.h, 26));
 
-    river1.setAttribute('d', roundRectPath(r1a.x, r1a.y, r1a.w, r1a.h, 22) + ' ' + roundRectPath(r1b.x, r1b.y, r1b.w, r1b.h, 22));
-    river2.setAttribute('d', roundRectPath(r2a.x, r2a.y, r2a.w, r2a.h, 22) + ' ' + roundRectPath(r2b.x, r2b.y, r2b.w, r2b.h, 22));
-
-    const walls = [
-      {type:'wall', x: 110, y: 245, w: 90, h: 120},
-      {type:'wall', x: 220, y: 500, w: 160, h: 60},
-      {type:'wall', x: 710, y: 500, w: 190, h: 60},
+    // Bigger walls to form corridors
+    walls = [
+      {type:'wall', x: 40,  y: 260, w: 120, h: 140},
+      {type:'wall', x: 180, y: 540, w: 260, h: 50},
+      {type:'wall', x: 620, y: 540, w: 340, h: 50},
+      {type:'wall', x: 650, y: 60,  w: 140, h: 110},
+      {type:'wall', x: 820, y: 210, w: 140, h: 60},
     ];
     obstacles.push(...walls);
-    drawWalls(walls);
+    drawWalls();
 
-    metro.x = 460; metro.y = 255; metro.t=0; metro.open=false; metro.phase=0;
+    // Metro placement
+    metro.t = 0;
+    metro.open = [false,false,false,false];
     setTransform(metroGate, metro.x, metro.y);
 
-    for(let i=0;i<3;i++){
-      beggars.push({
-        id: 'b'+i,
-        x: rand(300, 720),
-        y: rand(220, 460),
-        w: 84, h: 84,
-        vx: rand(-45,45),
-        vy: rand(-35,35),
-        t: rand(0,1)
+    // Old smokers spawn
+    olds = [];
+    const spawn = [
+      {x: 260, y: 310},
+      {x: 520, y: 520},
+      {x: 780, y: 360},
+      {x: 420, y: 120},
+    ];
+    for(let i=0;i<spawn.length;i++){
+      olds.push({
+        id: 'old'+i,
+        x: spawn[i].x,
+        y: spawn[i].y,
+        w: 68, h: 110, // collision box for scaled old man
+        speed: rand(70, 92),
+        wob: rand(0, 10),
+        el: null,
       });
     }
-    drawBeggars();
+    drawOlds();
 
-    setTransform(ettore, player.x, player.y);
-    setTransform(patry, girl.x, girl.y);
+    // Position characters (scaled in render)
+    setTransformScale(ettore, player.x, player.y, SCALE_E);
+    setTransformScale(patry, girl.x, girl.y, SCALE_P);
   }
 
-  // ---- Input ----
+  // Input
   const keys = {up:false,down:false,left:false,right:false};
-
-  // FIX 2: preveniamo scroll su frecce/spazio e rendiamo input più affidabile
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()) || ['arrowup','arrowdown','arrowleft','arrowright'].includes(k)){
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
       e.preventDefault();
     }
     if(k==='arrowup' || k==='w') keys.up=true;
@@ -1034,7 +1020,6 @@
     if(k==='arrowleft'|| k==='a') keys.left=true;
     if(k==='arrowright'|| k==='d') keys.right=true;
   }, {passive:false});
-
   window.addEventListener('keyup', (e)=>{
     const k = e.key.toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
@@ -1061,13 +1046,169 @@
     keys.right = activeDirs.has('right');
   }
 
-  // ---- Quiz ----
+  // Center overlay control
+  let overlayMode = 'none'; // none | try | win
+  let winTimer = 0;
+
+  function showTryAgain(){
+    overlayMode = 'try';
+    centerBig.textContent = 'TRY AGAIN';
+    centerSub.textContent = 'Clicca per ricominciare';
+    centerOverlay.classList.add('show');
+    beep(160, .12, 'square', .06);
+  }
+  function showFinallyTogether(){
+    overlayMode = 'win';
+    centerBig.textContent = 'FINALLY TOGETHER!';
+    centerSub.textContent = '…e ora il quiz!';
+    centerOverlay.classList.add('show');
+    beep(880, .09, 'triangle', .05);
+    winTimer = 0.95; // seconds
+  }
+  function hideOverlay(){
+    overlayMode = 'none';
+    centerOverlay.classList.remove('show');
+  }
+
+  centerOverlay.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(overlayMode === 'try'){
+      restartChase();
+    }
+  });
+
+  window.addEventListener('keydown', (e)=>{
+    if(overlayMode === 'try' && (e.key === 'Enter' || e.key === ' ')){
+      e.preventDefault();
+      restartChase();
+    }
+  }, {passive:false});
+
+  // Metro logic: compute openings and collision blocks
+  function updateMetro(dt){
+    metro.t += dt;
+
+    // Faster cycle + offsets so "more passages" open/close
+    const cycle = 1.55;     // total cycle seconds
+    const openFor = 0.85;   // seconds open
+    const offsets = [0.00, 0.28, 0.56, 0.84];
+
+    let openCount = 0;
+    for(let i=0;i<4;i++){
+      const ph = (metro.t + offsets[i]) % cycle;
+      metro.open[i] = ph < openFor;
+      if(metro.open[i]) openCount++;
+    }
+
+    // Ensure at least one open (just in case)
+    if(openCount === 0) metro.open[0] = true;
+
+    // Visual doors: open -> faint, closed -> solid
+    for(let i=0;i<4;i++){
+      const el = metroDoorsEls[i];
+      if(!el) continue;
+      if(metro.open[i]){
+        el.setAttribute('opacity', '0.22');
+        el.setAttribute('fill', 'rgba(70,255,210,.18)');
+      }else{
+        el.setAttribute('opacity', '1');
+        el.setAttribute('fill', 'rgba(240,242,255,.10)');
+      }
+    }
+    metroHint.textContent = `PASSAGGI APERTI: ${openCount}/4`;
+    metroHint.setAttribute('fill', openCount >= 2 ? 'rgba(70,255,210,.85)' : 'rgba(255,255,255,.75)');
+  }
+
+  function metroBlocks(){
+    // Create blocking segments for the metro bar excluding OPEN doors
+    const opens = [];
+    for(let i=0;i<4;i++){
+      if(metro.open[i]){
+        opens.push([metro.x + metro.doorX[i], metro.x + metro.doorX[i] + metro.doorW]);
+      }
+    }
+    opens.sort((a,b)=>a[0]-b[0]);
+
+    const blocks = [];
+    let cur = metro.x;
+    const end = metro.x + metro.w;
+
+    for(const r of opens){
+      const a = clamp(r[0], metro.x, end);
+      const b = clamp(r[1], metro.x, end);
+      if(a > cur) blocks.push({x:cur, y:metro.y, w:(a-cur), h:metro.h});
+      cur = Math.max(cur, b);
+    }
+    if(cur < end) blocks.push({x:cur, y:metro.y, w:(end-cur), h:metro.h});
+    return blocks;
+  }
+
+  // Movement + collisions
+  function moveWithCollisions(ent, dx, dy, blocks){
+    ent.x += dx;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dx>0) ent.x = b.x - ent.w;
+        else if(dx<0) ent.x = b.x + b.w;
+      }
+    }
+    ent.y += dy;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dy>0) ent.y = b.y - ent.h;
+        else if(dy<0) ent.y = b.y + b.h;
+      }
+    }
+  }
+
+  // Game flow
+  function restartChase(){
+    hideOverlay();
+    buildLevel();
+    setState(State.CHASE);
+    showToast("GO! Raggiungi Patry ✨", 1200);
+  }
+
+  function enterChase(){
+    buildLevel();
+    hideOverlay();
+    setState(State.CHASE);
+    showToast("Vai Ettore! Schiva baguette e vecchi fumatori!", 1600);
+    beep(520, .07, 'triangle', .03);
+  }
+
+  function startFromTitle(){
+    if(state !== State.TITLE) return;
+    ensureAudioContext();
+    enterChase();
+  }
+
+  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
+  pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
+  startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
+  window.addEventListener('keydown', (e)=>{
+    if(state !== State.TITLE) return;
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      startFromTitle();
+    }
+  }, {passive:false});
+
+  muteBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    audioOn = !audioOn;
+    muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
+    beep(audioOn ? 600 : 200, .06, 'triangle', .03);
+  });
+
+  // -------------------------------
+  // QUIZ
+  // -------------------------------
   const wrongMessages = [
     "❌ NOPE. Per farti perdonare: offrire il sushi. Ora ritenta il quiz!",
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
     "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
   ];
-
   const questions = [
     { bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
     { bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
@@ -1087,7 +1228,12 @@
   function showQuizBg(i){
     qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0'));
   }
-
+  function updateQuizMeter(){
+    tleftEl.textContent = Math.ceil(qTime).toString();
+    const ratio = clamp(qTime/10, 0, 1);
+    tfillEl.style.transform = `scaleX(${ratio})`;
+    tleftEl.classList.toggle('danger', qTime <= 3.2);
+  }
   function setupQuestion(){
     const item = questions[qIndex];
     qtitle.textContent = "QUIZ A TEMPO — 10s";
@@ -1108,21 +1254,12 @@
     updateQuizMeter();
     showQuizBg(item.bg);
   }
-
-  function updateQuizMeter(){
-    tleftEl.textContent = Math.ceil(qTime).toString();
-    const ratio = clamp(qTime/10, 0, 1);
-    tfillEl.style.transform = `scaleX(${ratio})`;
-    tleftEl.classList.toggle('danger', qTime <= 3.2);
-  }
-
   function failQuiz(){
     qRunning = false;
     retryMsg.textContent = pick(wrongMessages);
     retryBox.style.display = 'block';
     beep(180, .14, 'square', .05);
   }
-
   function answer(idx){
     if(!qRunning) return;
     const item = questions[qIndex];
@@ -1131,7 +1268,9 @@
       qIndex++;
       if(qIndex >= questions.length){
         qRunning = false;
-        enterGift();
+        // qui prosegue al regalo (già presente)
+        setState(State.GIFT);
+        showToast("Hai completato il quiz! 🎁", 1400);
       }else{
         setupQuestion();
       }
@@ -1139,7 +1278,6 @@
       failQuiz();
     }
   }
-
   retryBtn.addEventListener('click', ()=>{
     qIndex = 0;
     retryBox.style.display = 'none';
@@ -1158,154 +1296,103 @@
     beep(660, .08, 'triangle', .03);
   }
 
-  // ---- Gift ----
-  let giftOpened = false;
-  let kissT = 0;
-
-  function enterGift(){
-    setState(State.GIFT);
-    giftOpened = false;
-    kissT = 0;
-
-    parchment.setAttribute('opacity','0');
-    kissScene.setAttribute('opacity','0');
-    bigHeart.setAttribute('opacity','0');
-    tbc.setAttribute('opacity','0');
-
-    giftLid.setAttribute('transform','translate(0 0) rotate(0 80 20)');
-    showToast("Hai vinto! Clicca/tocca il pacco regalo 🎁", 1600);
-    beep(740, .08, 'triangle', .04);
-  }
-
-  giftBox.addEventListener('pointerdown', (e)=>{
-    if(state !== State.GIFT) return;
-    e.preventDefault();
-    if(!giftOpened){
-      giftOpened = true;
-      giftLid.setAttribute('transform','translate(18 -20) rotate(-22 80 20)');
-      parchment.setAttribute('opacity','1');
-      kissScene.setAttribute('opacity','1');
-      beep(980, .10, 'triangle', .04);
-      showToast("✨ Certificato sbloccato!", 1400);
-    }
-  }, {passive:false});
-
-  // ---- Chase ----
-  let baguetteSpawn = 0;
-
-  function moveWithCollisions(ent, dx, dy, blocks){
-    ent.x += dx;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dx>0) ent.x = b.x - ent.w;
-        else if(dx<0) ent.x = b.x + b.w;
-      }
-    }
-    ent.y += dy;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dy>0) ent.y = b.y - ent.h;
-        else if(dy<0) ent.y = b.y + b.h;
-      }
-    }
-  }
-
-  function resetChase(){
-    buildLevel();
-    showToast("💥 Colpito da baguette! Respawn…", 1400);
-    beep(160, .12, 'square', .05);
-  }
-
-  function enterChase(){
-    buildLevel();
-    setState(State.CHASE);
-    showToast("Vai Ettore! Raggiungi Patry (schiva baguette e metro)!", 1600);
-    beep(520, .07, 'triangle', .03);
-  }
-
-  // ---- Start / Mute ----
-  function ensureAudioContext(){
-    if(audioOn && !audioCtx){
-      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(_){}
-    }
-  }
-
-  function startFromTitle(){
-    if(state !== State.TITLE) return;
-    ensureAudioContext();
-    enterChase();
-  }
-
-  // FIX 1: bottoni sicuramente cliccabili
-  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
-  pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
-  startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
-
-  window.addEventListener('keydown', (e)=>{
-    if(state !== State.TITLE) return;
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      startFromTitle();
-    }
-  }, {passive:false});
-
-  muteBtn.addEventListener('click', (e)=>{
-    e.preventDefault();
-    audioOn = !audioOn;
-    muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
-    beep(audioOn ? 600 : 200, .06, 'triangle', .03);
-  });
-
-  // ---- Loop ----
+  // -------------------------------
+  // Main loop
+  // -------------------------------
   let t = 0;
   let last = now();
+  let baguetteSpawn = 0;
 
   function update(dt){
+    // Toast lifetime
     if(toastTimer > 0){
       toastTimer -= dt*1000;
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
+    // Parallax
     const drift = Math.sin(t*0.0002)*6;
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
+    // Overlay win timer -> then quiz
+    if(overlayMode === 'win'){
+      winTimer -= dt;
+      if(winTimer <= 0){
+        hideOverlay();
+        enterQuiz();
+      }
+    }
+
     if(state === State.CHASE){
-      metro.t += dt;
-      const cycle = 2.8;
-      const ph = metro.t % cycle;
-      metro.open = ph > 1.6;
+      // Metro
+      updateMetro(dt);
+      const mBlocks = metroBlocks();
 
-      const wob = Math.sin(ph*5.2)*2.5;
-      metroBody.setAttribute('transform', `translate(0 ${wob})`);
-      metroHint.textContent = metro.open ? "APERTA!" : "PASSAGGIO";
-      metroHint.setAttribute('fill', metro.open ? 'rgba(70,255,210,.85)' : 'rgba(255,255,255,.75)');
-      metroGate.setAttribute('opacity', metro.open ? '0.38' : '1');
+      // Build blocks for player collisions: static obstacles + metro blocks
+      const blocks = [];
+      for(const o of obstacles) blocks.push(o);
+      for(const b of mBlocks) blocks.push(b);
 
-      for(const b of beggars){
-        b.t += dt;
-        if(b.t > 1.4){
-          b.t = 0;
-          b.vx = rand(-55,55);
-          b.vy = rand(-45,45);
+      // Player input
+      let dx=0, dy=0;
+      const sp = player.speed;
+      if(keys.left) dx -= sp*dt;
+      if(keys.right) dx += sp*dt;
+      if(keys.up) dy -= sp*dt;
+      if(keys.down) dy += sp*dt;
+      if(dx && dy){ dx*=0.7071; dy*=0.7071; }
+
+      // Move player with collisions
+      moveWithCollisions(player, dx, dy, blocks);
+      player.x = clamp(player.x, 10, 930);
+      player.y = clamp(player.y, 40, 520);
+
+      // Old smokers chase Ettore (they do not collide with walls to keep them aggressive)
+      const pCx = player.x + player.w/2;
+      const pCy = player.y + player.h/2;
+
+      for(const o of olds){
+        o.wob += dt * 3.4;
+        const oCx = o.x + o.w/2;
+        const oCy = o.y + o.h/2;
+        let vx = (pCx - oCx);
+        let vy = (pCy - oCy);
+        const len = Math.hypot(vx,vy) || 1;
+        vx /= len; vy /= len;
+
+        // little wobble so they feel "alive"
+        vx += Math.sin(o.wob)*0.12;
+        vy += Math.cos(o.wob*1.1)*0.10;
+
+        const step = o.speed * dt;
+        o.x += vx * step;
+        o.y += vy * step;
+
+        // keep in bounds
+        o.x = clamp(o.x, 10, 930);
+        o.y = clamp(o.y, 60, 520);
+
+        // render
+        if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
+
+        // collision with player -> TRY AGAIN
+        if(rectsOverlap(player, o)){
+          showTryAgain();
+          return;
         }
-        b.x += b.vx*dt;
-        b.y += b.vy*dt;
-        if(b.x < 240 || b.x > 760) b.vx *= -1;
-        if(b.y < 200 || b.y > 500) b.vy *= -1;
-        const el = document.getElementById(b.id);
-        if(el) setTransform(el, b.x, b.y);
       }
 
+      // Spawn baguettes
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
-        baguetteSpawn = rand(0.9, 1.35);
+        baguetteSpawn = rand(0.75, 1.15);
         const obj = {
           x: 1040,
-          y: rand(120, 520),
+          y: rand(90, 530),
           w: 90,
           h: 26,
-          vx: rand(-520, -380),
+          vx: rand(-620, -460),
           vy: rand(-30, 30),
           wob: rand(0, 10),
           el: makeBaguette()
@@ -1325,41 +1412,33 @@
         return true;
       });
 
-      const blocks = [];
-      for(const o of obstacles) blocks.push(o);
-      for(const b of beggars) blocks.push(b);
-      if(!metro.open) blocks.push({x:metro.x, y:metro.y, w:metro.w, h:metro.h});
+      // Hit by baguette -> TRY AGAIN
+      for(const bq of baguettes){
+        const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
+        if(rectsOverlap(player, bBox)){
+          showTryAgain();
+          return;
+        }
+      }
 
-      let dx=0, dy=0;
-      const sp = player.speed;
-      if(keys.left) dx -= sp*dt;
-      if(keys.right) dx += sp*dt;
-      if(keys.up) dy -= sp*dt;
-      if(keys.down) dy += sp*dt;
-      if(dx && dy){ dx*=0.7071; dy*=0.7071; }
+      // Render characters (scaled)
+      setTransformScale(ettore, player.x, player.y, SCALE_E);
+      setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      moveWithCollisions(player, dx, dy, blocks);
-      player.x = clamp(player.x, 10, 900);
-      player.y = clamp(player.y, 70, 520);
-
-      setTransform(ettore, player.x, player.y);
-      setTransform(patry, girl.x, girl.y);
-
-      const px = player.x + 60, py = player.y + 110;
-      const gx = girl.x + 110, gy = girl.y + 110;
+      // Target line (optional)
+      const px = player.x + player.w/2, py = player.y + player.h/2;
+      const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
       targetLine.setAttribute('y1', py);
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      const pBox = {x:player.x, y:player.y, w:player.w, h:player.h};
-      for(const bq of baguettes){
-        const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
-        if(rectsOverlap(pBox, bBox)){ resetChase(); return; }
-      }
-
+      // Win condition: reach Patry -> show FINALLY TOGETHER -> quiz
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
-      if(rectsOverlap(pBox, gBox)){ showToast("🎉 Presa! Ora quiz a tempo!", 1200); enterQuiz(); return; }
+      if(rectsOverlap(player, gBox)){
+        showFinallyTogether();
+        return;
+      }
     }
 
     if(state === State.QUIZ){
@@ -1369,30 +1448,15 @@
           qTime = 0;
           updateQuizMeter();
           failQuiz();
-        }else updateQuizMeter();
-      }
-    }
-
-    if(state === State.GIFT){
-      if(giftOpened){
-        kissT += dt;
-        const k = clamp(kissT/1.6, 0, 1);
-        const ex = 200 + k*180;
-        const px = 740 - k*180;
-        ettoreK.setAttribute('transform', `translate(${ex} 455) scale(0.9)`);
-        patryK.setAttribute('transform', `translate(${px} 455) scale(0.9)`);
-
-        const h = clamp((kissT-0.8)/0.7, 0, 1);
-        bigHeart.setAttribute('opacity', String(h));
-        bigHeart.setAttribute('transform', `translate(500 500) scale(${2.2 + h*1.2})`);
-        if(h >= 1) tbc.setAttribute('opacity', '1');
+        }else{
+          updateQuizMeter();
+        }
       }
     }
   }
 
   function frame(){
     const n = now();
-    // FIX 2: dt cap più alto (prima rallentava a fps bassi)
     const dt = Math.min(0.06, (n-last)/1000);
     last = n;
     t = n;
@@ -1400,6 +1464,7 @@
     requestAnimationFrame(frame);
   }
 
+  // Init
   setState(State.TITLE);
   requestAnimationFrame(frame);
 })();
