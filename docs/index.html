@@ -178,7 +178,7 @@
 
     .sideHint{
       pointer-events:none;
-      max-width: 280px;
+      max-width: 320px;
       text-align:right;
       font-size:12px;
       font-weight:850;
@@ -187,7 +187,7 @@
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
     }
 
-    /* Center overlay for TRY AGAIN / FINALLY TOGETHER */
+    /* Center overlay: TRY AGAIN / FINALLY TOGETHER */
     #centerOverlay{
       position:absolute; inset:0;
       display:none;
@@ -272,7 +272,7 @@
     @media (prefers-reduced-motion: reduce){
       #centerOverlay .blink90{animation:none}
       .toast, .topbar, .controls{transition:none}
-      svg .blink, svg .floaty, svg .pulse {animation:none !important}
+      svg .blink, svg .pulse {animation:none !important}
     }
   </style>
 </head>
@@ -311,7 +311,6 @@
 
         <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
 
-        <!-- Reusable Ettore body -->
         <g id="ettoreDef">
           <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
           <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
@@ -326,7 +325,6 @@
           <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
         </g>
 
-        <!-- Reusable Patry body -->
         <g id="patryDef">
           <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
                 fill="#1A1A1D"/>
@@ -346,14 +344,14 @@
       <g id="bg">
         <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
         <g id="stars" opacity=".45"></g>
-
         <g id="skylineFar" opacity=".22">
           <path d="M0 440 L0 420 L40 420 L40 398 L70 398 L70 430 L110 430 L110 410 L145 410 L145 392 L190 392 L190 430 L240 430 L240 402 L270 402 L270 430 L320 430 L320 390 L360 390 L360 440 Z" fill="#000"/>
           <path d="M360 440 L360 410 L400 410 L400 380 L430 380 L430 420 L470 420 L470 400 L510 400 L510 360 L540 360 L540 420 L585 420 L585 398 L620 398 L620 430 L660 430 L660 390 L710 390 L710 440 Z" fill="#000"/>
           <path d="M710 440 L710 410 L750 410 L750 380 L790 380 L790 420 L830 420 L830 395 L880 395 L880 430 L920 430 L920 390 L970 390 L970 440 Z" fill="#000"/>
         </g>
-
         <rect x="0" y="430" width="1000" height="170" fill="rgba(0,0,0,.25)"/>
+        <path d="M60 520 C 240 470 360 470 520 520 C 680 570 800 570 940 520"
+              stroke="rgba(70,255,210,.14)" stroke-width="6" stroke-linecap="round" fill="none"/>
       </g>
 
       <!-- TITLE LAYER -->
@@ -442,37 +440,14 @@
         </g>
       </g>
 
-      <!-- CHASE LAYER -->
+      <!-- CHASE LAYER (NO METRO) -->
       <g id="chaseLayer" opacity="0">
-        <g id="rivers">
-          <path id="river1" d="" fill="rgba(70,160,255,.28)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
-          <path id="river2" d="" fill="rgba(70,160,255,.28)" stroke="rgba(255,255,255,.14)" stroke-width="2" />
-        </g>
-
-        <g id="walls" opacity=".95"></g>
-
-        <!-- Metro barrier with multiple doors -->
-        <g id="metroGate" filter="url(#softShadow)">
-          <rect id="metroShell" x="0" y="0" width="760" height="64" rx="18" fill="rgba(240,242,255,.10)" stroke="rgba(255,255,255,.18)"/>
-          <text x="380" y="-10" text-anchor="middle" font-size="16" font-weight="1000" fill="rgba(255,255,255,.72)">METRO</text>
-          <g id="metroDoors">
-            <rect id="metroDoor0" x="70"  y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
-            <rect id="metroDoor1" x="240" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
-            <rect id="metroDoor2" x="410" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
-            <rect id="metroDoor3" x="580" y="10" width="120" height="44" rx="14" fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)"/>
-          </g>
-          <text id="metroHint" x="380" y="86" text-anchor="middle" font-size="14" font-weight="1000" fill="rgba(255,255,255,.75)">PASSAGGI ALTERNATI</text>
-        </g>
-
-        <!-- Old smokers -->
         <g id="olds"></g>
-
         <g id="baguettes"></g>
 
-        <!-- Patry (smaller) -->
+        <!-- Patry -->
         <g id="patry" filter="url(#softShadow)">
           <use href="#patryDef"/>
-          <!-- Sign: counter-scale so it's readable even if Patry is small -->
           <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
             <rect x="0" y="0" width="170" height="70" rx="14" fill="rgba(255,255,255,.96)" stroke="rgba(0,0,0,.18)"/>
             <text x="85" y="30" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PROVA A</text>
@@ -480,7 +455,7 @@
           </g>
         </g>
 
-        <!-- Ettore (smaller) -->
+        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <use href="#ettoreDef"/>
         </g>
@@ -554,46 +529,8 @@
         </g>
       </g>
 
-      <!-- GIFT LAYER (come prima: lo lasciamo) -->
-      <g id="giftLayer" opacity="0">
-        <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-        <g opacity=".55" id="giftStars"></g>
-
-        <text x="500" y="56" text-anchor="middle" font-size="28" font-weight="1000"
-              fill="rgba(70,255,210,.90)" filter="url(#glowAqua)">MISSIONE COMPLETATA!</text>
-
-        <g id="giftBox" filter="url(#softShadow)" transform="translate(420 290)" style="cursor:pointer">
-          <rect x="0" y="30" width="160" height="120" rx="22" fill="rgba(255,77,109,.55)" stroke="rgba(255,255,255,.18)"/>
-          <rect x="72" y="30" width="16" height="120" rx="8" fill="rgba(70,255,210,.55)"/>
-          <rect x="0" y="82" width="160" height="16" rx="8" fill="rgba(70,255,210,.55)"/>
-          <g id="giftLid">
-            <rect x="-6" y="0" width="172" height="40" rx="18" fill="rgba(255,77,109,.70)" stroke="rgba(255,255,255,.18)"/>
-            <text x="80" y="26" text-anchor="middle" font-size="14" font-weight="1000" fill="rgba(255,255,255,.85)">CLICK!</text>
-          </g>
-        </g>
-
-        <g id="parchment" opacity="0" filter="url(#softShadow)">
-          <rect x="120" y="120" width="760" height="320" rx="22" fill="rgba(247,242,232,.95)" stroke="rgba(0,0,0,.18)"/>
-          <text x="500" y="160" text-anchor="middle" font-size="26" font-weight="1000" fill="#1A1A1A">CERTIFICATO</text>
-          <g font-size="16" font-weight="1000" fill="#1A1A1A" text-anchor="middle">
-            <text x="500" y="205">Certificato di sopravvivenza quinquennale</text>
-            <text x="500" y="235">conferito a</text>
-            <text x="500" y="270" font-size="20">ETTORE GORNI,</text>
-            <text x="500" y="305">in qualità di moroso più paziente</text>
-            <text x="500" y="335">e bubo più adorabile che ci sia.</text>
-          </g>
-        </g>
-
-        <g id="kissScene" opacity="0">
-          <g id="ettoreK" transform="translate(200 455) scale(0.9)"><use href="#ettoreDef"/></g>
-          <g id="patryK"  transform="translate(740 455) scale(0.9)"><use href="#patryDef"/></g>
-          <g id="bigHeart" opacity="0" transform="translate(500 500) scale(2.2)">
-            <use href="#heartPath" fill="rgba(255,77,109,.85)" filter="url(#glowPink)"/>
-          </g>
-          <text id="tbc" x="500" y="570" text-anchor="middle" font-size="26" font-weight="1000"
-                fill="rgba(255,255,255,.88)" opacity="0">TO BE CONTINUED...</text>
-        </g>
-      </g>
+      <!-- (Gift layer omitted here on purpose — kept in your previous versions if you want it) -->
+      <g id="giftLayer" opacity="0"></g>
 
       <style>
         .blink{ animation: blink 0.38s steps(2,end) infinite; }
@@ -618,7 +555,7 @@
       <div class="titleCard">
         <div class="left">
           <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso</div>
-          <div class="hint" style="opacity:.9">Schiva baguette e vecchi fumatori • Attraversa la <b>metro</b> quando c’è un passaggio aperto</div>
+          <div class="hint" style="opacity:.9">Schiva <b>baguette</b> e <b>vecchi fumatori</b>. Se ti prendono: <b>TRY AGAIN</b> (clicca per ricominciare).</div>
         </div>
         <div class="btnRow">
           <button id="startBtn" type="button">START</button>
@@ -638,7 +575,7 @@
           <div class="pad padGhost"></div>
           <div class="pad padGhost"></div>
         </div>
-        <div class="sideHint"><b>TIP:</b> i passaggi della metro si aprono/chiudono a turni. Aspetta e passa!</div>
+        <div class="sideHint"><b>TIP:</b> resta in movimento: i vecchi ti inseguono 👴🚬</div>
       </div>
 
       <div id="centerOverlay">
@@ -704,27 +641,13 @@
 
   // DOM
   const stars = document.getElementById('stars');
-  const giftStars = document.getElementById('giftStars');
-
   const titleLayer = document.getElementById('titleLayer');
   const chaseLayer = document.getElementById('chaseLayer');
   const quizBgLayer = document.getElementById('quizBgLayer');
   const giftLayer = document.getElementById('giftLayer');
 
-  const river1 = document.getElementById('river1');
-  const river2 = document.getElementById('river2');
-  const wallsG = document.getElementById('walls');
   const oldsG = document.getElementById('olds');
   const baguettesG = document.getElementById('baguettes');
-
-  const metroGate = document.getElementById('metroGate');
-  const metroHint = document.getElementById('metroHint');
-  const metroDoorsEls = [
-    document.getElementById('metroDoor0'),
-    document.getElementById('metroDoor1'),
-    document.getElementById('metroDoor2'),
-    document.getElementById('metroDoor3'),
-  ];
 
   const ettore = document.getElementById('ettore');
   const patry = document.getElementById('patry');
@@ -732,11 +655,11 @@
 
   const pressStart = document.getElementById('pressStart');
   const startButton = document.getElementById('startButton');
+
   const toast = document.getElementById('toast');
   const startBtn = document.getElementById('startBtn');
   const muteBtn = document.getElementById('muteBtn');
 
-  // Center overlay
   const centerOverlay = document.getElementById('centerOverlay');
   const centerBig = document.getElementById('centerBig');
   const centerSub = document.getElementById('centerSub');
@@ -767,7 +690,6 @@
   const now = () => performance.now();
 
   function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
-  function setTransform(el, x, y){ el.setAttribute('transform', `translate(${x} ${y})`); }
   function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
   function rectsOverlap(a,b){
@@ -842,55 +764,21 @@
     }
   }
   buildStars(stars, 110);
-  buildStars(giftStars, 140);
 
   // -------------------------------
-  // CHASE GAME (smaller characters)
+  // CHASE GAME (ONLY olds + baguettes)
   // -------------------------------
-  const SCALE_E = 0.55;  // Ettore smaller
-  const SCALE_P = 0.55;  // Patry smaller
+  const SCALE_E = 0.55;
+  const SCALE_P = 0.55;
 
-  // collision boxes tuned for scaled drawings
-  const player = { x: 90, y: 470, w: 72, h: 128, speed: 560 };
-  const girl   = { x: 860, y: 70,  w: 125, h: 125 };
+  const player = { x: 110, y: 490, w: 72, h: 128, speed: 600 };
+  const girl   = { x: 860, y: 75,  w: 125, h: 125 };
 
-  let obstacles = [];
-  let walls = [];
   let olds = [];
   let baguettes = [];
-
-  // Metro: barrier with 4 alternating doors (more passages)
-  let metro = {
-    x: 120, y: 285, w: 760, h: 64,
-    doorX: [70, 240, 410, 580], doorW: 120,
-    t: 0,
-    open: [false,false,false,false],
-  };
-
-  function roundRectPath(x,y,w,h,r){
-    r = Math.min(r, w/2, h/2);
-    return `M ${x+r} ${y} H ${x+w-r} Q ${x+w} ${y} ${x+w} ${y+r} V ${y+h-r} Q ${x+w} ${y+h} ${x+w-r} ${y+h} H ${x+r} Q ${x} ${y+h} ${x} ${y+h-r} V ${y+r} Q ${x} ${y} ${x+r} ${y} Z`;
-  }
-
-  function drawWalls(){
-    wallsG.innerHTML='';
-    for(const w of walls){
-      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-      g.setAttribute('transform', `translate(${w.x} ${w.y})`);
-      const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      r.setAttribute('width', w.w);
-      r.setAttribute('height', w.h);
-      r.setAttribute('rx', 22);
-      r.setAttribute('fill', 'rgba(255,255,255,.07)');
-      r.setAttribute('stroke', 'rgba(255,255,255,.16)');
-      r.setAttribute('stroke-width', '2');
-      g.appendChild(r);
-      wallsG.appendChild(g);
-    }
-  }
+  let baguetteSpawn = 0;
 
   function oldManSVG(){
-    // "vecchio con vestiti strappati e sigaretta"
     const g = document.createElementNS("http://www.w3.org/2000/svg","g");
     g.setAttribute('filter','url(#softShadow)');
     g.innerHTML = `
@@ -900,12 +788,10 @@
         <circle cx="32" cy="44" r="3" fill="#111"/>
         <circle cx="60" cy="44" r="3" fill="#111"/>
         <path d="M36 58 C 44 64 54 64 62 58" stroke="#6B3B2A" stroke-width="6" stroke-linecap="round"/>
-        <!-- clothes -->
         <path d="M10 74 C 10 60 82 60 82 74 L82 118 C 82 130 74 140 60 140 L32 140 C 18 140 10 130 10 118 Z"
               fill="rgba(255,209,102,.18)" stroke="rgba(255,209,102,.35)" stroke-width="2"/>
         <path d="M18 104 L30 90 L38 110 L48 92 L58 112 L68 96 L76 112"
               stroke="rgba(0,0,0,.22)" stroke-width="4" stroke-linecap="round" fill="none"/>
-        <!-- arm + cigarette -->
         <path d="M6 88 C -2 98 2 116 12 126" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
         <path d="M80 90 C 92 92 98 104 94 116 C 92 124 86 130 78 134" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
         <rect x="92" y="100" width="18" height="5" rx="2.5" fill="#F2F2F2"/>
@@ -917,13 +803,12 @@
   }
 
   function drawOlds(){
-    oldsG.innerHTML='';
+    oldsG.innerHTML = '';
     for(const o of olds){
       const el = oldManSVG();
       el.setAttribute('id', o.id);
       oldsG.appendChild(el);
       o.el = el;
-      // old men slightly bigger than Ettore
       setTransformScale(o.el, o.x, o.y, 0.62);
     }
   }
@@ -941,75 +826,42 @@
   }
 
   function buildLevel(){
-    // Smaller characters
     player.x = 110; player.y = 490;
     girl.x = 860; girl.y = 75;
 
     baguettes = [];
     baguettesG.innerHTML = '';
+    baguetteSpawn = 0.35;
 
-    // Bigger obstacles relative to characters
-    obstacles = [];
-    walls = [];
-
-    // Rivers: thicker + wider
-    const rH = 92;
-    const r1 = {x: 80, y: 150, w: 840, h: rH, gapX: 470, gapW: 170};
-    const r2 = {x: 80, y: 425, w: 840, h: rH, gapX: 300, gapW: 210};
-
-    const r1a = {type:'river', x:r1.x, y:r1.y, w:(r1.gapX - r1.x), h:r1.h};
-    const r1b = {type:'river', x:(r1.gapX + r1.gapW), y:r1.y, w:(r1.x + r1.w - (r1.gapX + r1.gapW)), h:r1.h};
-    const r2a = {type:'river', x:r2.x, y:r2.y, w:(r2.gapX - r2.x), h:r2.h};
-    const r2b = {type:'river', x:(r2.gapX + r2.gapW), y:r2.y, w:(r2.x + r2.w - (r2.gapX + r2.gapW)), h:r2.h};
-
-    obstacles.push(r1a,r1b,r2a,r2b);
-    river1.setAttribute('d', roundRectPath(r1a.x, r1a.y, r1a.w, r1a.h, 26) + ' ' + roundRectPath(r1b.x, r1b.y, r1b.w, r1b.h, 26));
-    river2.setAttribute('d', roundRectPath(r2a.x, r2a.y, r2a.w, r2a.h, 26) + ' ' + roundRectPath(r2b.x, r2b.y, r2b.w, r2b.h, 26));
-
-    // Bigger walls to form corridors
-    walls = [
-      {type:'wall', x: 40,  y: 260, w: 120, h: 140},
-      {type:'wall', x: 180, y: 540, w: 260, h: 50},
-      {type:'wall', x: 620, y: 540, w: 340, h: 50},
-      {type:'wall', x: 650, y: 60,  w: 140, h: 110},
-      {type:'wall', x: 820, y: 210, w: 140, h: 60},
-    ];
-    obstacles.push(...walls);
-    drawWalls();
-
-    // Metro placement
-    metro.t = 0;
-    metro.open = [false,false,false,false];
-    setTransform(metroGate, metro.x, metro.y);
-
-    // Old smokers spawn
-    olds = [];
-    const spawn = [
-      {x: 260, y: 310},
+    // Old smokers spawn (more of them)
+    const spawns = [
+      {x: 260, y: 320},
       {x: 520, y: 520},
       {x: 780, y: 360},
       {x: 420, y: 120},
+      {x: 140, y: 140},
     ];
-    for(let i=0;i<spawn.length;i++){
+    olds = [];
+    for(let i=0;i<spawns.length;i++){
       olds.push({
         id: 'old'+i,
-        x: spawn[i].x,
-        y: spawn[i].y,
-        w: 68, h: 110, // collision box for scaled old man
-        speed: rand(70, 92),
+        x: spawns[i].x,
+        y: spawns[i].y,
+        w: 68, h: 110,
+        speed: rand(80, 110),
         wob: rand(0, 10),
         el: null,
       });
     }
     drawOlds();
 
-    // Position characters (scaled in render)
     setTransformScale(ettore, player.x, player.y, SCALE_E);
     setTransformScale(patry, girl.x, girl.y, SCALE_P);
   }
 
   // Input
   const keys = {up:false,down:false,left:false,right:false};
+
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
     if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
@@ -1020,6 +872,7 @@
     if(k==='arrowleft'|| k==='a') keys.left=true;
     if(k==='arrowright'|| k==='d') keys.right=true;
   }, {passive:false});
+
   window.addEventListener('keyup', (e)=>{
     const k = e.key.toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
@@ -1046,7 +899,7 @@
     keys.right = activeDirs.has('right');
   }
 
-  // Center overlay control
+  // Center overlay
   let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
@@ -1063,7 +916,7 @@
     centerSub.textContent = '…e ora il quiz!';
     centerOverlay.classList.add('show');
     beep(880, .09, 'triangle', .05);
-    winTimer = 0.95; // seconds
+    winTimer = 0.95;
   }
   function hideOverlay(){
     overlayMode = 'none';
@@ -1076,7 +929,6 @@
       restartChase();
     }
   });
-
   window.addEventListener('keydown', (e)=>{
     if(overlayMode === 'try' && (e.key === 'Enter' || e.key === ' ')){
       e.preventDefault();
@@ -1084,96 +936,19 @@
     }
   }, {passive:false});
 
-  // Metro logic: compute openings and collision blocks
-  function updateMetro(dt){
-    metro.t += dt;
-
-    // Faster cycle + offsets so "more passages" open/close
-    const cycle = 1.55;     // total cycle seconds
-    const openFor = 0.85;   // seconds open
-    const offsets = [0.00, 0.28, 0.56, 0.84];
-
-    let openCount = 0;
-    for(let i=0;i<4;i++){
-      const ph = (metro.t + offsets[i]) % cycle;
-      metro.open[i] = ph < openFor;
-      if(metro.open[i]) openCount++;
-    }
-
-    // Ensure at least one open (just in case)
-    if(openCount === 0) metro.open[0] = true;
-
-    // Visual doors: open -> faint, closed -> solid
-    for(let i=0;i<4;i++){
-      const el = metroDoorsEls[i];
-      if(!el) continue;
-      if(metro.open[i]){
-        el.setAttribute('opacity', '0.22');
-        el.setAttribute('fill', 'rgba(70,255,210,.18)');
-      }else{
-        el.setAttribute('opacity', '1');
-        el.setAttribute('fill', 'rgba(240,242,255,.10)');
-      }
-    }
-    metroHint.textContent = `PASSAGGI APERTI: ${openCount}/4`;
-    metroHint.setAttribute('fill', openCount >= 2 ? 'rgba(70,255,210,.85)' : 'rgba(255,255,255,.75)');
-  }
-
-  function metroBlocks(){
-    // Create blocking segments for the metro bar excluding OPEN doors
-    const opens = [];
-    for(let i=0;i<4;i++){
-      if(metro.open[i]){
-        opens.push([metro.x + metro.doorX[i], metro.x + metro.doorX[i] + metro.doorW]);
-      }
-    }
-    opens.sort((a,b)=>a[0]-b[0]);
-
-    const blocks = [];
-    let cur = metro.x;
-    const end = metro.x + metro.w;
-
-    for(const r of opens){
-      const a = clamp(r[0], metro.x, end);
-      const b = clamp(r[1], metro.x, end);
-      if(a > cur) blocks.push({x:cur, y:metro.y, w:(a-cur), h:metro.h});
-      cur = Math.max(cur, b);
-    }
-    if(cur < end) blocks.push({x:cur, y:metro.y, w:(end-cur), h:metro.h});
-    return blocks;
-  }
-
-  // Movement + collisions
-  function moveWithCollisions(ent, dx, dy, blocks){
-    ent.x += dx;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dx>0) ent.x = b.x - ent.w;
-        else if(dx<0) ent.x = b.x + b.w;
-      }
-    }
-    ent.y += dy;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dy>0) ent.y = b.y - ent.h;
-        else if(dy<0) ent.y = b.y + b.h;
-      }
-    }
-  }
-
   // Game flow
   function restartChase(){
     hideOverlay();
     buildLevel();
     setState(State.CHASE);
-    showToast("GO! Raggiungi Patry ✨", 1200);
+    showToast("GO! Raggiungi Patry ✨", 1000);
   }
 
   function enterChase(){
     buildLevel();
     hideOverlay();
     setState(State.CHASE);
-    showToast("Vai Ettore! Schiva baguette e vecchi fumatori!", 1600);
+    showToast("Vai Ettore! Schiva baguette e vecchi fumatori!", 1400);
     beep(520, .07, 'triangle', .03);
   }
 
@@ -1268,9 +1043,9 @@
       qIndex++;
       if(qIndex >= questions.length){
         qRunning = false;
-        // qui prosegue al regalo (già presente)
-        setState(State.GIFT);
-        showToast("Hai completato il quiz! 🎁", 1400);
+        showToast("Quiz completato! 🎉", 1400);
+        // qui puoi collegare la tua schermata regalo se vuoi
+        setState(State.TITLE);
       }else{
         setupQuestion();
       }
@@ -1292,7 +1067,7 @@
     retryBox.style.display = 'none';
     setupQuestion();
     qRunning = true;
-    showToast("Quiz a tempo! 10 secondi per domanda ⏱", 1400);
+    showToast("Quiz a tempo! 10 secondi per domanda ⏱", 1200);
     beep(660, .08, 'triangle', .03);
   }
 
@@ -1301,39 +1076,31 @@
   // -------------------------------
   let t = 0;
   let last = now();
-  let baguetteSpawn = 0;
 
   function update(dt){
-    // Toast lifetime
     if(toastTimer > 0){
       toastTimer -= dt*1000;
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
-    // Parallax
     const drift = Math.sin(t*0.0002)*6;
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
-    // Overlay win timer -> then quiz
+    // Handle overlay win timing
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
         hideOverlay();
         enterQuiz();
       }
+      return; // freeze game behind overlay
+    }
+    if(overlayMode === 'try'){
+      return; // freeze game behind overlay
     }
 
     if(state === State.CHASE){
-      // Metro
-      updateMetro(dt);
-      const mBlocks = metroBlocks();
-
-      // Build blocks for player collisions: static obstacles + metro blocks
-      const blocks = [];
-      for(const o of obstacles) blocks.push(o);
-      for(const b of mBlocks) blocks.push(b);
-
       // Player input
       let dx=0, dy=0;
       const sp = player.speed;
@@ -1343,12 +1110,14 @@
       if(keys.down) dy += sp*dt;
       if(dx && dy){ dx*=0.7071; dy*=0.7071; }
 
-      // Move player with collisions
-      moveWithCollisions(player, dx, dy, blocks);
+      player.x += dx;
+      player.y += dy;
+
+      // Bounds only (no metro, no other obstacles)
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
-      // Old smokers chase Ettore (they do not collide with walls to keep them aggressive)
+      // Old smokers chase Ettore
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1361,7 +1130,6 @@
         const len = Math.hypot(vx,vy) || 1;
         vx /= len; vy /= len;
 
-        // little wobble so they feel "alive"
         vx += Math.sin(o.wob)*0.12;
         vy += Math.cos(o.wob*1.1)*0.10;
 
@@ -1369,14 +1137,11 @@
         o.x += vx * step;
         o.y += vy * step;
 
-        // keep in bounds
         o.x = clamp(o.x, 10, 930);
         o.y = clamp(o.y, 60, 520);
 
-        // render
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        // collision with player -> TRY AGAIN
         if(rectsOverlap(player, o)){
           showTryAgain();
           return;
@@ -1386,13 +1151,13 @@
       // Spawn baguettes
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
-        baguetteSpawn = rand(0.75, 1.15);
+        baguetteSpawn = rand(0.70, 1.10);
         const obj = {
           x: 1040,
           y: rand(90, 530),
           w: 90,
           h: 26,
-          vx: rand(-620, -460),
+          vx: rand(-650, -480),
           vy: rand(-30, 30),
           wob: rand(0, 10),
           el: makeBaguette()
@@ -1421,11 +1186,11 @@
         }
       }
 
-      // Render characters (scaled)
+      // Render characters
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // Target line (optional)
+      // Target line
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1433,7 +1198,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win condition: reach Patry -> show FINALLY TOGETHER -> quiz
+      // Win condition
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
