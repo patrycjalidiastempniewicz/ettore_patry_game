@@ -33,10 +33,17 @@
     }
 
     #app{position:fixed; inset:0; height:100dvh;}
-    #sceneWrap{position:relative; width:100%; height:100%; touch-action:none;}
+    #sceneWrap{
+      position:relative; width:100%; height:100%;
+      touch-action:none;
+    }
     svg{width:100%; height:100%; display:block;}
 
-    .ui{position:absolute; inset:0; pointer-events:auto; display:flex; flex-direction:column;}
+    .ui{
+      position:absolute; inset:0;
+      pointer-events:auto;
+      display:flex; flex-direction:column;
+    }
 
     .topbar{
       display:flex; gap:10px; align-items:center;
@@ -110,6 +117,7 @@
       font-size:13px;
       line-height:1.35;
     }
+
     .btnRow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
 
     button{
@@ -170,7 +178,7 @@
 
     .sideHint{
       pointer-events:none;
-      max-width: 340px;
+      max-width: 320px;
       text-align:right;
       font-size:12px;
       font-weight:850;
@@ -216,7 +224,11 @@
     .blink90{ animation: blink 0.38s steps(2,end) infinite; }
 
     /* Quiz overlay */
-    #quiz{position:absolute; inset:0; display:none; pointer-events:auto;}
+    #quiz{
+      position:absolute; inset:0;
+      display:none;
+      pointer-events:auto;
+    }
     body.state-quiz #quiz{display:block}
 
     .quizCard{
@@ -338,6 +350,8 @@
           <path d="M710 440 L710 410 L750 410 L750 380 L790 380 L790 420 L830 420 L830 395 L880 395 L880 430 L920 430 L920 390 L970 390 L970 440 Z" fill="#000"/>
         </g>
         <rect x="0" y="430" width="1000" height="170" fill="rgba(0,0,0,.25)"/>
+        <path d="M60 520 C 240 470 360 470 520 520 C 680 570 800 570 940 520"
+              stroke="rgba(70,255,210,.14)" stroke-width="6" stroke-linecap="round" fill="none"/>
       </g>
 
       <!-- TITLE LAYER -->
@@ -392,7 +406,7 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- Personaggi in title screen -->
+        <!-- Personaggi in title screen (più piccoli) -->
         <g filter="url(#softShadow)">
           <g transform="translate(210 330) scale(0.62)">
             <use href="#ettoreDef"/>
@@ -426,15 +440,12 @@
         </g>
       </g>
 
-      <!-- CHASE LAYER (LABYRINTH) -->
+      <!-- CHASE LAYER (NO METRO) -->
       <g id="chaseLayer" opacity="0">
-        <!-- Maze walls -->
-        <g id="maze" filter="url(#softShadow)"></g>
-
-        <!-- Obstacles: ONLY olds + baguettes -->
         <g id="olds"></g>
         <g id="baguettes"></g>
 
+        <!-- Patry -->
         <g id="patry" filter="url(#softShadow)">
           <use href="#patryDef"/>
           <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
@@ -444,14 +455,15 @@
           </g>
         </g>
 
+        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <use href="#ettoreDef"/>
         </g>
 
-        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.14)" stroke-width="3" stroke-linecap="round"/>
+        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.18)" stroke-width="3" stroke-linecap="round"/>
       </g>
 
-      <!-- QUIZ BG -->
+      <!-- QUIZ BACKGROUND LAYER -->
       <g id="quizBgLayer" opacity="0">
         <g id="qbg0" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
@@ -517,6 +529,7 @@
         </g>
       </g>
 
+      <!-- (Gift layer omitted here on purpose — kept in your previous versions if you want it) -->
       <g id="giftLayer" opacity="0"></g>
 
       <style>
@@ -533,7 +546,7 @@
     <!-- UI overlay -->
     <div class="ui">
       <div class="topbar">
-        <div class="pill">🧩 <span>LABYRINTH MODE</span> <small>— CHASE</small></div>
+        <div class="pill">🎮 <span>5 YEARS</span> <small id="levelLbl">— CHASE</small></div>
         <div class="pill">Obiettivo: <span style="color:var(--aqua); font-weight:1000;">raggiungi Patry</span></div>
       </div>
 
@@ -542,7 +555,7 @@
       <div class="titleCard">
         <div class="left">
           <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso</div>
-          <div class="hint" style="opacity:.9">Labirinto da superare: mura bloccano il percorso. Ostacoli “killer”: <b>vecchi</b> 👴🚬 e <b>baguette</b> 🥖.</div>
+          <div class="hint" style="opacity:.9">Schiva <b>baguette</b> e <b>vecchi fumatori</b>. Se ti prendono: <b>TRY AGAIN</b> (clicca per ricominciare).</div>
         </div>
         <div class="btnRow">
           <button id="startBtn" type="button">START</button>
@@ -562,7 +575,7 @@
           <div class="pad padGhost"></div>
           <div class="pad padGhost"></div>
         </div>
-        <div class="sideHint"><b>TIP:</b> se ti bloccano… cambia corridoio. Le baguette rimbalzano!</div>
+        <div class="sideHint"><b>TIP:</b> resta in movimento: i vecchi ti inseguono 👴🚬</div>
       </div>
 
       <div id="centerOverlay">
@@ -600,7 +613,7 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // Fit viewBox (responsive camera)
+  // Responsive camera (fit viewBox)
   function fitViewBox(){
     if(!svg) return;
     const baseW = 1000, baseH = 600;
@@ -633,7 +646,6 @@
   const quizBgLayer = document.getElementById('quizBgLayer');
   const giftLayer = document.getElementById('giftLayer');
 
-  const mazeG = document.getElementById('maze');
   const oldsG = document.getElementById('olds');
   const baguettesG = document.getElementById('baguettes');
 
@@ -684,24 +696,6 @@
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
-  // Movement with wall collisions (slide)
-  function moveWithCollisions(ent, dx, dy, blocks){
-    ent.x += dx;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dx>0) ent.x = b.x - ent.w;
-        else if(dx<0) ent.x = b.x + b.w;
-      }
-    }
-    ent.y += dy;
-    for(const b of blocks){
-      if(rectsOverlap(ent,b)){
-        if(dy>0) ent.y = b.y - ent.h;
-        else if(dy<0) ent.y = b.y + b.h;
-      }
-    }
-  }
-
   // Audio
   let audioOn = true;
   let audioCtx = null;
@@ -733,24 +727,6 @@
     toastTimer = ms;
   }
 
-  // Stars
-  function buildStars(group, count){
-    if(!group) return;
-    group.innerHTML = '';
-    for(let i=0;i<count;i++){
-      const cx = rand(0, 1000), cy = rand(0, 420);
-      const r = rand(0.7, 1.8);
-      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      c.setAttribute('cx', cx);
-      c.setAttribute('cy', cy);
-      c.setAttribute('r', r);
-      c.setAttribute('fill', 'rgba(255,255,255,.85)');
-      c.setAttribute('opacity', String(rand(0.25, 0.9)));
-      group.appendChild(c);
-    }
-  }
-  buildStars(stars, 110);
-
   // State
   const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
   let state = State.TITLE;
@@ -771,88 +747,36 @@
     }
   }
 
+  // Stars
+  function buildStars(group, count){
+    if(!group) return;
+    group.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const cx = rand(0, 1000), cy = rand(0, 420);
+      const r = rand(0.7, 1.8);
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute('cx', cx);
+      c.setAttribute('cy', cy);
+      c.setAttribute('r', r);
+      c.setAttribute('fill', 'rgba(255,255,255,.85)');
+      c.setAttribute('opacity', String(rand(0.25, 0.9)));
+      group.appendChild(c);
+    }
+  }
+  buildStars(stars, 110);
+
   // -------------------------------
-  // LABYRINTH CHASE
+  // CHASE GAME (ONLY olds + baguettes)
   // -------------------------------
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // collision boxes tuned (approx scaled sprite)
-  const player = { x: 70, y: 500, w: 72, h: 128, speed: 610 };
-  const girl   = { x: 870, y: 85,  w: 125, h: 125 };
+  const player = { x: 110, y: 490, w: 72, h: 128, speed: 600 };
+  const girl   = { x: 860, y: 75,  w: 125, h: 125 };
 
-  let mazeWalls = [];
   let olds = [];
   let baguettes = [];
   let baguetteSpawn = 0;
-
-  function drawMaze(){
-    mazeG.innerHTML = '';
-    for(const w of mazeWalls){
-      const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      r.setAttribute('x', w.x);
-      r.setAttribute('y', w.y);
-      r.setAttribute('width', w.w);
-      r.setAttribute('height', w.h);
-      r.setAttribute('rx', 14);
-      r.setAttribute('fill', 'rgba(255,255,255,.08)');
-      r.setAttribute('stroke', 'rgba(255,255,255,.18)');
-      r.setAttribute('stroke-width', '2');
-      mazeG.appendChild(r);
-    }
-    // subtle inner glow path hint
-    const glow = document.createElementNS("http://www.w3.org/2000/svg","path");
-    glow.setAttribute('d', 'M 50 540 C 160 520 160 90 290 90 C 420 90 420 520 550 520 C 680 520 680 90 820 90 C 900 90 940 110 960 140');
-    glow.setAttribute('fill', 'none');
-    glow.setAttribute('stroke', 'rgba(70,255,210,.10)');
-    glow.setAttribute('stroke-width', '6');
-    glow.setAttribute('stroke-linecap', 'round');
-    mazeG.appendChild(glow);
-  }
-
-  function buildMaze(){
-    // Outer bounds
-    mazeWalls = [
-      {x:20, y:40,  w:960, h:16},  // top
-      {x:20, y:564, w:960, h:16},  // bottom
-      {x:20, y:40,  w:16,  h:540}, // left
-      {x:964,y:40,  w:16,  h:540}, // right
-    ];
-
-    // Main labyrinth columns (snake):
-    // alternate walls that connect to bottom/top leaving ONE big gap
-    // (Player must zig-zag: top gap -> bottom gap -> top gap...)
-    const colXs = [140, 260, 380, 500, 620, 740];
-    // top boundary ends at y=56 (40+16); bottom boundary starts at y=564
-    // top-gap walls connect to bottom (start low); bottom-gap walls connect to top (start at 56)
-    for(let i=0;i<colXs.length;i++){
-      const x = colXs[i];
-      if(i % 2 === 0){
-        // top gap only: wall reaches bottom
-        mazeWalls.push({x, y:220, w:18, h:344}); // 220..564
-      }else{
-        // bottom gap only: wall starts at top and stops early
-        mazeWalls.push({x, y:56, w:18, h:354}); // 56..410 (gap 410..564)
-      }
-    }
-
-    // Extra “teeth” to make it feel more maze-like (still solvable)
-    mazeWalls.push(
-      {x:60,  y:240, w:90, h:18},
-      {x:60,  y:320, w:70, h:18},
-      {x:170, y:120, w:70, h:18},
-      {x:170, y:480, w:90, h:18},
-      {x:300, y:220, w:80, h:18},
-      {x:300, y:480, w:90, h:18},
-      {x:420, y:120, w:80, h:18},
-      {x:540, y:240, w:80, h:18},
-      {x:540, y:480, w:90, h:18},
-      {x:660, y:120, w:80, h:18},
-      {x:780, y:240, w:80, h:18}
-    );
-
-    drawMaze();
-  }
 
   function oldManSVG(){
     const g = document.createElementNS("http://www.w3.org/2000/svg","g");
@@ -882,6 +806,7 @@
     oldsG.innerHTML = '';
     for(const o of olds){
       const el = oldManSVG();
+      el.setAttribute('id', o.id);
       oldsG.appendChild(el);
       o.el = el;
       setTransformScale(o.el, o.x, o.y, 0.62);
@@ -901,32 +826,33 @@
   }
 
   function buildLevel(){
-    buildMaze();
+    player.x = 110; player.y = 490;
+    girl.x = 860; girl.y = 75;
 
-    // Start / goal
-    player.x = 58;  player.y = 505;
-    girl.x = 865;   girl.y = 85;
-
-    // Obstacles (only olds + baguettes)
     baguettes = [];
     baguettesG.innerHTML = '';
-    baguetteSpawn = 0.45;
+    baguetteSpawn = 0.35;
 
-    // Olds placed inside corridors (they will respect maze walls too)
-    olds = [
-      {x: 210, y: 170},
-      {x: 320, y: 520},
-      {x: 460, y: 170},
-      {x: 590, y: 520},
-      {x: 720, y: 170},
-    ].map((p,i)=>({
-      id: 'old'+i,
-      x: p.x, y: p.y,
-      w: 68, h: 110,
-      speed: rand(85, 115),
-      wob: rand(0, 10),
-      el: null
-    }));
+    // Old smokers spawn (more of them)
+    const spawns = [
+      {x: 260, y: 320},
+      {x: 520, y: 520},
+      {x: 780, y: 360},
+      {x: 420, y: 120},
+      {x: 140, y: 140},
+    ];
+    olds = [];
+    for(let i=0;i<spawns.length;i++){
+      olds.push({
+        id: 'old'+i,
+        x: spawns[i].x,
+        y: spawns[i].y,
+        w: 68, h: 110,
+        speed: rand(80, 110),
+        wob: rand(0, 10),
+        el: null,
+      });
+    }
     drawOlds();
 
     setTransformScale(ettore, player.x, player.y, SCALE_E);
@@ -938,7 +864,9 @@
 
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' ') e.preventDefault();
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
+      e.preventDefault();
+    }
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
@@ -971,7 +899,7 @@
     keys.right = activeDirs.has('right');
   }
 
-  // Overlay
+  // Center overlay
   let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
@@ -997,22 +925,30 @@
 
   centerOverlay.addEventListener('click', (e)=>{
     e.preventDefault();
-    if(overlayMode === 'try') restartChase();
+    if(overlayMode === 'try'){
+      restartChase();
+    }
   });
+  window.addEventListener('keydown', (e)=>{
+    if(overlayMode === 'try' && (e.key === 'Enter' || e.key === ' ')){
+      e.preventDefault();
+      restartChase();
+    }
+  }, {passive:false});
 
-  // Flow
+  // Game flow
   function restartChase(){
     hideOverlay();
     buildLevel();
     setState(State.CHASE);
-    showToast("LABYRINTH MODE: trova la via! 🧩", 1200);
+    showToast("GO! Raggiungi Patry ✨", 1000);
   }
 
   function enterChase(){
     buildLevel();
     hideOverlay();
     setState(State.CHASE);
-    showToast("Vai Ettore! Schiva vecchi e baguette!", 1400);
+    showToast("Vai Ettore! Schiva baguette e vecchi fumatori!", 1400);
     beep(520, .07, 'triangle', .03);
   }
 
@@ -1027,7 +963,10 @@
   startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
   window.addEventListener('keydown', (e)=>{
     if(state !== State.TITLE) return;
-    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); startFromTitle(); }
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      startFromTitle();
+    }
   }, {passive:false});
 
   muteBtn.addEventListener('click', (e)=>{
@@ -1105,6 +1044,7 @@
       if(qIndex >= questions.length){
         qRunning = false;
         showToast("Quiz completato! 🎉", 1400);
+        // qui puoi collegare la tua schermata regalo se vuoi
         setState(State.TITLE);
       }else{
         setupQuestion();
@@ -1143,23 +1083,24 @@
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
+    const drift = Math.sin(t*0.0002)*6;
     const skylineFar = document.getElementById('skylineFar');
-    if(skylineFar) skylineFar.setAttribute('transform', `translate(${Math.sin(t*0.0002)*6} 0)`);
+    if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
+    // Handle overlay win timing
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
         hideOverlay();
         enterQuiz();
       }
-      return;
+      return; // freeze game behind overlay
     }
-    if(overlayMode === 'try') return;
+    if(overlayMode === 'try'){
+      return; // freeze game behind overlay
+    }
 
     if(state === State.CHASE){
-      // Blocks = maze walls (they only block movement)
-      const blocks = mazeWalls;
-
       // Player input
       let dx=0, dy=0;
       const sp = player.speed;
@@ -1169,13 +1110,14 @@
       if(keys.down) dy += sp*dt;
       if(dx && dy){ dx*=0.7071; dy*=0.7071; }
 
-      moveWithCollisions(player, dx, dy, blocks);
+      player.x += dx;
+      player.y += dy;
 
-      // Keep inside inner bounds (avoid getting stuck into outer walls)
-      player.x = clamp(player.x, 44, 910);
-      player.y = clamp(player.y, 64, 520);
+      // Bounds only (no metro, no other obstacles)
+      player.x = clamp(player.x, 10, 930);
+      player.y = clamp(player.y, 40, 520);
 
-      // Olds chase, but also respect walls (so they feel “in the maze”)
+      // Old smokers chase Ettore
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1183,27 +1125,20 @@
         o.wob += dt * 3.4;
         const oCx = o.x + o.w/2;
         const oCy = o.y + o.h/2;
-
         let vx = (pCx - oCx);
         let vy = (pCy - oCy);
         const len = Math.hypot(vx,vy) || 1;
         vx /= len; vy /= len;
 
-        // wobble (alive + less predictable)
-        vx += Math.sin(o.wob)*0.10;
+        vx += Math.sin(o.wob)*0.12;
         vy += Math.cos(o.wob*1.1)*0.10;
 
         const step = o.speed * dt;
-        // try moving; if blocked, bias sideways
-        const before = {x:o.x, y:o.y};
-        moveWithCollisions(o, vx*step, vy*step, blocks);
+        o.x += vx * step;
+        o.y += vy * step;
 
-        if(before.x === o.x && before.y === o.y){
-          moveWithCollisions(o, -vy*step*0.9, vx*step*0.9, blocks);
-        }
-
-        o.x = clamp(o.x, 44, 910);
-        o.y = clamp(o.y, 64, 520);
+        o.x = clamp(o.x, 10, 930);
+        o.y = clamp(o.y, 60, 520);
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
@@ -1213,20 +1148,17 @@
         }
       }
 
-      // Spawn baguettes (they bounce on walls)
+      // Spawn baguettes
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
         baguetteSpawn = rand(0.70, 1.10);
-
-        // spawn from one of a few lanes to reduce “in-wall” spawns
-        const lanes = [90, 140, 200, 260, 320, 380, 440, 500];
         const obj = {
-          x: 950,
-          y: pick(lanes) + rand(-12, 12),
+          x: 1040,
+          y: rand(90, 530),
           w: 90,
           h: 26,
-          vx: rand(-660, -520),
-          vy: rand(-45, 45),
+          vx: rand(-650, -480),
+          vy: rand(-30, 30),
           wob: rand(0, 10),
           el: makeBaguette()
         };
@@ -1235,38 +1167,13 @@
       }
 
       for(const bq of baguettes){
-        const prevX = bq.x, prevY = bq.y;
-
         bq.wob += dt*6.0;
         bq.x += bq.vx*dt;
         bq.y += bq.vy*dt + Math.sin(bq.wob)*18*dt;
-
-        // bounce on maze walls
-        const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
-        let hit = false;
-        for(const w of blocks){
-          if(rectsOverlap(bBox, w)){
-            hit = true; break;
-          }
-        }
-        if(hit){
-          // simple bounce: revert and flip X, add a little Y randomness
-          bq.x = prevX;
-          bq.y = prevY;
-          bq.vx *= -1;
-          bq.vy += rand(-80, 80);
-          beep(220, .03, 'square', .01);
-        }
-
-        // keep in bounds; if out, remove
         bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
       }
-
       baguettes = baguettes.filter(bq=>{
-        if(bq.x < -200 || bq.x > 1200 || bq.y < -200 || bq.y > 900){
-          bq.el.remove();
-          return false;
-        }
+        if(bq.x < -160){ bq.el.remove(); return false; }
         return true;
       });
 
@@ -1283,7 +1190,7 @@
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // Target line (subtle)
+      // Target line
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1291,7 +1198,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win: reach Patry
+      // Win condition
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
@@ -1299,14 +1206,16 @@
       }
     }
 
-    if(state === State.QUIZ && qRunning){
-      qTime -= dt;
-      if(qTime <= 0){
-        qTime = 0;
-        updateQuizMeter();
-        failQuiz();
-      }else{
-        updateQuizMeter();
+    if(state === State.QUIZ){
+      if(qRunning){
+        qTime -= dt;
+        if(qTime <= 0){
+          qTime = 0;
+          updateQuizMeter();
+          failQuiz();
+        }else{
+          updateQuizMeter();
+        }
       }
     }
   }
