@@ -3,45 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>4 YEARS: SURVIVAL ANNIVERSARY MODE</title>
+  <title>5 YEARS: SURVIVAL ANNIVERSARY MODE</title>
 
-  <!-- Pixel-ish font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#05060B;
-      --maze:#2E7DFF;
-      --mazeGlow: rgba(46,125,255,.55);
-      --text:#F6F8FF;
-      --muted:#A7B0D6;
-      --yellow:#FFD84D;
-      --pink:#FF4DA0;
-      --red:#FF2E2E;
-      --stroke: rgba(255,255,255,.18);
-      --shadow: rgba(0,0,0,.55);
+      --bg0:#070A16;
+      --bg1:#0B1230;
+      --text:#F4F7FF;
+      --muted:#B7C2E6;
+      --aqua:#46FFD2;
+      --pink:#FF4D6D;
+      --amber:#FFD166;
+      --stroke: rgba(255,255,255,.16);
+      --shadow: rgba(0,0,0,.45);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      background: radial-gradient(900px 520px at 50% 30%, #0A1030 0%, var(--bg) 55%, #02030A 100%);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
+      background: radial-gradient(1000px 600px at 50% 25%, #1A2A66 0%, var(--bg1) 40%, var(--bg0) 100%);
       overflow:hidden;
-      min-height:100dvh;
+      min-height: 100dvh;
     }
 
     #app{position:fixed; inset:0; height:100dvh;}
     #sceneWrap{position:relative; width:100%; height:100%; touch-action:none;}
     svg{width:100%; height:100%; display:block;}
 
-    .ui{
-      position:absolute; inset:0;
-      pointer-events:auto;
-      display:flex; flex-direction:column;
-    }
+    .ui{position:absolute; inset:0; pointer-events:auto; display:flex; flex-direction:column;}
 
     .topbar{
       display:flex; gap:10px; align-items:center;
@@ -58,15 +53,14 @@
       padding:10px 12px;
       border:1px solid var(--stroke);
       border-radius:999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      box-shadow: 0 18px 52px var(--shadow);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      box-shadow: 0 14px 40px var(--shadow);
       backdrop-filter: blur(10px);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight:900;
-      font-size:12px;
+      font-weight:800;
+      font-size:13px;
       display:flex; align-items:center; gap:8px;
     }
-    .pill small{font-weight:900; color:var(--muted);}
+    .pill small{font-weight:700; color:var(--muted)}
 
     .toast{
       position:absolute; left:50%;
@@ -76,13 +70,12 @@
       padding:12px 14px;
       border:1px solid var(--stroke);
       border-radius:16px;
-      background: linear-gradient(180deg, rgba(12,18,44,.60), rgba(4,6,18,.60));
-      box-shadow: 0 22px 70px rgba(0,0,0,.45);
+      background: linear-gradient(180deg, rgba(18,26,52,.55), rgba(10,14,28,.55));
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
       backdrop-filter: blur(10px);
       pointer-events:none;
       opacity:0;
       transition:.18s ease;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-weight:900;
       font-size:13px;
       text-align:center;
@@ -98,8 +91,8 @@
       padding:16px 16px 14px;
       border-radius:18px;
       border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(12,18,44,.66), rgba(4,6,18,.66));
-      box-shadow: 0 26px 90px rgba(0,0,0,.55);
+      background: linear-gradient(180deg, rgba(18,26,52,.62), rgba(10,14,28,.62));
+      box-shadow: 0 24px 80px rgba(0,0,0,.40);
       backdrop-filter: blur(12px);
       pointer-events:auto;
       display:flex;
@@ -110,17 +103,13 @@
     body.state-title .titleCard{display:flex}
     body:not(.state-title) .titleCard{display:none}
 
-    .titleCard .left{
-      display:flex; flex-direction:column; gap:6px; min-width:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+    .titleCard .left{display:flex; flex-direction:column; gap:6px; min-width:0;}
     .titleCard .left .hint{
-      font-weight:900;
+      font-weight:750;
       color:var(--muted);
       font-size:13px;
       line-height:1.35;
     }
-
     .btnRow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
 
     button{
@@ -129,21 +118,20 @@
       border-radius:14px;
       padding:12px 14px;
       border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(46,125,255,.22), rgba(46,125,255,.08));
+      background: linear-gradient(180deg, rgba(70,255,210,.18), rgba(70,255,210,.06));
       color:var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight:1000;
-      box-shadow: 0 18px 54px rgba(0,0,0,.40);
+      font-weight:900;
+      box-shadow: 0 16px 40px rgba(0,0,0,.30);
       transition: transform .08s ease, filter .08s ease;
       pointer-events:auto;
       touch-action: manipulation;
     }
-    button:hover{filter:brightness(1.08)}
+    button:hover{filter:brightness(1.07)}
     button:active{transform:translateY(2px)}
     .secondary{
       background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
       color:var(--muted);
-      font-weight:950;
+      font-weight:850;
     }
 
     .controls{
@@ -164,20 +152,18 @@
       grid-template-columns: 56px 56px 56px;
       grid-template-rows: 56px 56px 56px;
       gap:10px;
-      filter: drop-shadow(0 22px 52px rgba(0,0,0,.55));
+      filter: drop-shadow(0 20px 44px rgba(0,0,0,.45));
     }
     .pad{
       width:56px; height:56px;
       border-radius:16px;
       border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
       display:grid; place-items:center;
       color:var(--text);
-      font-weight:1000;
+      font-weight:900;
       user-select:none;
       touch-action:none;
-      font-family: "Press Start 2P", system-ui, sans-serif;
-      font-size:16px;
     }
     .pad:active{transform:translateY(2px)}
     .padGhost{opacity:0}
@@ -186,59 +172,53 @@
       pointer-events:none;
       max-width: 340px;
       text-align:right;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size:12px;
-      font-weight:900;
+      font-weight:850;
       color:var(--muted);
       line-height:1.35;
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
     }
 
-    /* Center overlay */
+    /* Center overlay: TRY AGAIN / FINALLY TOGETHER */
     #centerOverlay{
       position:absolute; inset:0;
       display:none;
       place-items:center;
       pointer-events:auto;
-      background:
-        radial-gradient(650px 420px at 50% 45%, rgba(0,0,0,.70), rgba(0,0,0,.35) 55%, rgba(0,0,0,0) 100%);
+      background: radial-gradient(600px 380px at 50% 45%, rgba(0,0,0,.55), rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%);
     }
     #centerOverlay.show{display:grid;}
     .centerText{
       text-align:center;
-      padding:16px 18px;
+      padding:14px 18px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(12,18,44,.72), rgba(4,6,18,.72));
-      box-shadow: 0 30px 110px rgba(0,0,0,.60);
+      background: linear-gradient(180deg, rgba(18,26,52,.65), rgba(10,14,28,.65));
+      box-shadow: 0 28px 90px rgba(0,0,0,.45);
       backdrop-filter: blur(14px);
       cursor:pointer;
       user-select:none;
     }
     .centerText .big{
-      font-family: "Press Start 2P", system-ui, sans-serif;
-      font-size: clamp(26px, 5.2vw, 58px);
-      letter-spacing: 1.2px;
-      line-height: 1.1;
+      font-size: clamp(40px, 8vw, 92px);
+      font-weight: 1000;
+      letter-spacing: 1.5px;
+      line-height: 1;
       text-transform: uppercase;
-      text-shadow: 0 10px 30px rgba(0,0,0,.55);
+      text-shadow: 0 10px 28px rgba(0,0,0,.45);
     }
     .centerText .sub{
-      margin-top:12px;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin-top:10px;
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 850;
       color: var(--muted);
     }
     .blink90{ animation: blink 0.38s steps(2,end) infinite; }
 
     /* Quiz overlay */
-    #quiz{
-      position:absolute; inset:0;
-      display:none;
-      pointer-events:auto;
-    }
+    #quiz{position:absolute; inset:0; display:none; pointer-events:auto;}
     body.state-quiz #quiz{display:block}
+
     .quizCard{
       pointer-events:auto;
       position:absolute;
@@ -247,58 +227,40 @@
       width:min(980px, 92vw);
       border-radius:20px;
       border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(12,18,44,.76), rgba(4,6,18,.76));
-      box-shadow: 0 30px 110px rgba(0,0,0,.60);
+      background: linear-gradient(180deg, rgba(18,26,52,.70), rgba(10,14,28,.70));
+      box-shadow: 0 28px 90px rgba(0,0,0,.45);
       backdrop-filter: blur(14px);
       padding:16px;
     }
     .quizHead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-    .quizHead h2{
-      margin:0;
-      font-family: "Press Start 2P", system-ui, sans-serif;
-      font-size:14px;
-      line-height:1.35;
-      letter-spacing:.3px;
-    }
-    .quizHead .meta{
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--muted);
-      font-weight:950;
-      font-size:13px;
-    }
-    .qtext{
-      margin:12px 0 12px;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-size:16px;
-      font-weight:1000;
-      line-height:1.35;
-    }
+    .quizHead h2{margin:0; font-size:18px; letter-spacing:.2px;}
+    .quizHead .meta{color:var(--muted); font-weight:850; font-size:13px;}
+    .qtext{margin:10px 0 12px; font-size:16px; font-weight:900; line-height:1.35;}
     .options{display:grid; grid-template-columns:1fr; gap:10px;}
     @media (min-width: 760px){ .options{grid-template-columns: 1fr 1fr 1fr;} }
     .opt{
       text-align:left;
-      font-weight:1000;
+      font-weight:900;
       border-radius:16px;
       padding:14px 14px;
       border:1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
       color:var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     .opt:hover{filter:brightness(1.06)}
-    .bar{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-weight:950; font-size:13px; flex-wrap:wrap;}
+    .bar{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-weight:850; font-size:13px; flex-wrap:wrap;}
     .meter{width:min(280px, 60vw); height:12px; border-radius:999px; border:1px solid var(--stroke); background: rgba(0,0,0,.22); overflow:hidden;}
-    .fill{height:100%; width:100%; transform-origin:left center; background: linear-gradient(90deg, rgba(46,125,255,.95), rgba(255,216,77,.95), rgba(255,46,46,.95));}
-    .danger{color:var(--red)}
+    .fill{height:100%; width:100%; transform-origin:left center; background: linear-gradient(90deg, rgba(70,255,210,.9), rgba(255,209,102,.9), rgba(255,77,109,.9));}
+    .danger{color:var(--pink)}
     #retry{display:none; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.12); text-align:center; width:100%;}
-    #retry .msg{color: #FFD84D; font-weight:1000; margin: 0 0 10px; line-height:1.35;}
+    #retry .msg{color:var(--amber); font-weight:900; margin: 0 0 10px; line-height:1.35;}
 
     @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
 
     @media (prefers-reduced-motion: reduce){
-      .blink90{animation:none}
+      #centerOverlay .blink90{animation:none}
       .toast, .topbar, .controls{transition:none}
-      svg .blink, svg .pulse, svg .floaty {animation:none !important}
+      svg .blink, svg .pulse {animation:none !important}
     }
   </style>
 </head>
@@ -307,258 +269,272 @@
 <div id="app">
   <div id="sceneWrap">
 
-    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game pacman style">
+    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game">
       <defs>
-        <filter id="mazeGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(46,125,255,.45)"/>
-          <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="rgba(46,125,255,.22)"/>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1B2C6A"/>
+          <stop offset=".55" stop-color="#0B1230"/>
+          <stop offset="1" stop-color="#070A16"/>
+        </linearGradient>
+
+        <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(0,0,0,.45)"/>
         </filter>
 
-        <filter id="softShadow" x="-50%" y="-50%" width="220%" height="220%">
-          <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="rgba(0,0,0,.55)"/>
+        <filter id="glowAqua" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(70,255,210,.45)"/>
         </filter>
 
-        <path id="ghostBody" d="M 0 36
-          C 0 12 18 0 36 0
-          C 54 0 72 12 72 36
-          L 72 78
-          C 64 74 60 74 52 78
-          C 44 82 40 82 32 78
-          C 24 74 20 74 12 78
-          C 6 81 3 81 0 78
-          Z"/>
+        <filter id="glowPink" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(255,77,109,.45)"/>
+        </filter>
 
-        <!-- Pellets (decor) -->
-        <circle id="pellet" cx="0" cy="0" r="3.2" />
+        <pattern id="plaid" width="24" height="24" patternUnits="userSpaceOnUse">
+          <rect width="24" height="24" fill="#B12B3B"/>
+          <rect x="0" y="9" width="24" height="4" fill="rgba(255,255,255,.14)"/>
+          <rect x="9" y="0" width="4" height="24" fill="rgba(255,255,255,.14)"/>
+          <rect x="0" y="16" width="24" height="3" fill="rgba(0,0,0,.12)"/>
+          <rect x="16" y="0" width="3" height="24" fill="rgba(0,0,0,.12)"/>
+        </pattern>
 
-        <!-- Ettore: Pac-man vibe (yellow orb) with beard + glasses -->
-        <g id="ettorePac">
-          <circle cx="48" cy="48" r="44" fill="var(--yellow)"/>
-          <!-- mouth wedge (black cut-out) -->
-          <g id="ettoreMouth">
-            <path id="mouthOpen" d="M48 48 L92 30 L92 66 Z" fill="#05060B" opacity="0.92"/>
-            <path id="mouthClosed" d="M48 48 L92 46 L92 50 Z" fill="#05060B" opacity="0"/>
-          </g>
-          <!-- beard -->
-          <path d="M14 58 C 18 84 78 84 82 58 C 84 84 70 98 48 98 C 26 98 12 84 14 58 Z"
-                fill="rgba(70,40,22,.90)"/>
-          <!-- glasses -->
-          <rect x="18" y="36" width="24" height="16" rx="6" fill="none" stroke="#0A0A0A" stroke-width="3"/>
-          <rect x="54" y="36" width="24" height="16" rx="6" fill="none" stroke="#0A0A0A" stroke-width="3"/>
-          <line x1="42" y1="44" x2="54" y2="44" stroke="#0A0A0A" stroke-width="3"/>
-          <!-- eye dots -->
-          <circle cx="30" cy="44" r="2.5" fill="#0A0A0A"/>
-          <circle cx="66" cy="44" r="2.5" fill="#0A0A0A"/>
-          <!-- hair curl tuft -->
-          <path d="M30 14 C 22 10 18 18 24 24 C 30 30 22 34 18 28" fill="none" stroke="rgba(70,40,22,.9)" stroke-width="4" stroke-linecap="round"/>
+        <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
+
+        <g id="ettoreDef">
+          <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
+          <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
+          <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
+          <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+          <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
+          <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
+          <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
+          <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
+          <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
+          <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+          <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
         </g>
 
-        <!-- Patry: pink orb w/ dark hair + glasses + green eyes + sign -->
-        <g id="patryPac">
-          <circle cx="48" cy="48" r="44" fill="var(--pink)"/>
-          <!-- hair -->
-          <path d="M16 34 C 20 10 78 10 82 34 C 74 28 68 28 60 32 C 52 36 44 36 36 32 C 28 28 22 28 16 34 Z"
-                fill="rgba(10,10,14,.95)"/>
-          <!-- glasses -->
-          <rect x="18" y="40" width="24" height="16" rx="6" fill="none" stroke="#0A0A0A" stroke-width="3"/>
-          <rect x="54" y="40" width="24" height="16" rx="6" fill="none" stroke="#0A0A0A" stroke-width="3"/>
-          <line x1="42" y1="48" x2="54" y2="48" stroke="#0A0A0A" stroke-width="3"/>
-          <circle cx="30" cy="48" r="3.2" fill="#36FF7A"/>
-          <circle cx="66" cy="48" r="3.2" fill="#36FF7A"/>
-
-          <!-- sign -->
-          <g transform="translate(-176 8)" filter="url(#softShadow)">
-            <rect x="0" y="0" width="168" height="72" rx="14" fill="rgba(255,255,255,.96)" stroke="rgba(0,0,0,.18)"/>
-            <text x="84" y="30" text-anchor="middle" font-size="14" font-weight="1000" fill="#111" style="font-family: 'Press Start 2P', system-ui, sans-serif;">PROVA A</text>
-            <text x="84" y="56" text-anchor="middle" font-size="14" font-weight="1000" fill="#111" style="font-family: 'Press Start 2P', system-ui, sans-serif;">PRENDERMI</text>
-          </g>
-        </g>
-
-        <!-- Old smoker: Pac-man ghost w/ cigarette -->
-        <g id="oldGhost">
-          <use href="#ghostBody" fill="rgba(220,220,230,.95)"/>
-          <g transform="translate(12 22)">
-            <ellipse cx="18" cy="18" rx="12" ry="14" fill="#FFF"/>
-            <ellipse cx="42" cy="18" rx="12" ry="14" fill="#FFF"/>
-            <circle cx="20" cy="20" r="5" fill="#2E7DFF"/>
-            <circle cx="44" cy="20" r="5" fill="#2E7DFF"/>
-          </g>
-          <!-- torn clothes vibes -->
-          <path d="M8 62 L18 54 L28 66 L40 54 L52 68 L62 56 L70 66" stroke="rgba(0,0,0,.18)" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- cigarette -->
-          <g transform="translate(58 40)">
-            <rect x="0" y="10" width="22" height="6" rx="3" fill="#F2F2F2"/>
-            <rect x="18" y="10" width="6" height="6" rx="3" fill="#FF2E2E"/>
-            <path d="M22 6 C 28 2 32 -6 26 -12" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
-          </g>
-        </g>
-
-        <!-- Baguette -->
-        <g id="baguetteDef">
-          <g transform="rotate(-8 45 13)">
-            <rect x="0" y="0" width="90" height="26" rx="13" fill="#E7C178"/>
-            <path d="M16 8 L24 18 M34 8 L42 18 M52 8 L60 18 M70 8 L78 18"
-                  stroke="rgba(120,70,20,.35)" stroke-width="4" stroke-linecap="round"/>
-          </g>
+        <g id="patryDef">
+          <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
+                fill="#1A1A1D"/>
+          <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
+          <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+          <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
+          <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
+          <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
+          <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
+          <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
+          <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+          <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
         </g>
       </defs>
 
       <!-- BACKGROUND -->
       <g id="bg">
-        <rect x="0" y="0" width="1000" height="600" fill="#05060B"/>
-        <g id="maze" filter="url(#mazeGlow)" opacity="0.95">
-          <!-- Outer frame -->
-          <rect x="48" y="56" width="904" height="496" rx="24" fill="none" stroke="var(--maze)" stroke-width="10"/>
-          <!-- Classic-ish pac maze segments (decor only) -->
-          <path d="M120 120 H 420 V 180 H 260 V 240 H 460 V 120"
-                fill="none" stroke="var(--maze)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M540 120 H 880 V 240 H 740 V 180 H 580 V 240 H 540 V 120"
-                fill="none" stroke="var(--maze)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M160 300 H 360 V 360 H 220 V 440 H 160 V 300"
-                fill="none" stroke="var(--maze)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M640 300 H 840 V 440 H 780 V 360 H 640 V 300"
-                fill="none" stroke="var(--maze)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M420 320 H 580 V 420 H 420 Z"
-                fill="none" stroke="var(--maze)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+        <g id="stars" opacity=".45"></g>
+        <g id="skylineFar" opacity=".22">
+          <path d="M0 440 L0 420 L40 420 L40 398 L70 398 L70 430 L110 430 L110 410 L145 410 L145 392 L190 392 L190 430 L240 430 L240 402 L270 402 L270 430 L320 430 L320 390 L360 390 L360 440 Z" fill="#000"/>
+          <path d="M360 440 L360 410 L400 410 L400 380 L430 380 L430 420 L470 420 L470 400 L510 400 L510 360 L540 360 L540 420 L585 420 L585 398 L620 398 L620 430 L660 430 L660 390 L710 390 L710 440 Z" fill="#000"/>
+          <path d="M710 440 L710 410 L750 410 L750 380 L790 380 L790 420 L830 420 L830 395 L880 395 L880 430 L920 430 L920 390 L970 390 L970 440 Z" fill="#000"/>
         </g>
-
-        <!-- Pellets (decor only) -->
-        <g id="pellets" opacity="0.75"></g>
+        <rect x="0" y="430" width="1000" height="170" fill="rgba(0,0,0,.25)"/>
       </g>
 
       <!-- TITLE LAYER -->
       <g id="titleLayer">
-        <g filter="url(#mazeGlow)" opacity="0.92">
-          <text x="500" y="105" text-anchor="middle" fill="#FFFFFF"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:26px;">
-            5 YEARS: SURVIVAL
-          </text>
-          <text x="500" y="150" text-anchor="middle" fill="rgba(255,255,255,.92)"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:20px;">
-            ANNIVERSARY MODE
-          </text>
+        <g id="twoTowers" filter="url(#softShadow)">
+          <path d="M160 510 C 280 470 420 458 500 458 C 580 458 720 470 840 510 L840 560 L160 560 Z"
+                fill="rgba(0,0,0,.25)"/>
+          <g transform="translate(430 140)">
+            <path d="M40 0 L100 0 L120 360 L20 360 Z" fill="#1A1F2E"/>
+            <path d="M40 0 L100 0" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+            <g fill="#1A1F2E">
+              <rect x="38" y="-14" width="16" height="14" rx="3"/>
+              <rect x="60" y="-14" width="16" height="14" rx="3"/>
+              <rect x="82" y="-14" width="16" height="14" rx="3"/>
+            </g>
+            <g opacity=".55" fill="rgba(70,255,210,.35)">
+              <rect x="52" y="40" width="10" height="18" rx="3"/>
+              <rect x="78" y="40" width="10" height="18" rx="3"/>
+              <rect x="52" y="85" width="10" height="18" rx="3"/>
+              <rect x="78" y="85" width="10" height="18" rx="3"/>
+              <rect x="52" y="130" width="10" height="18" rx="3"/>
+              <rect x="78" y="130" width="10" height="18" rx="3"/>
+              <rect x="52" y="175" width="10" height="18" rx="3"/>
+              <rect x="78" y="175" width="10" height="18" rx="3"/>
+              <rect x="52" y="220" width="10" height="18" rx="3"/>
+              <rect x="78" y="220" width="10" height="18" rx="3"/>
+            </g>
+          </g>
+
+          <g transform="translate(575 220) rotate(-6)">
+            <path d="M0 0 L72 0 L92 280 L-18 280 Z" fill="#171C2A"/>
+            <g fill="#171C2A">
+              <rect x="-2" y="-14" width="16" height="14" rx="3"/>
+              <rect x="18" y="-14" width="16" height="14" rx="3"/>
+              <rect x="38" y="-14" width="16" height="14" rx="3"/>
+              <rect x="58" y="-14" width="16" height="14" rx="3"/>
+            </g>
+            <g opacity=".45" fill="rgba(70,255,210,.30)">
+              <rect x="10" y="50" width="10" height="18" rx="3"/>
+              <rect x="32" y="50" width="10" height="18" rx="3"/>
+              <rect x="54" y="50" width="10" height="18" rx="3"/>
+              <rect x="10" y="100" width="10" height="18" rx="3"/>
+              <rect x="32" y="100" width="10" height="18" rx="3"/>
+              <rect x="54" y="100" width="10" height="18" rx="3"/>
+              <rect x="10" y="150" width="10" height="18" rx="3"/>
+              <rect x="32" y="150" width="10" height="18" rx="3"/>
+              <rect x="54" y="150" width="10" height="18" rx="3"/>
+            </g>
+          </g>
+
+          <path d="M200 510 C 310 485 420 476 500 476 C 580 476 690 485 800 510"
+                stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- demo sprites on title -->
+        <!-- Personaggi in title screen -->
         <g filter="url(#softShadow)">
-          <g transform="translate(220 300) scale(1.0)">
-            <use href="#ettorePac"/>
+          <g transform="translate(210 330) scale(0.62)">
+            <use href="#ettoreDef"/>
           </g>
-          <g transform="translate(740 300) scale(1.0)">
-            <use href="#patryPac"/>
-          </g>
-          <g transform="translate(420 350) scale(1.0)">
-            <use href="#oldGhost"/>
-          </g>
-          <g transform="translate(520 260) scale(1.0)">
-            <use href="#baguetteDef"/>
+          <g transform="translate(760 330) scale(0.62)">
+            <use href="#patryDef"/>
+            <g transform="translate(-180 18) scale(1.35)">
+              <rect x="0" y="0" width="160" height="66" rx="14" fill="rgba(255,255,255,.95)" stroke="rgba(0,0,0,.18)"/>
+              <text x="80" y="28" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PROVA A</text>
+              <text x="80" y="50" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PRENDERMI</text>
+            </g>
           </g>
         </g>
 
-        <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#mazeGlow)">
-          <text x="500" y="525" fill="var(--yellow)"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:18px;">PRESS START</text>
+        <g id="titleText" font-weight="900" text-anchor="middle" filter="url(#softShadow)">
+          <text x="500" y="70" font-size="44" fill="rgba(255,255,255,.92)">5 YEARS: SURVIVAL</text>
+          <text x="500" y="114" font-size="36" fill="rgba(255,255,255,.86)">ANNIVERSARY MODE</text>
+          <text id="glitchA" class="blink" x="500" y="70" font-size="44" fill="rgba(70,255,210,.50)" filter="url(#glowAqua)">5 YEARS: SURVIVAL</text>
+          <text id="glitchB" class="blink" x="500" y="70" font-size="44" fill="rgba(255,77,109,.45)" filter="url(#glowPink)">5 YEARS: SURVIVAL</text>
+        </g>
+
+        <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#glowPink)">
+          <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="1000">PRESS START</text>
         </g>
 
         <g id="startButton" class="clickable pulse" filter="url(#softShadow)">
-          <rect x="340" y="420" width="320" height="82" rx="18"
-                fill="rgba(46,125,255,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-          <text x="500" y="472" text-anchor="middle" fill="rgba(255,255,255,.92)"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:20px;">START</text>
+          <rect x="360" y="420" width="280" height="74" rx="22"
+                fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+          <text x="500" y="468" text-anchor="middle" font-size="30" font-weight="1000"
+                fill="rgba(255,255,255,.92)">START</text>
         </g>
-
-        <style>
-          .blink{ animation: blink 0.38s steps(2,end) infinite; }
-          .pulse{ animation: pulse 1.25s ease-in-out infinite; transform-origin: 500px 461px; }
-          .clickable{ cursor:pointer; pointer-events: all; }
-          @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.03) } }
-        </style>
       </g>
 
-      <!-- CHASE LAYER -->
+      <!-- CHASE LAYER (LABYRINTH) -->
       <g id="chaseLayer" opacity="0">
+        <!-- Maze walls -->
+        <g id="maze" filter="url(#softShadow)"></g>
+
+        <!-- Obstacles: ONLY olds + baguettes -->
         <g id="olds"></g>
         <g id="baguettes"></g>
 
-        <g id="patry" filter="url(#softShadow)"></g>
-        <g id="ettore" filter="url(#softShadow)"></g>
+        <g id="patry" filter="url(#softShadow)">
+          <use href="#patryDef"/>
+          <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
+            <rect x="0" y="0" width="170" height="70" rx="14" fill="rgba(255,255,255,.96)" stroke="rgba(0,0,0,.18)"/>
+            <text x="85" y="30" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PROVA A</text>
+            <text x="85" y="54" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PRENDERMI</text>
+          </g>
+        </g>
 
-        <line id="targetLine" x1="0" y1="0" x2="0" y2="0"
-              stroke="rgba(255,216,77,.14)" stroke-width="3" stroke-linecap="round"/>
+        <g id="ettore" filter="url(#softShadow)">
+          <use href="#ettoreDef"/>
+        </g>
+
+        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.14)" stroke-width="3" stroke-linecap="round"/>
       </g>
 
-      <!-- QUIZ BACKGROUND LAYER (kept simple pac-style) -->
+      <!-- QUIZ BG -->
       <g id="quizBgLayer" opacity="0">
-        <rect x="0" y="0" width="1000" height="600" fill="#05060B"/>
-        <g filter="url(#mazeGlow)" opacity="0.85">
-          <rect x="90" y="90" width="820" height="420" rx="22" fill="none" stroke="var(--maze)" stroke-width="10"/>
+        <g id="qbg0" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".22">
+            <circle cx="170" cy="210" r="90" fill="rgba(70,255,210,.45)"/>
+            <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">PRIMO DATE</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">dove tutto è iniziato…</text>
         </g>
-        <g opacity="0.18">
-          <g transform="translate(140 150) scale(0.9)"><use href="#oldGhost"/></g>
-          <g transform="translate(760 420) scale(0.9)"><use href="#oldGhost"/></g>
-          <g transform="translate(720 150) scale(0.9)"><use href="#baguetteDef"/></g>
+
+        <g id="qbg1" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".18">
+            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">MOOD CHECK</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando Patry è scocciata…</text>
+        </g>
+
+        <g id="qbg2" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".22">
+            <rect x="120" y="340" width="760" height="180" rx="26" fill="rgba(255,255,255,.08)"/>
+            <g stroke="rgba(255,255,255,.20)" stroke-width="6">
+              <line x1="160" y1="380" x2="840" y2="380"/>
+              <line x1="160" y1="430" x2="840" y2="430"/>
+              <line x1="160" y1="480" x2="840" y2="480"/>
+            </g>
+          </g>
+          <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">PARKING PANIC</text>
+          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quasi-bloccati: storia vera</text>
+        </g>
+
+        <g id="qbg3" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".28">
+            <circle cx="260" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="240" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+            <circle cx="500" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="480" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+            <circle cx="740" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
+            <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">DESSERT COCCOLA</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">quando siete giù…</text>
+        </g>
+
+        <g id="qbg4" opacity="0">
+          <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
+          <g opacity=".25">
+            <g transform="translate(180 240) scale(2.2)"><use href="#heartPath" fill="rgba(255,77,109,.55)"/></g>
+            <g transform="translate(820 300) scale(2.8)"><use href="#heartPath" fill="rgba(255,77,109,.35)"/></g>
+            <g transform="translate(560 460) scale(3.4)"><use href="#heartPath" fill="rgba(255,77,109,.28)"/></g>
+          </g>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">NICKNAME QUEST</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">come vi chiamate di solito?</text>
         </g>
       </g>
 
-      <!-- GIFT LAYER -->
-      <g id="giftLayer" opacity="0">
-        <rect x="0" y="0" width="1000" height="600" fill="#05060B"/>
-        <g filter="url(#mazeGlow)" opacity="0.95">
-          <rect x="70" y="70" width="860" height="460" rx="22" fill="none" stroke="var(--maze)" stroke-width="10"/>
-        </g>
+      <g id="giftLayer" opacity="0"></g>
 
-        <text x="500" y="120" text-anchor="middle" fill="#FFFFFF"
-              style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:18px;">
-          YOU WIN!
-        </text>
-
-        <g id="giftBox" filter="url(#softShadow)" transform="translate(420 260)" style="cursor:pointer">
-          <rect x="0" y="36" width="160" height="120" rx="16" fill="rgba(255,77,160,.60)" stroke="rgba(255,255,255,.18)"/>
-          <rect x="72" y="36" width="16" height="120" rx="8" fill="rgba(46,125,255,.70)"/>
-          <rect x="0" y="88" width="160" height="16" rx="8" fill="rgba(46,125,255,.70)"/>
-          <g id="giftLid">
-            <rect x="-6" y="0" width="172" height="42" rx="16" fill="rgba(255,77,160,.75)" stroke="rgba(255,255,255,.18)"/>
-            <text x="80" y="28" text-anchor="middle" fill="rgba(255,255,255,.90)"
-                  style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:12px;">CLICK!</text>
-          </g>
-        </g>
-
-        <g id="parchment" opacity="0" filter="url(#softShadow)">
-          <rect x="120" y="160" width="760" height="260" rx="18" fill="rgba(247,242,232,.96)" stroke="rgba(0,0,0,.18)"/>
-          <text x="500" y="198" text-anchor="middle" fill="#1A1A1A"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:14px;">CERTIFICATO</text>
-
-          <g text-anchor="middle" fill="#1A1A1A" style="font-family: Inter, system-ui, sans-serif; font-weight: 900; font-size: 16px;">
-            <text x="500" y="236">Certificato di sopravvivenza quinquennale</text>
-            <text x="500" y="262">conferito a</text>
-            <text x="500" y="295" style="font-size:20px;">ETTORE GORNI,</text>
-            <text x="500" y="326">in qualità di moroso più paziente</text>
-            <text x="500" y="352">e bubo più adorabile che ci sia.</text>
-          </g>
-        </g>
-
-        <g id="kissScene" opacity="0">
-          <g id="ettoreK" transform="translate(260 440) scale(0.9)"><use href="#ettorePac"/></g>
-          <g id="patryK"  transform="translate(660 440) scale(0.9)"><use href="#patryPac"/></g>
-
-          <g id="bigHeart" opacity="0" transform="translate(500 455) scale(2.0)">
-            <path d="M0 -16 C0 -30 -18 -34 -28 -22 C-38 -10 -30 6 0 24 C30 6 38 -10 28 -22 C18 -34 0 -30 0 -16 Z"
-                  fill="rgba(255,46,46,.88)" filter="url(#softShadow)"/>
-          </g>
-
-          <text id="tbc" x="500" y="560" text-anchor="middle" fill="rgba(255,255,255,.92)" opacity="0"
-                style="font-family:'Press Start 2P',system-ui,sans-serif; font-size:16px;">
-            TO BE CONTINUED...
-          </text>
-        </g>
-      </g>
+      <style>
+        .blink{ animation: blink 0.38s steps(2,end) infinite; }
+        #glitchA{ animation-duration: 0.65s; transform: translate(2px, -1px); opacity:.65; }
+        #glitchB{ animation-duration: 0.65s; animation-delay: 0.12s; transform: translate(-2px, 1px); opacity:.55; }
+        .pulse{ animation: pulse 1.25s ease-in-out infinite; transform-origin: 500px 457px; }
+        .clickable{ cursor:pointer; pointer-events: all; }
+        #startButton:hover rect{ filter: brightness(1.14); }
+        @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.03) } }
+      </style>
     </svg>
 
     <!-- UI overlay -->
     <div class="ui">
       <div class="topbar">
-        <div class="pill">🎮 <span>CHASE</span> <small>evita 👴🚬 & 🥖</small></div>
-        <div class="pill">Obiettivo: <span style="color:var(--yellow); font-weight:1000;">raggiungi Patry</span></div>
+        <div class="pill">🧩 <span>LABYRINTH MODE</span> <small>— CHASE</small></div>
+        <div class="pill">Obiettivo: <span style="color:var(--aqua); font-weight:1000;">raggiungi Patry</span></div>
       </div>
 
       <div id="toast" class="toast"></div>
@@ -566,7 +542,7 @@
       <div class="titleCard">
         <div class="left">
           <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso</div>
-          <div class="hint">Stile <b>Pac-Man</b>: solo <b>vecchi</b> e <b>baguette</b> ti fermano. Se ti prendono: <b>TRY AGAIN</b>.</div>
+          <div class="hint" style="opacity:.9">Labirinto da superare: mura bloccano il percorso. Ostacoli “killer”: <b>vecchi</b> 👴🚬 e <b>baguette</b> 🥖.</div>
         </div>
         <div class="btnRow">
           <button id="startBtn" type="button">START</button>
@@ -586,7 +562,7 @@
           <div class="pad padGhost"></div>
           <div class="pad padGhost"></div>
         </div>
-        <div class="sideHint"><b>TIP:</b> muoviti sempre — i vecchi ti inseguono 👴🚬</div>
+        <div class="sideHint"><b>TIP:</b> se ti bloccano… cambia corridoio. Le baguette rimbalzano!</div>
       </div>
 
       <div id="centerOverlay">
@@ -613,6 +589,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -623,8 +600,9 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // Fit viewBox
+  // Fit viewBox (responsive camera)
   function fitViewBox(){
+    if(!svg) return;
     const baseW = 1000, baseH = 600;
     const baseAR = baseW / baseH;
     const vw = (window.visualViewport && window.visualViewport.width)  ? window.visualViewport.width  : window.innerWidth;
@@ -648,27 +626,28 @@
     window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   }
 
-  // DOM layers
+  // DOM
+  const stars = document.getElementById('stars');
   const titleLayer = document.getElementById('titleLayer');
   const chaseLayer = document.getElementById('chaseLayer');
   const quizBgLayer = document.getElementById('quizBgLayer');
   const giftLayer = document.getElementById('giftLayer');
 
-  const pelletsG = document.getElementById('pellets');
+  const mazeG = document.getElementById('maze');
   const oldsG = document.getElementById('olds');
   const baguettesG = document.getElementById('baguettes');
 
-  const ettoreG = document.getElementById('ettore');
-  const patryG = document.getElementById('patry');
+  const ettore = document.getElementById('ettore');
+  const patry = document.getElementById('patry');
   const targetLine = document.getElementById('targetLine');
 
   const pressStart = document.getElementById('pressStart');
   const startButton = document.getElementById('startButton');
+
+  const toast = document.getElementById('toast');
   const startBtn = document.getElementById('startBtn');
   const muteBtn = document.getElementById('muteBtn');
-  const toast = document.getElementById('toast');
 
-  // Overlay
   const centerOverlay = document.getElementById('centerOverlay');
   const centerBig = document.getElementById('centerBig');
   const centerSub = document.getElementById('centerSub');
@@ -684,15 +663,13 @@
   const retryMsg = document.getElementById('retryMsg');
   const retryBtn = document.getElementById('retryBtn');
 
-  // Gift
-  const giftBox = document.getElementById('giftBox');
-  const giftLid = document.getElementById('giftLid');
-  const parchment = document.getElementById('parchment');
-  const kissScene = document.getElementById('kissScene');
-  const ettoreK = document.getElementById('ettoreK');
-  const patryK = document.getElementById('patryK');
-  const bigHeart = document.getElementById('bigHeart');
-  const tbc = document.getElementById('tbc');
+  const qbg = [
+    document.getElementById('qbg0'),
+    document.getElementById('qbg1'),
+    document.getElementById('qbg2'),
+    document.getElementById('qbg3'),
+    document.getElementById('qbg4'),
+  ];
 
   // Helpers
   const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
@@ -700,32 +677,53 @@
   const pick = (arr) => arr[(Math.random()*arr.length)|0];
   const now = () => performance.now();
 
-  const NS = "http://www.w3.org/2000/svg";
-
   function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
-  function setTransform(el, x, y, s=1, rot=0){
-    el.setAttribute('transform', `translate(${x} ${y}) scale(${s}) rotate(${rot} 48 48)`);
-  }
+  function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
+
   function rectsOverlap(a,b){
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+
+  // Movement with wall collisions (slide)
+  function moveWithCollisions(ent, dx, dy, blocks){
+    ent.x += dx;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dx>0) ent.x = b.x - ent.w;
+        else if(dx<0) ent.x = b.x + b.w;
+      }
+    }
+    ent.y += dy;
+    for(const b of blocks){
+      if(rectsOverlap(ent,b)){
+        if(dy>0) ent.y = b.y - ent.h;
+        else if(dy<0) ent.y = b.y + b.h;
+      }
+    }
   }
 
   // Audio
   let audioOn = true;
   let audioCtx = null;
-  function beep(freq=440, dur=0.08, type='square', gain=0.03){
+  function beep(freq=440, dur=0.08, type='sine', gain=0.03){
     if(!audioOn) return;
     try{
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      o.type = type; o.frequency.value = freq;
+      o.type = type;
+      o.frequency.value = freq;
       g.gain.value = gain;
       o.connect(g); g.connect(audioCtx.destination);
-      o.start(); o.stop(audioCtx.currentTime + dur);
+      o.start();
+      o.stop(audioCtx.currentTime + dur);
     }catch(_){}
   }
-  function ensureAudio(){ if(audioOn && !audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(_){}} }
+  function ensureAudioContext(){
+    if(audioOn && !audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(_){}
+    }
+  }
 
   // Toast
   let toastTimer = 0;
@@ -734,6 +732,24 @@
     toast.classList.add('show');
     toastTimer = ms;
   }
+
+  // Stars
+  function buildStars(group, count){
+    if(!group) return;
+    group.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const cx = rand(0, 1000), cy = rand(0, 420);
+      const r = rand(0.7, 1.8);
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute('cx', cx);
+      c.setAttribute('cy', cy);
+      c.setAttribute('r', r);
+      c.setAttribute('fill', 'rgba(255,255,255,.85)');
+      c.setAttribute('opacity', String(rand(0.25, 0.9)));
+      group.appendChild(c);
+    }
+  }
+  buildStars(stars, 110);
 
   // State
   const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
@@ -755,142 +771,180 @@
     }
   }
 
-  // Pellets decor
-  function buildPellets(){
-    pelletsG.innerHTML = '';
-    const cols = 32, rows = 18;
-    for(let r=0;r<rows;r++){
-      for(let c=0;c<cols;c++){
-        if((r+c)%2!==0) continue;
-        const x = 70 + c*(860/(cols-1));
-        const y = 90 + r*(440/(rows-1));
-        // don't spam the center too much
-        if(x>420 && x<580 && y>240 && y<360) continue;
-
-        const dot = document.createElementNS(NS,'circle');
-        dot.setAttribute('cx', x);
-        dot.setAttribute('cy', y);
-        dot.setAttribute('r', (Math.random()<0.06) ? 6 : 3.2);
-        dot.setAttribute('fill', 'rgba(255,216,77,.95)');
-        dot.setAttribute('opacity', (Math.random()<0.06) ? '0.9' : '0.55');
-        pelletsG.appendChild(dot);
-      }
-    }
-  }
-  buildPellets();
-
   // -------------------------------
-  // CHASE: only olds + baguettes as obstacles
+  // LABYRINTH CHASE
   // -------------------------------
-  const SCALE = 0.70;             // sprite scale in chase (Pac sprites are compact)
-  const player = { x: 120, y: 500, w: 70, h: 70, speed: 700 };
-  const girl   = { x: 860, y: 95,  w: 70, h: 70 };
+  const SCALE_E = 0.55;
+  const SCALE_P = 0.55;
 
+  // collision boxes tuned (approx scaled sprite)
+  const player = { x: 70, y: 500, w: 72, h: 128, speed: 610 };
+  const girl   = { x: 870, y: 85,  w: 125, h: 125 };
+
+  let mazeWalls = [];
   let olds = [];
   let baguettes = [];
   let baguetteSpawn = 0;
 
-  // movement direction for rotation + mouth
-  let lastDir = 'right';
-  let moving = false;
-  let mouthPhase = 0;
+  function drawMaze(){
+    mazeG.innerHTML = '';
+    for(const w of mazeWalls){
+      const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      r.setAttribute('x', w.x);
+      r.setAttribute('y', w.y);
+      r.setAttribute('width', w.w);
+      r.setAttribute('height', w.h);
+      r.setAttribute('rx', 14);
+      r.setAttribute('fill', 'rgba(255,255,255,.08)');
+      r.setAttribute('stroke', 'rgba(255,255,255,.18)');
+      r.setAttribute('stroke-width', '2');
+      mazeG.appendChild(r);
+    }
+    // subtle inner glow path hint
+    const glow = document.createElementNS("http://www.w3.org/2000/svg","path");
+    glow.setAttribute('d', 'M 50 540 C 160 520 160 90 290 90 C 420 90 420 520 550 520 C 680 520 680 90 820 90 C 900 90 940 110 960 140');
+    glow.setAttribute('fill', 'none');
+    glow.setAttribute('stroke', 'rgba(70,255,210,.10)');
+    glow.setAttribute('stroke-width', '6');
+    glow.setAttribute('stroke-linecap', 'round');
+    mazeG.appendChild(glow);
+  }
 
-  function makeUse(href){
-    const g = document.createElementNS(NS,'g');
-    const u = document.createElementNS(NS,'use');
-    u.setAttribute('href', href);
-    g.appendChild(u);
+  function buildMaze(){
+    // Outer bounds
+    mazeWalls = [
+      {x:20, y:40,  w:960, h:16},  // top
+      {x:20, y:564, w:960, h:16},  // bottom
+      {x:20, y:40,  w:16,  h:540}, // left
+      {x:964,y:40,  w:16,  h:540}, // right
+    ];
+
+    // Main labyrinth columns (snake):
+    // alternate walls that connect to bottom/top leaving ONE big gap
+    // (Player must zig-zag: top gap -> bottom gap -> top gap...)
+    const colXs = [140, 260, 380, 500, 620, 740];
+    // top boundary ends at y=56 (40+16); bottom boundary starts at y=564
+    // top-gap walls connect to bottom (start low); bottom-gap walls connect to top (start at 56)
+    for(let i=0;i<colXs.length;i++){
+      const x = colXs[i];
+      if(i % 2 === 0){
+        // top gap only: wall reaches bottom
+        mazeWalls.push({x, y:220, w:18, h:344}); // 220..564
+      }else{
+        // bottom gap only: wall starts at top and stops early
+        mazeWalls.push({x, y:56, w:18, h:354}); // 56..410 (gap 410..564)
+      }
+    }
+
+    // Extra “teeth” to make it feel more maze-like (still solvable)
+    mazeWalls.push(
+      {x:60,  y:240, w:90, h:18},
+      {x:60,  y:320, w:70, h:18},
+      {x:170, y:120, w:70, h:18},
+      {x:170, y:480, w:90, h:18},
+      {x:300, y:220, w:80, h:18},
+      {x:300, y:480, w:90, h:18},
+      {x:420, y:120, w:80, h:18},
+      {x:540, y:240, w:80, h:18},
+      {x:540, y:480, w:90, h:18},
+      {x:660, y:120, w:80, h:18},
+      {x:780, y:240, w:80, h:18}
+    );
+
+    drawMaze();
+  }
+
+  function oldManSVG(){
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute('filter','url(#softShadow)');
+    g.innerHTML = `
+      <g>
+        <rect x="18" y="20" width="56" height="54" rx="18" fill="#EBC6A1"/>
+        <path d="M18 44 C 22 16 74 16 74 44" fill="#B9B9B9"/>
+        <circle cx="32" cy="44" r="3" fill="#111"/>
+        <circle cx="60" cy="44" r="3" fill="#111"/>
+        <path d="M36 58 C 44 64 54 64 62 58" stroke="#6B3B2A" stroke-width="6" stroke-linecap="round"/>
+        <path d="M10 74 C 10 60 82 60 82 74 L82 118 C 82 130 74 140 60 140 L32 140 C 18 140 10 130 10 118 Z"
+              fill="rgba(255,209,102,.18)" stroke="rgba(255,209,102,.35)" stroke-width="2"/>
+        <path d="M18 104 L30 90 L38 110 L48 92 L58 112 L68 96 L76 112"
+              stroke="rgba(0,0,0,.22)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <path d="M6 88 C -2 98 2 116 12 126" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
+        <path d="M80 90 C 92 92 98 104 94 116 C 92 124 86 130 78 134" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
+        <rect x="92" y="100" width="18" height="5" rx="2.5" fill="#F2F2F2"/>
+        <rect x="108" y="100" width="5" height="5" rx="2.5" fill="#FF4D6D"/>
+        <path d="M110 92 C 116 86 120 78 116 70" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </g>
+    `;
     return g;
   }
 
-  function buildChaseSprites(){
-    ettoreG.innerHTML = '';
-    patryG.innerHTML = '';
-    ettoreG.appendChild(makeUse('#ettorePac'));
-    patryG.appendChild(makeUse('#patryPac'));
-  }
-  buildChaseSprites();
-
-  function spawnOlds(){
+  function drawOlds(){
     oldsG.innerHTML = '';
-    olds = [];
-    const spawns = [
-      {x: 250, y: 140},
-      {x: 700, y: 160},
-      {x: 420, y: 360},
-      {x: 820, y: 420},
-      {x: 160, y: 420},
-    ];
-    for(let i=0;i<spawns.length;i++){
-      const el = makeUse('#oldGhost');
-      el.setAttribute('filter','url(#softShadow)');
+    for(const o of olds){
+      const el = oldManSVG();
       oldsG.appendChild(el);
-      olds.push({
-        id: i,
-        x: spawns[i].x,
-        y: spawns[i].y,
-        w: 72, h: 78,
-        speed: rand(95, 135),
-        wob: rand(0, 10),
-        el
-      });
-      // old ghost uses 72x78-ish view; we place it with scale
-      el.setAttribute('transform', `translate(${spawns[i].x} ${spawns[i].y}) scale(${0.95})`);
+      o.el = el;
+      setTransformScale(o.el, o.x, o.y, 0.62);
     }
   }
 
-  function spawnBaguette(){
-    const el = makeUse('#baguetteDef');
-    el.setAttribute('filter','url(#softShadow)');
-    baguettesG.appendChild(el);
-
-    // spawn from random edge for a more Pac chaos
-    const side = (Math.random()*4)|0;
-    let x, y, vx, vy;
-    const speed = rand(520, 720);
-    if(side===0){ x=-120; y=rand(90,530); vx=speed; vy=rand(-70,70); }
-    else if(side===1){ x=1120; y=rand(90,530); vx=-speed; vy=rand(-70,70); }
-    else if(side===2){ x=rand(60,940); y=-80; vx=rand(-80,80); vy=speed; }
-    else { x=rand(60,940); y=680; vx=rand(-80,80); vy=-speed; }
-
-    baguettes.push({
-      x, y, w: 90, h: 26,
-      vx, vy,
-      wob: rand(0,10),
-      el
-    });
+  function makeBaguette(){
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute('filter','url(#softShadow)');
+    g.innerHTML = `
+      <g transform="rotate(-8)">
+        <rect x="0" y="0" width="90" height="26" rx="13" fill="#E7C178"/>
+        <path d="M16 8 L24 18 M34 8 L42 18 M52 8 L60 18 M70 8 L78 18"
+              stroke="rgba(120,70,20,.35)" stroke-width="4" stroke-linecap="round"/>
+      </g>`;
+    return g;
   }
 
-  function resetChase(){
-    player.x = 120; player.y = 500;
-    girl.x = 860; girl.y = 95;
+  function buildLevel(){
+    buildMaze();
 
+    // Start / goal
+    player.x = 58;  player.y = 505;
+    girl.x = 865;   girl.y = 85;
+
+    // Obstacles (only olds + baguettes)
     baguettes = [];
     baguettesG.innerHTML = '';
-    baguetteSpawn = 0.30;
+    baguetteSpawn = 0.45;
 
-    lastDir = 'right';
-    moving = false;
-    mouthPhase = 0;
+    // Olds placed inside corridors (they will respect maze walls too)
+    olds = [
+      {x: 210, y: 170},
+      {x: 320, y: 520},
+      {x: 460, y: 170},
+      {x: 590, y: 520},
+      {x: 720, y: 170},
+    ].map((p,i)=>({
+      id: 'old'+i,
+      x: p.x, y: p.y,
+      w: 68, h: 110,
+      speed: rand(85, 115),
+      wob: rand(0, 10),
+      el: null
+    }));
+    drawOlds();
 
-    spawnOlds();
-    // render initial positions
-    setTransform(ettoreG, player.x, player.y, SCALE, 0);
-    setTransform(patryG, girl.x, girl.y, SCALE, 0);
+    setTransformScale(ettore, player.x, player.y, SCALE_E);
+    setTransformScale(patry, girl.x, girl.y, SCALE_P);
   }
 
   // Input
   const keys = {up:false,down:false,left:false,right:false};
+
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
-      e.preventDefault();
-    }
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' ') e.preventDefault();
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
     if(k==='arrowright'|| k==='d') keys.right=true;
   }, {passive:false});
+
   window.addEventListener('keyup', (e)=>{
     const k = e.key.toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
@@ -917,7 +971,7 @@
     keys.right = activeDirs.has('right');
   }
 
-  // Overlay control
+  // Overlay
   let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
@@ -926,15 +980,15 @@
     centerBig.textContent = 'TRY AGAIN';
     centerSub.textContent = 'Clicca per ricominciare';
     centerOverlay.classList.add('show');
-    beep(150, .12, 'square', .06);
+    beep(160, .12, 'square', .06);
   }
   function showFinallyTogether(){
     overlayMode = 'win';
     centerBig.textContent = 'FINALLY TOGETHER!';
     centerSub.textContent = '…e ora il quiz!';
     centerOverlay.classList.add('show');
-    beep(880, .10, 'triangle', .06);
-    winTimer = 0.9;
+    beep(880, .09, 'triangle', .05);
+    winTimer = 0.95;
   }
   function hideOverlay(){
     overlayMode = 'none';
@@ -943,33 +997,37 @@
 
   centerOverlay.addEventListener('click', (e)=>{
     e.preventDefault();
-    if(overlayMode === 'try'){
-      hideOverlay();
-      resetChase();
-      setState(State.CHASE);
-      showToast("INSERT COIN… scherzo 😄 GO!", 950);
-    }
+    if(overlayMode === 'try') restartChase();
   });
 
-  // Title start
-  function startGame(){
-    if(state !== State.TITLE) return;
-    ensureAudio();
+  // Flow
+  function restartChase(){
     hideOverlay();
-    resetChase();
+    buildLevel();
     setState(State.CHASE);
-    showToast("CHASE MODE: raggiungi Patry! 💖", 1200);
-    beep(520, .07, 'triangle', .04);
+    showToast("LABYRINTH MODE: trova la via! 🧩", 1200);
   }
-  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startGame(); });
-  pressStart.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startGame(); }, {passive:false});
-  startButton.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startGame(); }, {passive:false});
+
+  function enterChase(){
+    buildLevel();
+    hideOverlay();
+    setState(State.CHASE);
+    showToast("Vai Ettore! Schiva vecchi e baguette!", 1400);
+    beep(520, .07, 'triangle', .03);
+  }
+
+  function startFromTitle(){
+    if(state !== State.TITLE) return;
+    ensureAudioContext();
+    enterChase();
+  }
+
+  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
+  pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
+  startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
   window.addEventListener('keydown', (e)=>{
     if(state !== State.TITLE) return;
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      startGame();
-    }
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); startFromTitle(); }
   }, {passive:false});
 
   muteBtn.addEventListener('click', (e)=>{
@@ -979,30 +1037,6 @@
     beep(audioOn ? 600 : 200, .06, 'triangle', .03);
   });
 
-  // Mouth animation: toggle open/closed paths by opacity
-  function updateMouth(){
-    const mouthOpen = ettoreG.querySelector('#mouthOpen');
-    const mouthClosed = ettoreG.querySelector('#mouthClosed');
-    if(!mouthOpen || !mouthClosed) return;
-    if(!moving){
-      mouthOpen.setAttribute('opacity','0.30');
-      mouthClosed.setAttribute('opacity','0');
-      return;
-    }
-    const t = mouthPhase % 1.0;
-    const open = t < 0.5;
-    mouthOpen.setAttribute('opacity', open ? '0.92' : '0.18');
-    mouthClosed.setAttribute('opacity', open ? '0' : '0.92');
-  }
-
-  function dirToRot(d){
-    if(d==='right') return 0;
-    if(d==='down') return 90;
-    if(d==='left') return 180;
-    if(d==='up') return -90;
-    return 0;
-  }
-
   // -------------------------------
   // QUIZ
   // -------------------------------
@@ -1011,30 +1045,31 @@
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
     "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
   ];
-
   const questions = [
-    { q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
-    { q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
-    { q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?", opts:[
+    { bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
+    { bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
+    { bg:2, q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?", opts:[
       "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
       "Quando non ho prenotato l'albergo in Grecia",
       "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
     ], correct:0 },
-    { q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
-    { q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
+    { bg:3, q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
+    { bg:4, q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
   ];
 
   let qIndex = 0;
   let qTime = 10.0;
   let qRunning = false;
 
+  function showQuizBg(i){
+    qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0'));
+  }
   function updateQuizMeter(){
     tleftEl.textContent = Math.ceil(qTime).toString();
     const ratio = clamp(qTime/10, 0, 1);
     tfillEl.style.transform = `scaleX(${ratio})`;
     tleftEl.classList.toggle('danger', qTime <= 3.2);
   }
-
   function setupQuestion(){
     const item = questions[qIndex];
     qtitle.textContent = "QUIZ A TEMPO — 10s";
@@ -1053,24 +1088,24 @@
 
     qTime = 10.0;
     updateQuizMeter();
+    showQuizBg(item.bg);
   }
-
   function failQuiz(){
     qRunning = false;
     retryMsg.textContent = pick(wrongMessages);
     retryBox.style.display = 'block';
-    beep(180, .14, 'square', .06);
+    beep(180, .14, 'square', .05);
   }
-
   function answer(idx){
     if(!qRunning) return;
     const item = questions[qIndex];
     if(idx === item.correct){
-      beep(860, .08, 'triangle', .05);
+      beep(880, .08, 'triangle', .04);
       qIndex++;
       if(qIndex >= questions.length){
         qRunning = false;
-        enterGift();
+        showToast("Quiz completato! 🎉", 1400);
+        setState(State.TITLE);
       }else{
         setupQuestion();
       }
@@ -1078,13 +1113,12 @@
       failQuiz();
     }
   }
-
   retryBtn.addEventListener('click', ()=>{
     qIndex = 0;
     retryBox.style.display = 'none';
     setupQuestion();
     qRunning = true;
-    beep(520, .07, 'triangle', .04);
+    beep(520, .07, 'triangle', .03);
   });
 
   function enterQuiz(){
@@ -1093,84 +1127,25 @@
     retryBox.style.display = 'none';
     setupQuestion();
     qRunning = true;
-    showToast("QUIZ MODE: 10s per domanda ⏱", 1200);
-    beep(660, .08, 'triangle', .04);
+    showToast("Quiz a tempo! 10 secondi per domanda ⏱", 1200);
+    beep(660, .08, 'triangle', .03);
   }
-
-  // -------------------------------
-  // Gift flow
-  // -------------------------------
-  let giftOpened = false;
-
-  function enterGift(){
-    setState(State.GIFT);
-    giftOpened = false;
-    parchment.setAttribute('opacity','0');
-    kissScene.setAttribute('opacity','0');
-    bigHeart.setAttribute('opacity','0');
-    tbc.setAttribute('opacity','0');
-    giftLid.setAttribute('transform','translate(0 0)');
-    showToast("🎁 Premi sul pacchetto!", 1500);
-    beep(740, .08, 'triangle', .04);
-  }
-
-  function openGift(){
-    if(giftOpened) return;
-    giftOpened = true;
-
-    // lid pop
-    giftLid.setAttribute('transform','translate(0 -18) rotate(-8 80 20)');
-    beep(920, .06, 'triangle', .05);
-
-    // parchment in
-    setTimeout(()=> {
-      parchment.setAttribute('opacity','1');
-      beep(520, .07, 'triangle', .04);
-    }, 250);
-
-    // kiss scene
-    setTimeout(()=> {
-      kissScene.setAttribute('opacity','1');
-      // move sprites together
-      let t = 0;
-      const a0 = {x:260, y:440};
-      const b0 = {x:660, y:440};
-      const a1 = {x:410, y:440};
-      const b1 = {x:510, y:440};
-      const step = () => {
-        t += 0.04;
-        const u = Math.min(1, t);
-        const ax = a0.x + (a1.x - a0.x)*u;
-        const bx = b0.x + (b1.x - b0.x)*u;
-        ettoreK.setAttribute('transform', `translate(${ax} ${a0.y}) scale(0.9)`);
-        patryK.setAttribute('transform', `translate(${bx} ${b0.y}) scale(0.9)`);
-        if(u < 1) requestAnimationFrame(step);
-        else{
-          bigHeart.setAttribute('opacity','1');
-          tbc.setAttribute('opacity','1');
-          beep(1040, .10, 'triangle', .05);
-        }
-      };
-      requestAnimationFrame(step);
-    }, 800);
-  }
-
-  giftBox.addEventListener('click', (e)=>{ e.preventDefault(); openGift(); });
 
   // -------------------------------
   // Main loop
   // -------------------------------
+  let t = 0;
   let last = now();
-  let tGlobal = 0;
 
   function update(dt){
-    // toast
     if(toastTimer > 0){
       toastTimer -= dt*1000;
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
-    // overlay timing for win -> quiz
+    const skylineFar = document.getElementById('skylineFar');
+    if(skylineFar) skylineFar.setAttribute('transform', `translate(${Math.sin(t*0.0002)*6} 0)`);
+
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
@@ -1179,103 +1154,123 @@
       }
       return;
     }
-    if(overlayMode === 'try'){
-      return;
-    }
+    if(overlayMode === 'try') return;
 
     if(state === State.CHASE){
-      // movement
+      // Blocks = maze walls (they only block movement)
+      const blocks = mazeWalls;
+
+      // Player input
       let dx=0, dy=0;
       const sp = player.speed;
-
-      if(keys.left)  dx -= sp*dt;
+      if(keys.left) dx -= sp*dt;
       if(keys.right) dx += sp*dt;
-      if(keys.up)    dy -= sp*dt;
-      if(keys.down)  dy += sp*dt;
-
-      moving = !!(dx || dy);
+      if(keys.up) dy -= sp*dt;
+      if(keys.down) dy += sp*dt;
       if(dx && dy){ dx*=0.7071; dy*=0.7071; }
 
-      // decide direction
-      if(Math.abs(dx) > Math.abs(dy)){
-        if(dx > 0) lastDir = 'right';
-        if(dx < 0) lastDir = 'left';
-      }else if(Math.abs(dy) > 0){
-        if(dy > 0) lastDir = 'down';
-        if(dy < 0) lastDir = 'up';
-      }
+      moveWithCollisions(player, dx, dy, blocks);
 
-      player.x += dx;
-      player.y += dy;
+      // Keep inside inner bounds (avoid getting stuck into outer walls)
+      player.x = clamp(player.x, 44, 910);
+      player.y = clamp(player.y, 64, 520);
 
-      // bounds (maze is decorative; ONLY olds & baguettes are obstacles)
-      player.x = clamp(player.x, 60, 940);
-      player.y = clamp(player.y, 80, 520);
-
-      // mouth animation
-      if(moving) mouthPhase = (mouthPhase + dt*3.2) % 1.0;
-      updateMouth();
-
-      // old chase
+      // Olds chase, but also respect walls (so they feel “in the maze”)
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
       for(const o of olds){
-        o.wob += dt * 3.6;
+        o.wob += dt * 3.4;
         const oCx = o.x + o.w/2;
         const oCy = o.y + o.h/2;
+
         let vx = (pCx - oCx);
         let vy = (pCy - oCy);
         const len = Math.hypot(vx,vy) || 1;
         vx /= len; vy /= len;
 
-        // wobble
+        // wobble (alive + less predictable)
         vx += Math.sin(o.wob)*0.10;
-        vy += Math.cos(o.wob*1.05)*0.08;
+        vy += Math.cos(o.wob*1.1)*0.10;
 
         const step = o.speed * dt;
-        o.x += vx * step;
-        o.y += vy * step;
+        // try moving; if blocked, bias sideways
+        const before = {x:o.x, y:o.y};
+        moveWithCollisions(o, vx*step, vy*step, blocks);
 
-        o.x = clamp(o.x, 60, 940);
-        o.y = clamp(o.y, 80, 520);
+        if(before.x === o.x && before.y === o.y){
+          moveWithCollisions(o, -vy*step*0.9, vx*step*0.9, blocks);
+        }
 
-        // rotate ghost eyes a bit toward player
-        const rot = (vx >= 0) ? 0 : 0;
-        o.el.setAttribute('transform', `translate(${o.x} ${o.y}) scale(0.95) rotate(${rot} 36 36)`);
+        o.x = clamp(o.x, 44, 910);
+        o.y = clamp(o.y, 64, 520);
 
-        // collision -> try again
+        if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
+
         if(rectsOverlap(player, o)){
           showTryAgain();
           return;
         }
       }
 
-      // baguettes spawn
+      // Spawn baguettes (they bounce on walls)
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
-        baguetteSpawn = rand(0.65, 1.05);
-        spawnBaguette();
+        baguetteSpawn = rand(0.70, 1.10);
+
+        // spawn from one of a few lanes to reduce “in-wall” spawns
+        const lanes = [90, 140, 200, 260, 320, 380, 440, 500];
+        const obj = {
+          x: 950,
+          y: pick(lanes) + rand(-12, 12),
+          w: 90,
+          h: 26,
+          vx: rand(-660, -520),
+          vy: rand(-45, 45),
+          wob: rand(0, 10),
+          el: makeBaguette()
+        };
+        baguettes.push(obj);
+        baguettesG.appendChild(obj.el);
       }
 
-      // baguettes update
       for(const bq of baguettes){
+        const prevX = bq.x, prevY = bq.y;
+
         bq.wob += dt*6.0;
         bq.x += bq.vx*dt;
         bq.y += bq.vy*dt + Math.sin(bq.wob)*18*dt;
-        bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*8} 45 13)`);
+
+        // bounce on maze walls
+        const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
+        let hit = false;
+        for(const w of blocks){
+          if(rectsOverlap(bBox, w)){
+            hit = true; break;
+          }
+        }
+        if(hit){
+          // simple bounce: revert and flip X, add a little Y randomness
+          bq.x = prevX;
+          bq.y = prevY;
+          bq.vx *= -1;
+          bq.vy += rand(-80, 80);
+          beep(220, .03, 'square', .01);
+        }
+
+        // keep in bounds; if out, remove
+        bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
       }
 
-      // remove offscreen
       baguettes = baguettes.filter(bq=>{
-        if(bq.x < -220 || bq.x > 1220 || bq.y < -220 || bq.y > 820){
+        if(bq.x < -200 || bq.x > 1200 || bq.y < -200 || bq.y > 900){
           bq.el.remove();
           return false;
         }
         return true;
       });
 
-      // baguette collision -> try again
+      // Hit by baguette -> TRY AGAIN
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox)){
@@ -1284,12 +1279,11 @@
         }
       }
 
-      // render characters
-      const rot = dirToRot(lastDir);
-      setTransform(ettoreG, player.x, player.y, SCALE, rot);
-      setTransform(patryG, girl.x, girl.y, SCALE, 0);
+      // Render characters
+      setTransformScale(ettore, player.x, player.y, SCALE_E);
+      setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // target line (subtle)
+      // Target line (subtle)
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1297,7 +1291,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // win
+      // Win: reach Patry
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
@@ -1305,33 +1299,23 @@
       }
     }
 
-    if(state === State.QUIZ){
-      if(qRunning){
-        qTime -= dt;
-        if(qTime <= 0){
-          qTime = 0;
-          updateQuizMeter();
-          failQuiz();
-        }else{
-          updateQuizMeter();
-        }
+    if(state === State.QUIZ && qRunning){
+      qTime -= dt;
+      if(qTime <= 0){
+        qTime = 0;
+        updateQuizMeter();
+        failQuiz();
+      }else{
+        updateQuizMeter();
       }
     }
-  }
-
-  function dirToRot(d){
-    if(d==='right') return 0;
-    if(d==='down') return 90;
-    if(d==='left') return 180;
-    if(d==='up') return -90;
-    return 0;
   }
 
   function frame(){
     const n = now();
     const dt = Math.min(0.06, (n-last)/1000);
     last = n;
-    tGlobal = n;
+    t = n;
     update(dt);
     requestAnimationFrame(frame);
   }
