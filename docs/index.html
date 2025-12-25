@@ -31,9 +31,11 @@
       background: radial-gradient(1000px 600px at 50% 25%, #1A2A66 0%, var(--bg1) 40%, var(--bg0) 100%);
       overflow:hidden;
       touch-action:none;
+      /* aiuta su mobile (barra browser dinamica) */
+      min-height: 100dvh;
     }
 
-    #app{position:fixed; inset:0; display:grid; place-items:stretch;}
+    #app{position:fixed; inset:0; display:grid; place-items:stretch; height:100dvh;}
     #sceneWrap{position:relative; width:100%; height:100%;}
     svg{width:100%; height:100%; display:block;}
 
@@ -67,7 +69,8 @@
     .pill small{font-weight:700; color:var(--muted)}
 
     .toast{
-      position:absolute; left:50%; bottom:18px;
+      position:absolute; left:50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
       transform:translateX(-50%);
       width:min(920px, 92vw);
       padding:12px 14px;
@@ -87,7 +90,8 @@
 
     .titleCard{
       position:absolute;
-      left:50%; bottom:18px;
+      left:50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
       transform:translateX(-50%);
       width:min(980px, 92vw);
       padding:16px 16px 14px;
@@ -141,7 +145,8 @@
 
     .controls{
       position:absolute;
-      left:0; right:0; bottom:88px;
+      left:0; right:0;
+      bottom: calc(88px + env(safe-area-inset-bottom));
       padding:0 14px;
       display:flex; justify-content:space-between; align-items:flex-end;
       pointer-events:none;
@@ -290,7 +295,8 @@
   <div id="sceneWrap">
 
     <!-- SVG SCENE -->
-    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-label="Ettore & Patry game">
+    <!-- CAMBIATO: preserveAspectRatio meet (no crop) -->
+    <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#1B2C6A"/>
@@ -310,7 +316,6 @@
           <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(255,77,109,.45)"/>
         </filter>
 
-        <!-- Plaid pattern for lumberjack shirt -->
         <pattern id="plaid" width="24" height="24" patternUnits="userSpaceOnUse">
           <rect width="24" height="24" fill="#B12B3B"/>
           <rect x="0" y="9" width="24" height="4" fill="rgba(255,255,255,.14)"/>
@@ -319,7 +324,6 @@
           <rect x="16" y="0" width="3" height="24" fill="rgba(0,0,0,.12)"/>
         </pattern>
 
-        <!-- Heart path -->
         <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
       </defs>
 
@@ -339,7 +343,6 @@
 
       <!-- TITLE LAYER -->
       <g id="titleLayer">
-        <!-- Two Towers -->
         <g id="twoTowers" filter="url(#softShadow)">
           <path d="M160 510 C 280 470 420 458 500 458 C 580 458 720 470 840 510 L840 560 L160 560 Z"
                 fill="rgba(0,0,0,.25)"/>
@@ -390,7 +393,6 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- Title text -->
         <g id="titleText" font-weight="900" text-anchor="middle">
           <text x="500" y="68" font-size="44" fill="rgba(255,255,255,.92)" filter="url(#softShadow)">
             5 YEARS: SURVIVAL
@@ -407,14 +409,12 @@
           </text>
         </g>
 
-        <!-- Press start (cliccabile) -->
         <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#glowPink)">
           <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="900">
             PRESS START
           </text>
         </g>
 
-        <!-- START button (cliccabile e sempre visibile nella schermata titolo) -->
         <g id="startButton" class="clickable pulse" filter="url(#softShadow)">
           <rect x="360" y="420" width="280" height="74" rx="22"
                 fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
@@ -448,7 +448,6 @@
         <g id="beggars"></g>
         <g id="baguettes"></g>
 
-        <!-- Patry -->
         <g id="patry" class="floaty" filter="url(#softShadow)">
           <g id="patryBody" transform="translate(0 0)">
             <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
@@ -471,7 +470,6 @@
           </g>
         </g>
 
-        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <g id="ettoreBody">
             <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
@@ -640,7 +638,6 @@
         </g>
       </g>
 
-      <!-- SVG animations & clickable behavior -->
       <style>
         .blink{ animation: blink 0.38s steps(2,end) infinite; }
         #glitchA{ animation-duration: 0.65s; transform: translate(2px, -1px); opacity:.65; }
@@ -655,7 +652,6 @@
       </style>
     </svg>
 
-    <!-- UI overlay -->
     <div class="ui">
       <div class="topbar">
         <div class="pill">🎮 <span>5 YEARS</span> <small id="levelLbl">— CHASE</small></div>
@@ -664,7 +660,6 @@
 
       <div id="toast" class="toast"></div>
 
-      <!-- Title card (rimane, ma non è più l’unico modo per avviare) -->
       <div class="titleCard">
         <div class="left">
           <div class="hint"><b>PC:</b> WASD / frecce • <b>Mobile:</b> pad in basso • Schiva baguette e metro!</div>
@@ -691,7 +686,6 @@
         <div class="sideHint">Suggerimento: la <b>metro</b> alterna chiuso/aperto. Aspetta l’apertura per passare.</div>
       </div>
 
-      <!-- QUIZ -->
       <div id="quiz">
         <div class="quizCard">
           <div class="quizHead">
@@ -720,6 +714,37 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
+  // --- Responsive camera (fit viewBox): evita zoom/ritagli su PC e mobile ---
+  function fitViewBox(){
+    if(!svg) return;
+
+    const baseW = 1000, baseH = 600;
+    const baseAR = baseW / baseH;
+
+    const vw = (window.visualViewport && window.visualViewport.width)  ? window.visualViewport.width  : window.innerWidth;
+    const vh = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+    const screenAR = vw / vh;
+
+    let vbX = 0, vbY = 0, vbW = baseW, vbH = baseH;
+
+    if(screenAR < baseAR){
+      vbH = baseW / screenAR;
+      vbY = (baseH - vbH) / 2;
+    } else {
+      vbW = baseH * screenAR;
+      vbX = (baseW - vbW) / 2;
+    }
+
+    svg.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
+  }
+
+  fitViewBox();
+  window.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
+  window.addEventListener('orientationchange', () => setTimeout(fitViewBox, 150));
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
+  }
+
   const stars = document.getElementById('stars');
   const giftStars = document.getElementById('giftStars');
 
@@ -742,7 +767,6 @@
   const patry = document.getElementById('patry');
   const targetLine = document.getElementById('targetLine');
 
-  // NEW: clickable title controls
   const pressStart = document.getElementById('pressStart');
   const startButton = document.getElementById('startButton');
 
@@ -771,7 +795,6 @@
   const bigHeart = document.getElementById('bigHeart');
   const tbc = document.getElementById('tbc');
 
-  // Quiz BG groups
   const qbg = [
     document.getElementById('qbg0'),
     document.getElementById('qbg1'),
@@ -1182,14 +1205,10 @@
     enterChase();
   }
 
-  // HTML button
   startBtn.addEventListener('click', () => startFromTitle());
-
-  // SVG controls
   if(pressStart) pressStart.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
   if(startButton) startButton.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); });
 
-  // Keyboard start (Enter / Space)
   window.addEventListener('keydown', (e)=>{
     if(state !== State.TITLE) return;
     if(e.key === 'Enter' || e.key === ' '){
@@ -1214,13 +1233,11 @@
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
-    // parallax skyline
     const drift = Math.sin(t*0.0002)*6;
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
     if(state === State.CHASE){
-      // metro open/close cycle
       metro.t += dt;
       const cycle = 2.8;
       const ph = metro.t % cycle;
@@ -1233,7 +1250,6 @@
       metroHint.setAttribute('fill', metro.open ? 'rgba(70,255,210,.85)' : 'rgba(255,255,255,.75)');
       metroGate.setAttribute('opacity', metro.open ? '0.38' : '1');
 
-      // update beggars
       for(const b of beggars){
         b.t += dt;
         if(b.t > 1.4){
@@ -1250,7 +1266,6 @@
         if(el) setTransform(el, b.x, b.y);
       }
 
-      // baguette spawn
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
         baguetteSpawn = rand(0.9, 1.35);
@@ -1287,7 +1302,6 @@
       for(const b of beggars) blocks.push(b);
       if(!metro.open) blocks.push({x:metro.x, y:metro.y, w:metro.w, h:metro.h});
 
-      // movement
       let dx=0, dy=0;
       const sp = player.speed;
       if(keys.left) dx -= sp*dt;
@@ -1310,7 +1324,6 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // hit test baguettes
       const pBox = {x:player.x, y:player.y, w:player.w, h:player.h};
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
@@ -1320,7 +1333,6 @@
         }
       }
 
-      // reach Patry
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(pBox, gBox)){
         showToast("🎉 Presa! Ora quiz a tempo!", 1200);
