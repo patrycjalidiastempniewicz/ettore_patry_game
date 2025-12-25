@@ -262,6 +262,9 @@
       .toast, .topbar, .controls{transition:none}
       svg .blink, svg .pulse {animation:none !important}
     }
+
+    /* Safety: se un layer è nascosto, non deve intercettare input */
+    #chaseLayer, #quizBgLayer, #giftLayer { pointer-events: none; }
   </style>
 </head>
 
@@ -428,10 +431,7 @@
 
       <!-- CHASE LAYER (LABYRINTH) -->
       <g id="chaseLayer" opacity="0">
-        <!-- Maze walls -->
         <g id="maze" filter="url(#softShadow)"></g>
-
-        <!-- Obstacles: ONLY olds + baguettes -->
         <g id="olds"></g>
         <g id="baguettes"></g>
 
@@ -597,10 +597,14 @@
 
 <script>
 (() => {
+  'use strict';
+
   const body = document.body;
   const svg = document.getElementById('svg');
 
+  // -------------------------------
   // Fit viewBox (responsive camera)
+  // -------------------------------
   function fitViewBox(){
     if(!svg) return;
     const baseW = 1000, baseH = 600;
@@ -626,12 +630,15 @@
     window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   }
 
+  // -------------------------------
   // DOM
+  // -------------------------------
   const stars = document.getElementById('stars');
   const titleLayer = document.getElementById('titleLayer');
   const chaseLayer = document.getElementById('chaseLayer');
   const quizBgLayer = document.getElementById('quizBgLayer');
   const giftLayer = document.getElementById('giftLayer');
+  const skylineFar = document.getElementById('skylineFar');
 
   const mazeG = document.getElementById('maze');
   const oldsG = document.getElementById('olds');
@@ -671,14 +678,24 @@
     document.getElementById('qbg4'),
   ];
 
+  // -------------------------------
   // Helpers
+  // -------------------------------
   const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
   const rand = (a,b) => a + Math.random()*(b-a);
   const pick = (arr) => arr[(Math.random()*arr.length)|0];
   const now = () => performance.now();
 
-  function setOpacity(el, v){ el.setAttribute('opacity', String(v)); }
-  function setTransformScale(el, x, y, s){ el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
+  function showLayer(el, show){
+    if(!el) return;
+    el.style.display = show ? '' : 'none';       // IMPORTANT: evita click-blocking dei layer invisibili
+    el.setAttribute('opacity', show ? '1' : '0');
+  }
+
+  function setTransformScale(el, x, y, s){
+    if(!el) return;
+    el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`);
+  }
 
   function rectsOverlap(a,b){
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
@@ -702,38 +719,64 @@
     }
   }
 
-  // Audio
+  // -------------------------------
+  // Audio (più robusto su mobile)
+  // -------------------------------
   let audioOn = true;
   let audioCtx = null;
+
+  function ensureAudioContext(){
+    if(!audioOn) return;
+    try{
+      if(!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if(audioCtx && audioCtx.state === 'suspended'){
+        audioCtx.resume().catch(()=>{});
+      }
+    }catch(_){}
+  }
+
   function beep(freq=440, dur=0.08, type='sine', gain=0.03){
     if(!audioOn) return;
     try{
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      ensureAudioContext();
+      if(!audioCtx) return;
+
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
+      const t0 = audioCtx.currentTime;
+
       o.type = type;
-      o.frequency.value = freq;
-      g.gain.value = gain;
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start();
-      o.stop(audioCtx.currentTime + dur);
+      o.frequency.setValueAtTime(freq, t0);
+
+      // Envelope anti-click/pop
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(gain, t0 + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + Math.max(0.02, dur));
+
+      o.connect(g);
+      g.connect(audioCtx.destination);
+
+      o.start(t0);
+      o.stop(t0 + Math.max(0.02, dur));
     }catch(_){}
   }
-  function ensureAudioContext(){
-    if(audioOn && !audioCtx){
-      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(_){}
-    }
-  }
 
+  // -------------------------------
   // Toast
+  // -------------------------------
   let toastTimer = 0;
   function showToast(msg, ms=1400){
+    if(!toast) return;
     toast.textContent = msg;
     toast.classList.add('show');
     toastTimer = ms;
   }
 
+  // -------------------------------
   // Stars
+  // -------------------------------
   function buildStars(group, count){
     if(!group) return;
     group.innerHTML = '';
@@ -751,7 +794,9 @@
   }
   buildStars(stars, 110);
 
+  // -------------------------------
   // State
+  // -------------------------------
   const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
   let state = State.TITLE;
 
@@ -760,15 +805,10 @@
     body.classList.remove('state-title','state-chase','state-quiz','state-gift');
     body.classList.add(`state-${s}`);
 
-    if(s === State.TITLE){
-      setOpacity(titleLayer, 1); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
-    }else if(s === State.CHASE){
-      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 1); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
-    }else if(s === State.QUIZ){
-      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 1); setOpacity(giftLayer, 0);
-    }else if(s === State.GIFT){
-      setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 1);
-    }
+    showLayer(titleLayer, s === State.TITLE);
+    showLayer(chaseLayer, s === State.CHASE);
+    showLayer(quizBgLayer, s === State.QUIZ);
+    showLayer(giftLayer, s === State.GIFT);
   }
 
   // -------------------------------
@@ -777,8 +817,7 @@
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // collision boxes tuned (approx scaled sprite)
-  const player = { x: 70, y: 500, w: 72, h: 128, speed: 610 };
+  const player = { x: 70, y: 500, w: 70, h: 120, speed: 610 };
   const girl   = { x: 870, y: 85,  w: 125, h: 125 };
 
   let mazeWalls = [];
@@ -787,6 +826,7 @@
   let baguetteSpawn = 0;
 
   function drawMaze(){
+    if(!mazeG) return;
     mazeG.innerHTML = '';
     for(const w of mazeWalls){
       const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
@@ -800,7 +840,7 @@
       r.setAttribute('stroke-width', '2');
       mazeG.appendChild(r);
     }
-    // subtle inner glow path hint
+
     const glow = document.createElementNS("http://www.w3.org/2000/svg","path");
     glow.setAttribute('d', 'M 50 540 C 160 520 160 90 290 90 C 420 90 420 520 550 520 C 680 520 680 90 820 90 C 900 90 940 110 960 140');
     glow.setAttribute('fill', 'none');
@@ -811,32 +851,23 @@
   }
 
   function buildMaze(){
-    // Outer bounds
     mazeWalls = [
-      {x:20, y:40,  w:960, h:16},  // top
-      {x:20, y:564, w:960, h:16},  // bottom
-      {x:20, y:40,  w:16,  h:540}, // left
-      {x:964,y:40,  w:16,  h:540}, // right
+      {x:20, y:40,  w:960, h:16},
+      {x:20, y:564, w:960, h:16},
+      {x:20, y:40,  w:16,  h:540},
+      {x:964,y:40,  w:16,  h:540},
     ];
 
-    // Main labyrinth columns (snake):
-    // alternate walls that connect to bottom/top leaving ONE big gap
-    // (Player must zig-zag: top gap -> bottom gap -> top gap...)
     const colXs = [140, 260, 380, 500, 620, 740];
-    // top boundary ends at y=56 (40+16); bottom boundary starts at y=564
-    // top-gap walls connect to bottom (start low); bottom-gap walls connect to top (start at 56)
     for(let i=0;i<colXs.length;i++){
       const x = colXs[i];
       if(i % 2 === 0){
-        // top gap only: wall reaches bottom
-        mazeWalls.push({x, y:220, w:18, h:344}); // 220..564
+        mazeWalls.push({x, y:220, w:18, h:344});
       }else{
-        // bottom gap only: wall starts at top and stops early
-        mazeWalls.push({x, y:56, w:18, h:354}); // 56..410 (gap 410..564)
+        mazeWalls.push({x, y:56, w:18, h:354});
       }
     }
 
-    // Extra “teeth” to make it feel more maze-like (still solvable)
     mazeWalls.push(
       {x:60,  y:240, w:90, h:18},
       {x:60,  y:320, w:70, h:18},
@@ -879,6 +910,7 @@
   }
 
   function drawOlds(){
+    if(!oldsG) return;
     oldsG.innerHTML = '';
     for(const o of olds){
       const el = oldManSVG();
@@ -903,16 +935,13 @@
   function buildLevel(){
     buildMaze();
 
-    // Start / goal
     player.x = 58;  player.y = 505;
     girl.x = 865;   girl.y = 85;
 
-    // Obstacles (only olds + baguettes)
     baguettes = [];
-    baguettesG.innerHTML = '';
+    if(baguettesG) baguettesG.innerHTML = '';
     baguetteSpawn = 0.45;
 
-    // Olds placed inside corridors (they will respect maze walls too)
     olds = [
       {x: 210, y: 170},
       {x: 320, y: 520},
@@ -933,12 +962,22 @@
     setTransformScale(patry, girl.x, girl.y, SCALE_P);
   }
 
+  // -------------------------------
   // Input
+  // -------------------------------
   const keys = {up:false,down:false,left:false,right:false};
+  const activeDirs = new Set();
+
+  function resetInput(){
+    keys.up = keys.down = keys.left = keys.right = false;
+    activeDirs.clear();
+  }
 
   window.addEventListener('keydown', (e)=>{
-    const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' ') e.preventDefault();
+    const k = (e.key || '').toLowerCase();
+    const blockKeys = ['arrowup','arrowdown','arrowleft','arrowright',' ','spacebar'];
+    if(blockKeys.includes(k)) e.preventDefault();
+
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
@@ -946,24 +985,13 @@
   }, {passive:false});
 
   window.addEventListener('keyup', (e)=>{
-    const k = e.key.toLowerCase();
+    const k = (e.key || '').toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
     if(k==='arrowdown'|| k==='s') keys.down=false;
     if(k==='arrowleft'|| k==='a') keys.left=false;
     if(k==='arrowright'|| k==='d') keys.right=false;
   });
 
-  const activeDirs = new Set();
-  document.querySelectorAll('.pad').forEach(btn=>{
-    const dir = btn.dataset.dir;
-    if(!dir) return;
-    const on = (e)=>{ e.preventDefault(); activeDirs.add(dir); syncDirs(); };
-    const off = (e)=>{ e.preventDefault(); activeDirs.delete(dir); syncDirs(); };
-    btn.addEventListener('pointerdown', on, {passive:false});
-    btn.addEventListener('pointerup', off, {passive:false});
-    btn.addEventListener('pointercancel', off, {passive:false});
-    btn.addEventListener('pointerleave', off, {passive:false});
-  });
   function syncDirs(){
     keys.up = activeDirs.has('up');
     keys.down = activeDirs.has('down');
@@ -971,11 +999,37 @@
     keys.right = activeDirs.has('right');
   }
 
+  document.querySelectorAll('.pad').forEach(btn=>{
+    const dir = btn.dataset.dir;
+    if(!dir) return;
+
+    const on = (e)=>{
+      e.preventDefault();
+      try{ btn.setPointerCapture(e.pointerId); }catch(_){}
+      activeDirs.add(dir);
+      syncDirs();
+    };
+    const off = (e)=>{
+      e.preventDefault();
+      activeDirs.delete(dir);
+      syncDirs();
+    };
+
+    btn.addEventListener('pointerdown', on, {passive:false});
+    btn.addEventListener('pointerup', off, {passive:false});
+    btn.addEventListener('pointercancel', off, {passive:false});
+    btn.addEventListener('lostpointercapture', off, {passive:false});
+    btn.addEventListener('pointerleave', off, {passive:false});
+  });
+
+  // -------------------------------
   // Overlay
+  // -------------------------------
   let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
   function showTryAgain(){
+    resetInput();
     overlayMode = 'try';
     centerBig.textContent = 'TRY AGAIN';
     centerSub.textContent = 'Clicca per ricominciare';
@@ -983,6 +1037,7 @@
     beep(160, .12, 'square', .06);
   }
   function showFinallyTogether(){
+    resetInput();
     overlayMode = 'win';
     centerBig.textContent = 'FINALLY TOGETHER!';
     centerSub.textContent = '…e ora il quiz!';
@@ -995,12 +1050,19 @@
     centerOverlay.classList.remove('show');
   }
 
-  centerOverlay.addEventListener('click', (e)=>{
+  centerOverlay?.addEventListener('pointerdown', (e)=>{
     e.preventDefault();
-    if(overlayMode === 'try') restartChase();
-  });
+    if(overlayMode === 'try'){
+      restartChase();
+    } else if(overlayMode === 'win'){
+      hideOverlay();
+      enterQuiz();
+    }
+  }, {passive:false});
 
+  // -------------------------------
   // Flow
+  // -------------------------------
   function restartChase(){
     hideOverlay();
     buildLevel();
@@ -1019,21 +1081,25 @@
   function startFromTitle(){
     if(state !== State.TITLE) return;
     ensureAudioContext();
+    resetInput();
     enterChase();
   }
 
-  startBtn.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
+  startBtn?.addEventListener('click', (e)=>{ e.preventDefault(); startFromTitle(); });
   pressStart?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
   startButton?.addEventListener('pointerdown', (e)=>{ e.preventDefault(); startFromTitle(); }, {passive:false});
   window.addEventListener('keydown', (e)=>{
     if(state !== State.TITLE) return;
-    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); startFromTitle(); }
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      startFromTitle();
+    }
   }, {passive:false});
 
-  muteBtn.addEventListener('click', (e)=>{
+  muteBtn?.addEventListener('click', (e)=>{
     e.preventDefault();
     audioOn = !audioOn;
-    muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
+    if(muteBtn) muteBtn.textContent = `Audio: ${audioOn ? 'ON' : 'OFF'}`;
     beep(audioOn ? 600 : 200, .06, 'triangle', .03);
   });
 
@@ -1045,6 +1111,7 @@
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
     "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
   ];
+
   const questions = [
     { bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
     { bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
@@ -1062,16 +1129,21 @@
   let qRunning = false;
 
   function showQuizBg(i){
-    qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0'));
+    qbg.forEach((g, idx)=> { if(g) g.setAttribute('opacity', idx===i ? '1' : '0'); });
   }
+
   function updateQuizMeter(){
+    if(!tleftEl || !tfillEl) return;
     tleftEl.textContent = Math.ceil(qTime).toString();
     const ratio = clamp(qTime/10, 0, 1);
     tfillEl.style.transform = `scaleX(${ratio})`;
     tleftEl.classList.toggle('danger', qTime <= 3.2);
   }
+
   function setupQuestion(){
     const item = questions[qIndex];
+    if(!item) return;
+
     qtitle.textContent = "QUIZ A TEMPO — 10s";
     qindexEl.textContent = (qIndex+1).toString();
     qtextEl.textContent = item.q;
@@ -1090,15 +1162,18 @@
     updateQuizMeter();
     showQuizBg(item.bg);
   }
+
   function failQuiz(){
     qRunning = false;
     retryMsg.textContent = pick(wrongMessages);
     retryBox.style.display = 'block';
     beep(180, .14, 'square', .05);
   }
+
   function answer(idx){
     if(!qRunning) return;
     const item = questions[qIndex];
+
     if(idx === item.correct){
       beep(880, .08, 'triangle', .04);
       qIndex++;
@@ -1113,7 +1188,8 @@
       failQuiz();
     }
   }
-  retryBtn.addEventListener('click', ()=>{
+
+  retryBtn?.addEventListener('click', ()=>{
     qIndex = 0;
     retryBox.style.display = 'none';
     setupQuestion();
@@ -1140,11 +1216,12 @@
   function update(dt){
     if(toastTimer > 0){
       toastTimer -= dt*1000;
-      if(toastTimer <= 0) toast.classList.remove('show');
+      if(toastTimer <= 0 && toast) toast.classList.remove('show');
     }
 
-    const skylineFar = document.getElementById('skylineFar');
-    if(skylineFar) skylineFar.setAttribute('transform', `translate(${Math.sin(t*0.0002)*6} 0)`);
+    if(skylineFar){
+      skylineFar.setAttribute('transform', `translate(${Math.sin(t*0.0002)*6} 0)`);
+    }
 
     if(overlayMode === 'win'){
       winTimer -= dt;
@@ -1157,7 +1234,6 @@
     if(overlayMode === 'try') return;
 
     if(state === State.CHASE){
-      // Blocks = maze walls (they only block movement)
       const blocks = mazeWalls;
 
       // Player input
@@ -1171,11 +1247,10 @@
 
       moveWithCollisions(player, dx, dy, blocks);
 
-      // Keep inside inner bounds (avoid getting stuck into outer walls)
       player.x = clamp(player.x, 44, 910);
       player.y = clamp(player.y, 64, 520);
 
-      // Olds chase, but also respect walls (so they feel “in the maze”)
+      // Olds chase
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1189,16 +1264,14 @@
         const len = Math.hypot(vx,vy) || 1;
         vx /= len; vy /= len;
 
-        // wobble (alive + less predictable)
         vx += Math.sin(o.wob)*0.10;
         vy += Math.cos(o.wob*1.1)*0.10;
 
         const step = o.speed * dt;
-        // try moving; if blocked, bias sideways
-        const before = {x:o.x, y:o.y};
-        moveWithCollisions(o, vx*step, vy*step, blocks);
+        const beforeX = o.x, beforeY = o.y;
 
-        if(before.x === o.x && before.y === o.y){
+        moveWithCollisions(o, vx*step, vy*step, blocks);
+        if(beforeX === o.x && beforeY === o.y){
           moveWithCollisions(o, -vy*step*0.9, vx*step*0.9, blocks);
         }
 
@@ -1213,12 +1286,11 @@
         }
       }
 
-      // Spawn baguettes (they bounce on walls)
+      // Spawn baguettes (bounce on walls)
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
         baguetteSpawn = rand(0.70, 1.10);
 
-        // spawn from one of a few lanes to reduce “in-wall” spawns
         const lanes = [90, 140, 200, 260, 320, 380, 440, 500];
         const obj = {
           x: 950,
@@ -1231,7 +1303,7 @@
           el: makeBaguette()
         };
         baguettes.push(obj);
-        baguettesG.appendChild(obj.el);
+        if(baguettesG) baguettesG.appendChild(obj.el);
       }
 
       for(const bq of baguettes){
@@ -1241,16 +1313,12 @@
         bq.x += bq.vx*dt;
         bq.y += bq.vy*dt + Math.sin(bq.wob)*18*dt;
 
-        // bounce on maze walls
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         let hit = false;
         for(const w of blocks){
-          if(rectsOverlap(bBox, w)){
-            hit = true; break;
-          }
+          if(rectsOverlap(bBox, w)){ hit = true; break; }
         }
         if(hit){
-          // simple bounce: revert and flip X, add a little Y randomness
           bq.x = prevX;
           bq.y = prevY;
           bq.vx *= -1;
@@ -1258,19 +1326,20 @@
           beep(220, .03, 'square', .01);
         }
 
-        // keep in bounds; if out, remove
-        bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
+        if(bq.el){
+          bq.el.setAttribute('transform', `translate(${bq.x} ${bq.y}) rotate(${Math.sin(bq.wob)*6} 45 13)`);
+        }
       }
 
       baguettes = baguettes.filter(bq=>{
         if(bq.x < -200 || bq.x > 1200 || bq.y < -200 || bq.y > 900){
-          bq.el.remove();
+          bq.el?.remove();
           return false;
         }
         return true;
       });
 
-      // Hit by baguette -> TRY AGAIN
+      // Hit by baguette => TRY AGAIN
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox)){
@@ -1283,13 +1352,15 @@
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // Target line (subtle)
-      const px = player.x + player.w/2, py = player.y + player.h/2;
-      const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
-      targetLine.setAttribute('x1', px);
-      targetLine.setAttribute('y1', py);
-      targetLine.setAttribute('x2', gx);
-      targetLine.setAttribute('y2', gy);
+      // Target line
+      if(targetLine){
+        const px = player.x + player.w/2, py = player.y + player.h/2;
+        const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
+        targetLine.setAttribute('x1', px);
+        targetLine.setAttribute('y1', py);
+        targetLine.setAttribute('x2', gx);
+        targetLine.setAttribute('y2', gy);
+      }
 
       // Win: reach Patry
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
@@ -1323,6 +1394,7 @@
   // Init
   setState(State.TITLE);
   requestAnimationFrame(frame);
+
 })();
 </script>
 </body>
