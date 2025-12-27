@@ -33,17 +33,51 @@
     }
 
     #app{position:fixed; inset:0; height:100dvh;}
-    #sceneWrap{position:relative; width:100%; height:100%; touch-action:none;}
+    #sceneWrap{
+      position:relative; width:100%; height:100%;
+      touch-action:none;
+    }
     svg{width:100%; height:100%; display:block;}
 
     .ui{
       position:absolute; inset:0;
       pointer-events:auto;
       display:flex; flex-direction:column;
+      z-index:30;
     }
 
-    /* ✅ FIX 1a: quando sei nella schermata regalo, la UI HTML non deve bloccare i click sullo SVG */
+    /* ✅ FIX: in modalità regalo la UI non deve bloccare i click sull’SVG (e CTA è fuori dalla UI) */
     body.state-gift .ui{ pointer-events:none; }
+
+    /* ✅ CTA premio: overlay HTML sempre cliccabile sopra l'SVG */
+    #giftCtaWrap{
+      position:absolute;
+      inset:0;
+      display:none;
+      place-items:center;
+      z-index:80;
+      pointer-events:none; /* solo il bottone prende i click */
+      background: radial-gradient(600px 380px at 50% 45%, rgba(0,0,0,.40), rgba(0,0,0,.18) 60%, rgba(0,0,0,0) 100%);
+    }
+    #giftCtaWrap.show{ display:grid; }
+    #giftCtaWrap button{
+      pointer-events:auto;
+      font: inherit;
+      cursor:pointer;
+      border-radius:18px;
+      padding:16px 18px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,209,102,.22), rgba(255,209,102,.10));
+      color:var(--text);
+      font-weight:1000;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      box-shadow: 0 20px 60px rgba(0,0,0,.40);
+      transition: transform .08s ease, filter .08s ease;
+      touch-action: manipulation;
+    }
+    #giftCtaWrap button:hover{filter:brightness(1.08)}
+    #giftCtaWrap button:active{transform:translateY(2px)}
 
     .topbar{
       display:flex; gap:10px; align-items:center;
@@ -187,12 +221,13 @@
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
     }
 
-    /* Center overlay */
+    /* Center overlay: TRY AGAIN / FINALLY TOGETHER */
     #centerOverlay{
       position:absolute; inset:0;
       display:none;
       place-items:center;
       pointer-events:auto;
+      z-index:55;
       background: radial-gradient(600px 380px at 50% 45%, rgba(0,0,0,.55), rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%);
     }
     #centerOverlay.show{display:grid;}
@@ -224,7 +259,12 @@
     .blink90{ animation: blink 0.38s steps(2,end) infinite; }
 
     /* Quiz overlay */
-    #quiz{ position:absolute; inset:0; display:none; pointer-events:auto; }
+    #quiz{
+      position:absolute; inset:0;
+      display:none;
+      pointer-events:auto;
+      z-index:45;
+    }
     body.state-quiz #quiz{display:block}
 
     .quizCard{
@@ -274,10 +314,6 @@
       .toast, .topbar, .controls{transition:none}
       svg .blink, svg .pulse {animation:none !important}
     }
-
-    /* ✅ FIX 1b: SVG GIFT clickability — nessun layer invisibile deve rubare input */
-    #giftLayer{ pointer-events:none; }
-    #giftBox, #giftBox *{ pointer-events:all; }
   </style>
 </head>
 
@@ -384,6 +420,7 @@
               <rect x="78" y="220" width="10" height="18" rx="3"/>
             </g>
           </g>
+
           <g transform="translate(575 220) rotate(-6)">
             <path d="M0 0 L72 0 L92 280 L-18 280 Z" fill="#171C2A"/>
             <g fill="#171C2A">
@@ -404,12 +441,16 @@
               <rect x="54" y="150" width="10" height="18" rx="3"/>
             </g>
           </g>
+
           <path d="M200 510 C 310 485 420 476 500 476 C 580 476 690 485 800 510"
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
+        <!-- Personaggi in title screen (più piccoli) -->
         <g filter="url(#softShadow)">
-          <g transform="translate(210 330) scale(0.62)"><use href="#ettoreDef"/></g>
+          <g transform="translate(210 330) scale(0.62)">
+            <use href="#ettoreDef"/>
+          </g>
           <g transform="translate(760 330) scale(0.62)">
             <use href="#patryDef"/>
             <g transform="translate(-180 18) scale(1.35)">
@@ -444,6 +485,7 @@
         <g id="olds"></g>
         <g id="baguettes"></g>
 
+        <!-- Patry -->
         <g id="patry" filter="url(#softShadow)">
           <use href="#patryDef"/>
           <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
@@ -453,12 +495,15 @@
           </g>
         </g>
 
-        <g id="ettore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
+        <!-- Ettore -->
+        <g id="ettore" filter="url(#softShadow)">
+          <use href="#ettoreDef"/>
+        </g>
 
         <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.18)" stroke-width="3" stroke-linecap="round"/>
       </g>
 
-      <!-- QUIZ BACKGROUND -->
+      <!-- QUIZ BACKGROUND LAYER -->
       <g id="quizBgLayer" opacity="0">
         <g id="qbg0" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
@@ -470,16 +515,17 @@
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Primo Date</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">nessuna traccia, solo ricordo…</text>
         </g>
+
         <g id="qbg1" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".18">
-            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380"
-                  stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
+            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">Allarme Rosso</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">attenzione: segnali sottili…</text>
         </g>
+
         <g id="qbg2" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".22">
@@ -494,6 +540,7 @@
           <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Rottura scampata</text>
           <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">una timeline che non vogliamo…</text>
         </g>
+
         <g id="qbg3" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".28">
@@ -508,6 +555,7 @@
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Tiramisù</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">cura rapida: livello amore +1</text>
         </g>
+
         <g id="qbg4" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
           <g opacity=".25">
@@ -530,7 +578,7 @@
         </g>
 
         <g id="giftHint" opacity="1" filter="url(#glowPink)">
-          <text x="500" y="120" text-anchor="middle" font-size="26" font-weight="1000" fill="rgba(255,209,102,.95)">CLICCA IL REGALO 🎁</text>
+          <text x="500" y="120" text-anchor="middle" font-size="26" font-weight="1000" fill="rgba(255,209,102,.95)">PREMIO SBLOCCATO 🎁</text>
         </g>
 
         <g id="giftBox" class="clickable" filter="url(#softShadow)">
@@ -560,8 +608,12 @@
             <text x="500" y="232" text-anchor="middle" font-size="14" font-weight="900" fill="#111">
               <tspan x="500" dy="0">conferito a</tspan>
               <tspan x="500" dy="20" font-size="16" font-weight="1000">ETTORE GORNI</tspan>
-              <tspan x="500" dy="22" font-size="13" font-weight="850">in qualità di moroso più paziente e</tspan>
-              <tspan x="500" dy="18" font-size="13" font-weight="850">bubo più adorabile che ci sia.</tspan>
+              <tspan x="500" dy="22" font-size="13" font-weight="850">
+                in qualità di moroso più paziente e
+              </tspan>
+              <tspan x="500" dy="18" font-size="13" font-weight="850">
+                bubo più adorabile che ci sia.
+              </tspan>
             </text>
 
             <text x="500" y="352" text-anchor="middle" font-size="12" font-weight="900" fill="rgba(0,0,0,.55)">— firmato: Patry —</text>
@@ -657,7 +709,11 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- ✅ CTA premio (HTML sempre interattivo) -->
+    <div id="giftCtaWrap" aria-hidden="true">
+      <button id="giftCtaBtn" type="button">CLICCA PER RICEVERE IL TUO PREMIO</button>
     </div>
 
   </div>
@@ -719,6 +775,10 @@
   const centerBig = document.getElementById('centerBig');
   const centerSub = document.getElementById('centerSub');
 
+  // Gift CTA (HTML)
+  const giftCtaWrap = document.getElementById('giftCtaWrap');
+  const giftCtaBtn  = document.getElementById('giftCtaBtn');
+
   // Quiz UI
   const qtitle = document.getElementById('qtitle');
   const qsub   = document.getElementById('qsub');
@@ -739,7 +799,7 @@
     document.getElementById('qbg4'),
   ];
 
-  // Gift UI (SVG)
+  // Gift SVG
   const giftBox = document.getElementById('giftBox');
   const giftLid = document.getElementById('giftLid');
   const giftHint = document.getElementById('giftHint');
@@ -761,7 +821,7 @@
   function setOpacity(el, v){ if(el) el.setAttribute('opacity', String(v)); }
   function setTransformScale(el, x, y, s){ if(el) el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
-  // Hitbox più stretta
+  // HITBOX: tolleranza -> hitbox più stretta
   function rectsOverlap(a,b, padA=0, padB=0){
     const ax = a.x + padA;
     const ay = a.y + padA;
@@ -818,12 +878,16 @@
 
     if(s === State.TITLE){
       setOpacity(titleLayer, 1); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
+      giftCtaWrap?.classList.remove('show');
     }else if(s === State.CHASE){
       setOpacity(titleLayer, 0); setOpacity(chaseLayer, 1); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 0);
+      giftCtaWrap?.classList.remove('show');
     }else if(s === State.QUIZ){
       setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 1); setOpacity(giftLayer, 0);
+      giftCtaWrap?.classList.remove('show');
     }else if(s === State.GIFT){
       setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 1);
+      // show gestito da resetGift/enterGift
     }
   }
 
@@ -846,11 +910,12 @@
   buildStars(stars, 110);
 
   // -------------------------------
-  // CHASE
+  // CHASE GAME
   // -------------------------------
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
+  // hitbox tighten
   const HIT_PLAYER = 18;
   const HIT_OLD    = 14;
   const HIT_BAG    = 6;
@@ -917,20 +982,24 @@
     baguettesG.innerHTML = '';
     baguetteSpawn = 0.35;
 
-    // ✅ 3 vecchi + più lenti
+    // ✅ SOLO 3 vecchi + più lenti
     const spawns = [
       {x: 260, y: 320},
       {x: 520, y: 520},
       {x: 780, y: 360},
     ];
-    olds = spawns.map((p, i)=>({
-      id:'old'+i,
-      x:p.x, y:p.y,
-      w:68, h:110,
-      speed: rand(45, 65),
-      wob: rand(0,10),
-      el:null
-    }));
+    olds = [];
+    for(let i=0;i<spawns.length;i++){
+      olds.push({
+        id: 'old'+i,
+        x: spawns[i].x,
+        y: spawns[i].y,
+        w: 68, h: 110,
+        speed: rand(45, 65),
+        wob: rand(0, 10),
+        el: null,
+      });
+    }
     drawOlds();
 
     setTransformScale(ettore, player.x, player.y, SCALE_E);
@@ -939,14 +1008,18 @@
 
   // Input
   const keys = {up:false,down:false,left:false,right:false};
+
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' ') e.preventDefault();
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
+      e.preventDefault();
+    }
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
     if(k==='arrowright'|| k==='d') keys.right=true;
   }, {passive:false});
+
   window.addEventListener('keyup', (e)=>{
     const k = e.key.toLowerCase();
     if(k==='arrowup' || k==='w') keys.up=false;
@@ -973,8 +1046,8 @@
     keys.right = activeDirs.has('right');
   }
 
-  // Overlay
-  let overlayMode = 'none';
+  // Center overlay
+  let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
   function showTryAgain(){
@@ -1001,7 +1074,14 @@
     e.preventDefault();
     if(overlayMode === 'try') restartChase();
   });
+  window.addEventListener('keydown', (e)=>{
+    if(overlayMode === 'try' && (e.key === 'Enter' || e.key === ' ')){
+      e.preventDefault();
+      restartChase();
+    }
+  }, {passive:false});
 
+  // Game flow
   function restartChase(){
     hideOverlay();
     buildLevel();
@@ -1051,22 +1131,50 @@
   ];
 
   const questions = [
-    { title:"Primo Date", sub:"Coordinate segrete: solo noi le sappiamo — firmato: Patry", bg:0,
-      q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
-    { title:"Allarme Rosso", sub:"Protocollo attivo: leggere tra le righe — firmato: Patry", bg:1,
-      q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
-    { title:"Rottura scampata", sub:"Una timeline alternativa cancellata in tempo — firmato: Patry", bg:2,
+    {
+      title:"Primo Date",
+      sub:"Coordinate segrete: solo noi le sappiamo — firmato: Patry",
+      bg:0,
+      q:"Il posto del primo date?",
+      opts:["Casa del popolo","Carmentown","Bar dell'ombra"],
+      correct:1
+    },
+    {
+      title:"Allarme Rosso",
+      sub:"Protocollo attivo: leggere tra le righe — firmato: Patry",
+      bg:1,
+      q:"Cosa fa Patry quando è scocciata da qualcosa?",
+      opts:["Sbuffino","Agita i pugni in aria","Fa bibi"],
+      correct:0
+    },
+    {
+      title:"Rottura scampata",
+      sub:"Una timeline alternativa cancellata in tempo — firmato: Patry",
+      bg:2,
       q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
       opts:[
         "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
         "Quando non ho prenotato l'albergo in Grecia",
         "Quando mi sono addormentato alla guida facendoci quasi uscire dalla strada"
       ],
-      correct:0 },
-    { title:"Tiramisù", sub:"Buff dolce: morale +10 (non chiedere come) — firmato: Patry", bg:3,
-      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0 },
-    { title:"Nickname del cuore", sub:"Codice privato: accesso negato ai curiosi — firmato: Patry", bg:4,
-      q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0 },
+      correct:0
+    },
+    {
+      title:"Tiramisù",
+      sub:"Buff dolce: morale +10 (non chiedere come) — firmato: Patry",
+      bg:3,
+      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?",
+      opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"],
+      correct:0
+    },
+    {
+      title:"Nickname del cuore",
+      sub:"Codice privato: accesso negato ai curiosi — firmato: Patry",
+      bg:4,
+      q:"Il nomignolo più usato per chiamarci?",
+      opts:["Bubo/a","Cucci","Tesoro"],
+      correct:0
+    },
   ];
 
   let qIndex = 0;
@@ -1086,6 +1194,7 @@
     const item = questions[qIndex];
     qtitle.textContent = `${item.title} — 10s`;
     qsub.textContent = item.sub;
+
     qindexEl.textContent = (qIndex+1).toString();
     qtextEl.textContent = item.q;
 
@@ -1145,12 +1254,24 @@
   }
 
   // -------------------------------
-  // GIFT
+  // GIFT (finale) + CTA pulsante
   // -------------------------------
-  const GIFT = { stage:0, lid:0, t:0, couple:0, heartT:0 };
+  const GIFT = {
+    stage: 0, // 0 waiting click, 1 opening lid, 2 scroll reveal, 3 couple walk, 4 heart, 5 end
+    lid: 0,
+    t: 0,
+    couple: 0,
+    heartT: 0,
+  };
 
   function resetGift(){
-    GIFT.stage = 0; GIFT.lid = 0; GIFT.t = 0; GIFT.couple = 0; GIFT.heartT = 0;
+    GIFT.stage = 0;
+    GIFT.lid = 0;
+    GIFT.t = 0;
+    GIFT.couple = 0;
+    GIFT.heartT = 0;
+
+    giftCtaWrap?.classList.add('show');
 
     setOpacity(giftHint, 1);
     setOpacity(giftScroll, 0);
@@ -1170,20 +1291,31 @@
   function enterGift(){
     setState(State.GIFT);
     resetGift();
-    showToast("Finale sbloccato ✨ Clicca il regalo 🎁", 1600);
+    showToast("Finale sbloccato ✨", 1200);
     beep(740, .08, 'triangle', .03);
   }
 
-  // ✅ FIX 2: pointerdown (non click)
-  giftBox?.addEventListener('pointerdown', (e)=>{
+  function startGiftOpen(){
+    if(state !== State.GIFT) return;
+    if(GIFT.stage !== 0) return;
+    GIFT.stage = 1;
+    giftCtaWrap?.classList.remove('show');
+    setOpacity(giftHint, 0);
+    beep(820, .08, 'triangle', .04);
+  }
+
+  // ✅ bottone HTML (garantito)
+  giftCtaBtn?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    startGiftOpen();
+  });
+
+  // ✅ click sul regalo (se funziona, bene; se no c'è il bottone)
+  giftBox?.addEventListener('click', (e)=>{
     if(state !== State.GIFT) return;
     e.preventDefault();
-    if(GIFT.stage === 0){
-      GIFT.stage = 1;
-      setOpacity(giftHint, 0);
-      beep(820, .08, 'triangle', .04);
-    }
-  }, {passive:false});
+    startGiftOpen();
+  });
 
   function updateGift(dt){
     if(GIFT.stage === 0) return;
@@ -1240,6 +1372,11 @@
       const sClamped = clamp(s, 0.35, 6.2);
       if(giftHeartInner) giftHeartInner.setAttribute('transform', `translate(500 270) scale(${sClamped.toFixed(3)})`);
 
+      if(GIFT.heartT >= 0.35){
+        setTransformScale(giftEttore, 424, 360, 0.62);
+        setTransformScale(giftPatry,  516, 360, 0.62);
+      }
+
       if(GIFT.heartT >= 1.05){
         GIFT.stage = 5;
         setOpacity(giftTBC, 1);
@@ -1254,7 +1391,6 @@
   // -------------------------------
   let t = 0;
   let last = now();
-  let baguetteSpawn = 0;
 
   function update(dt){
     if(toastTimer > 0){
@@ -1266,7 +1402,7 @@
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
-    // overlay freeze
+    // overlay win timing
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
@@ -1275,9 +1411,12 @@
       }
       return;
     }
-    if(overlayMode === 'try') return;
+    if(overlayMode === 'try'){
+      return;
+    }
 
     if(state === State.CHASE){
+      // Player input
       let dx=0, dy=0;
       const sp = player.speed;
       if(keys.left) dx -= sp*dt;
@@ -1286,9 +1425,13 @@
       if(keys.down) dy += sp*dt;
       if(dx && dy){ dx*=0.7071; dy*=0.7071; }
 
-      player.x = clamp(player.x + dx, 10, 930);
-      player.y = clamp(player.y + dy, 40, 520);
+      player.x += dx;
+      player.y += dy;
 
+      player.x = clamp(player.x, 10, 930);
+      player.y = clamp(player.y, 40, 520);
+
+      // Old smokers chase
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1306,8 +1449,11 @@
         vy += Math.cos(o.wob*1.1)*0.10;
 
         const step = o.speed * dt;
-        o.x = clamp(o.x + vx * step, 10, 930);
-        o.y = clamp(o.y + vy * step, 60, 520);
+        o.x += vx * step;
+        o.y += vy * step;
+
+        o.x = clamp(o.x, 10, 930);
+        o.y = clamp(o.y, 60, 520);
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
@@ -1317,7 +1463,7 @@
         }
       }
 
-      // baguettes
+      // Spawn baguettes
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
         baguetteSpawn = rand(0.70, 1.10);
