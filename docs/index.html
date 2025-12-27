@@ -46,10 +46,10 @@
       z-index:30;
     }
 
-    /* ✅ FIX: in modalità regalo la UI non deve bloccare i click sull’SVG (e CTA è fuori dalla UI) */
+    /* In modalità regalo la UI non deve bloccare interazioni (CTA è fuori dalla UI) */
     body.state-gift .ui{ pointer-events:none; }
 
-    /* ✅ CTA premio: overlay HTML sempre cliccabile sopra l'SVG */
+    /* CTA premio: overlay HTML sempre cliccabile sopra l'SVG */
     #giftCtaWrap{
       position:absolute;
       inset:0;
@@ -120,6 +120,7 @@
       font-weight:900;
       font-size:13px;
       text-align:center;
+      z-index:40;
     }
     .toast.show{opacity:1}
 
@@ -446,7 +447,7 @@
                 stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
         </g>
 
-        <!-- Personaggi in title screen (più piccoli) -->
+        <!-- Personaggi in title screen -->
         <g filter="url(#softShadow)">
           <g transform="translate(210 330) scale(0.62)">
             <use href="#ettoreDef"/>
@@ -513,7 +514,7 @@
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Primo Date</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">nessuna traccia, solo ricordo…</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">coordinate segrete…</text>
         </g>
 
         <g id="qbg1" opacity="0">
@@ -523,7 +524,7 @@
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">Allarme Rosso</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">attenzione: segnali sottili…</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">segnali sottili…</text>
         </g>
 
         <g id="qbg2" opacity="0">
@@ -538,7 +539,7 @@
           </g>
           <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Rottura scampata</text>
-          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">una timeline che non vogliamo…</text>
+          <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">timeline alternativa…</text>
         </g>
 
         <g id="qbg3" opacity="0">
@@ -553,7 +554,7 @@
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Tiramisù</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">cura rapida: livello amore +1</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">buff dolce…</text>
         </g>
 
         <g id="qbg4" opacity="0">
@@ -565,7 +566,7 @@
           </g>
           <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
           <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Nickname del cuore</text>
-          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">parola chiave: non divulgare…</text>
+          <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">accesso riservato…</text>
         </g>
       </g>
 
@@ -596,8 +597,25 @@
           </g>
         </g>
 
+        <!-- Coppia + cuore (sempre a destra, non sopra il certificato) -->
+        <g id="giftCouple" opacity="0">
+          <g id="giftEttore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
+          <g id="giftPatry" filter="url(#softShadow)"><use href="#patryDef"/></g>
+
+          <g id="giftHeart" opacity="0" filter="url(#glowPink)">
+            <g id="giftHeartInner" transform="translate(860 280) scale(0.1)">
+              <use href="#heartPath" fill="#FF4D6D"/>
+            </g>
+          </g>
+
+          <g id="giftTBC" opacity="0" class="blink" filter="url(#glowAqua)">
+            <text x="500" y="560" text-anchor="middle" font-size="28" font-weight="1000" fill="rgba(70,255,210,.95)">TO BE CONTINUED...</text>
+          </g>
+        </g>
+
+        <!-- Certificato (sempre sopra: massimo leggibile) -->
         <g id="giftScroll" opacity="0" filter="url(#softShadow)">
-          <g id="giftScrollInner" transform="translate(0 18)">
+          <g id="giftScrollInner" transform="translate(0 44)">
             <rect x="250" y="140" width="500" height="230" rx="24" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
             <rect x="250" y="140" width="500" height="44" rx="22" fill="rgba(255,209,102,.65)" opacity=".55"/>
             <circle cx="260" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
@@ -617,21 +635,6 @@
             </text>
 
             <text x="500" y="352" text-anchor="middle" font-size="12" font-weight="900" fill="rgba(0,0,0,.55)">— firmato: Patry —</text>
-          </g>
-        </g>
-
-        <g id="giftCouple" opacity="0">
-          <g id="giftEttore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
-          <g id="giftPatry" filter="url(#softShadow)"><use href="#patryDef"/></g>
-
-          <g id="giftHeart" opacity="0" filter="url(#glowPink)">
-            <g id="giftHeartInner" transform="translate(500 270) scale(0.1)">
-              <use href="#heartPath" fill="#FF4D6D"/>
-            </g>
-          </g>
-
-          <g id="giftTBC" opacity="0" class="blink" filter="url(#glowAqua)">
-            <text x="500" y="560" text-anchor="middle" font-size="28" font-weight="1000" fill="rgba(70,255,210,.95)">TO BE CONTINUED...</text>
           </g>
         </g>
       </g>
@@ -711,7 +714,7 @@
       </div>
     </div>
 
-    <!-- ✅ CTA premio (HTML sempre interattivo) -->
+    <!-- CTA premio -->
     <div id="giftCtaWrap" aria-hidden="true">
       <button id="giftCtaBtn" type="button">CLICCA PER RICEVERE IL TUO PREMIO</button>
     </div>
@@ -821,7 +824,7 @@
   function setOpacity(el, v){ if(el) el.setAttribute('opacity', String(v)); }
   function setTransformScale(el, x, y, s){ if(el) el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
-  // HITBOX: tolleranza -> hitbox più stretta
+  // Collision con tolleranza (hitbox più stretta)
   function rectsOverlap(a,b, padA=0, padB=0){
     const ax = a.x + padA;
     const ay = a.y + padA;
@@ -887,7 +890,6 @@
       giftCtaWrap?.classList.remove('show');
     }else if(s === State.GIFT){
       setOpacity(titleLayer, 0); setOpacity(chaseLayer, 0); setOpacity(quizBgLayer, 0); setOpacity(giftLayer, 1);
-      // show gestito da resetGift/enterGift
     }
   }
 
@@ -910,12 +912,12 @@
   buildStars(stars, 110);
 
   // -------------------------------
-  // CHASE GAME
+  // CHASE GAME (3 vecchi + lenti)
   // -------------------------------
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // hitbox tighten
+  // Hitbox (più stretta = collisione più "diretta")
   const HIT_PLAYER = 18;
   const HIT_OLD    = 14;
   const HIT_BAG    = 6;
@@ -982,7 +984,6 @@
     baguettesG.innerHTML = '';
     baguetteSpawn = 0.35;
 
-    // ✅ SOLO 3 vecchi + più lenti
     const spawns = [
       {x: 260, y: 320},
       {x: 520, y: 520},
@@ -995,7 +996,7 @@
         x: spawns[i].x,
         y: spawns[i].y,
         w: 68, h: 110,
-        speed: rand(45, 65),
+        speed: rand(45, 65), // più lenti
         wob: rand(0, 10),
         el: null,
       });
@@ -1149,7 +1150,7 @@
     },
     {
       title:"Rottura scampata",
-      sub:"Una timeline alternativa cancellata in tempo — firmato: Patry",
+      sub:"Timeline alternativa annullata in extremis — firmato: Patry",
       bg:2,
       q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
       opts:[
@@ -1254,7 +1255,7 @@
   }
 
   // -------------------------------
-  // GIFT (finale) + CTA pulsante
+  // GIFT (certificato sempre leggibile)
   // -------------------------------
   const GIFT = {
     stage: 0, // 0 waiting click, 1 opening lid, 2 scroll reveal, 3 couple walk, 4 heart, 5 end
@@ -1262,6 +1263,24 @@
     t: 0,
     couple: 0,
     heartT: 0,
+  };
+
+  // Layout premio: coppia + cuore a destra (mai sopra la pergamena)
+  const GIFT_LAYOUT = {
+    coupleScale: 0.48,
+    y: 372,
+
+    ettoreStartX: 760,
+    patryStartX:  870,
+
+    ettoreEndX:   805,
+    patryEndX:    840,
+
+    heartX: 860,
+    heartY: 280,
+
+    heartMin: 0.12,
+    heartMax: 2.6
   };
 
   function resetGift(){
@@ -1282,10 +1301,15 @@
     if(giftLid) giftLid.setAttribute('transform', `rotate(0 500 285)`);
     if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 44)`);
 
-    setTransformScale(giftEttore, 210, 360, 0.62);
-    setTransformScale(giftPatry,  710, 360, 0.62);
+    // Coppia a destra (più piccola)
+    setTransformScale(giftEttore, GIFT_LAYOUT.ettoreStartX, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
+    setTransformScale(giftPatry,  GIFT_LAYOUT.patryStartX,  GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
 
-    if(giftHeartInner) giftHeartInner.setAttribute('transform', `translate(500 270) scale(0.1)`);
+    // Cuore a destra (piccolo)
+    if(giftHeartInner) giftHeartInner.setAttribute(
+      'transform',
+      `translate(${GIFT_LAYOUT.heartX} ${GIFT_LAYOUT.heartY}) scale(${GIFT_LAYOUT.heartMin})`
+    );
   }
 
   function enterGift(){
@@ -1304,13 +1328,13 @@
     beep(820, .08, 'triangle', .04);
   }
 
-  // ✅ bottone HTML (garantito)
+  // Bottone HTML (garantito)
   giftCtaBtn?.addEventListener('click', (e)=>{
     e.preventDefault();
     startGiftOpen();
   });
 
-  // ✅ click sul regalo (se funziona, bene; se no c'è il bottone)
+  // Click sul regalo (opzionale)
   giftBox?.addEventListener('click', (e)=>{
     if(state !== State.GIFT) return;
     e.preventDefault();
@@ -1320,18 +1344,20 @@
   function updateGift(dt){
     if(GIFT.stage === 0) return;
 
+    // Apri coperchio
     if(GIFT.stage === 1){
       GIFT.lid = Math.min(72, GIFT.lid + dt * 140);
       if(giftLid) giftLid.setAttribute('transform', `rotate(${-GIFT.lid} 500 285)`);
       if(GIFT.lid >= 72){
         GIFT.stage = 2;
         GIFT.t = 0;
-        setOpacity(giftScroll, 1);
+        setOpacity(giftScroll, 1);     // certificato appare
         beep(600, .07, 'triangle', .03);
       }
       return;
     }
 
+    // Pergamena "scende"
     if(GIFT.stage === 2){
       GIFT.t += dt;
       const r = clamp(GIFT.t / 0.6, 0, 1);
@@ -1346,16 +1372,17 @@
       return;
     }
 
+    // Coppia si avvicina (a destra)
     if(GIFT.stage === 3){
       GIFT.couple = Math.min(1, GIFT.couple + dt / 1.25);
       const ease = (x)=> (1 - Math.pow(1-x, 3));
       const k = ease(GIFT.couple);
 
-      const ex = 210 + (420 - 210) * k;
-      const px = 710 + (520 - 710) * k;
+      const ex = GIFT_LAYOUT.ettoreStartX + (GIFT_LAYOUT.ettoreEndX - GIFT_LAYOUT.ettoreStartX) * k;
+      const px = GIFT_LAYOUT.patryStartX  + (GIFT_LAYOUT.patryEndX  - GIFT_LAYOUT.patryStartX)  * k;
 
-      setTransformScale(giftEttore, ex, 360, 0.62);
-      setTransformScale(giftPatry,  px, 360, 0.62);
+      setTransformScale(giftEttore, ex, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
+      setTransformScale(giftPatry,  px, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
 
       if(GIFT.couple >= 1){
         GIFT.stage = 4;
@@ -1366,15 +1393,23 @@
       return;
     }
 
+    // Cuore cresce (sempre a destra, piccolo)
     if(GIFT.stage === 4){
       GIFT.heartT += dt;
-      const s = 0.35 + 5.2 * (1 - Math.exp(-GIFT.heartT * 4.5));
-      const sClamped = clamp(s, 0.35, 6.2);
-      if(giftHeartInner) giftHeartInner.setAttribute('transform', `translate(500 270) scale(${sClamped.toFixed(3)})`);
 
+      const s = GIFT_LAYOUT.heartMin
+        + (GIFT_LAYOUT.heartMax - GIFT_LAYOUT.heartMin) * (1 - Math.exp(-GIFT.heartT * 4.5));
+      const sClamped = clamp(s, GIFT_LAYOUT.heartMin, GIFT_LAYOUT.heartMax);
+
+      if(giftHeartInner) giftHeartInner.setAttribute(
+        'transform',
+        `translate(${GIFT_LAYOUT.heartX} ${GIFT_LAYOUT.heartY}) scale(${sClamped.toFixed(3)})`
+      );
+
+      // "bacio" (resta a destra)
       if(GIFT.heartT >= 0.35){
-        setTransformScale(giftEttore, 424, 360, 0.62);
-        setTransformScale(giftPatry,  516, 360, 0.62);
+        setTransformScale(giftEttore, GIFT_LAYOUT.ettoreEndX, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
+        setTransformScale(giftPatry,  GIFT_LAYOUT.patryEndX,  GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
       }
 
       if(GIFT.heartT >= 1.05){
@@ -1402,7 +1437,7 @@
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
-    // overlay win timing
+    // Overlay timing
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
@@ -1415,8 +1450,8 @@
       return;
     }
 
+    // CHASE
     if(state === State.CHASE){
-      // Player input
       let dx=0, dy=0;
       const sp = player.speed;
       if(keys.left) dx -= sp*dt;
@@ -1431,7 +1466,7 @@
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
-      // Old smokers chase
+      // Vecchi inseguono
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1457,6 +1492,7 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
+        // TRY AGAIN solo su collisione diretta
         if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
@@ -1492,6 +1528,7 @@
         return true;
       });
 
+      // TRY AGAIN solo su collisione diretta con baguette
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox, HIT_PLAYER, HIT_BAG)){
@@ -1500,9 +1537,11 @@
         }
       }
 
+      // Render characters
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
+      // Target line
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1510,6 +1549,7 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
+      // Win
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
@@ -1517,6 +1557,7 @@
       }
     }
 
+    // QUIZ
     if(state === State.QUIZ){
       if(qRunning){
         qTime -= dt;
@@ -1530,6 +1571,7 @@
       }
     }
 
+    // GIFT
     if(state === State.GIFT){
       updateGift(dt);
     }
