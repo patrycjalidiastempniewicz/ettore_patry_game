@@ -11,32 +11,38 @@
 
   <style>
     :root{
-      --bg0:#070A16;
-      --bg1:#0B1230;
-      --text:#F4F7FF;
-      --muted:#B7C2E6;
-      --aqua:#46FFD2;
-      --pink:#FF4D6D;
-      --amber:#FFD166;
+      --bg0:#121326;
+      --bg1:#1F2B4A;
+      --text:#F6F2FF;
+      --muted:#C9C2E6;
+
+      /* palette più “storybook / watercolor” */
+      --aqua:#93E7D6;
+      --pink:#FF6B8A;
+      --amber:#FFD38C;
+
       --stroke: rgba(255,255,255,.16);
       --shadow: rgba(0,0,0,.45);
+
+      --paper: rgba(255,255,255,.06);
+      --ink: rgba(20,18,30,.34);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
-      background: radial-gradient(1000px 600px at 50% 25%, #1A2A66 0%, var(--bg1) 40%, var(--bg0) 100%);
+      background:
+        radial-gradient(900px 520px at 50% 18%, rgba(255,211,140,.18) 0%, rgba(147,231,214,.10) 28%, rgba(31,43,74,.10) 40%, rgba(18,19,38,.0) 60%),
+        radial-gradient(1200px 700px at 50% 30%, #2B3762 0%, var(--bg1) 40%, var(--bg0) 100%);
       overflow:hidden;
       min-height: 100dvh;
     }
 
     #app{position:fixed; inset:0; height:100dvh;}
-    #sceneWrap{
-      position:relative; width:100%; height:100%;
-      touch-action:none;
-    }
+    #sceneWrap{position:relative; width:100%; height:100%; touch-action:none;}
     svg{width:100%; height:100%; display:block;}
 
     .ui{
@@ -45,36 +51,34 @@
       display:flex; flex-direction:column;
       z-index:30;
     }
-
-    /* In modalità regalo la UI non deve bloccare interazioni (CTA è fuori dalla UI) */
     body.state-gift .ui{ pointer-events:none; }
 
-    /* CTA premio: overlay HTML sempre cliccabile sopra l'SVG */
+    /* CTA premio */
     #giftCtaWrap{
-      position:absolute;
-      inset:0;
+      position:absolute; inset:0;
       display:none;
       place-items:center;
       z-index:80;
-      pointer-events:none; /* solo il bottone prende i click */
-      background: radial-gradient(600px 380px at 50% 45%, rgba(0,0,0,.40), rgba(0,0,0,.18) 60%, rgba(0,0,0,0) 100%);
+      pointer-events:none;
+      background: radial-gradient(640px 420px at 50% 45%, rgba(0,0,0,.38), rgba(0,0,0,.18) 60%, rgba(0,0,0,0) 100%);
     }
-    #giftCtaWrap.show{ display:grid; }
+    #giftCtaWrap.show{display:grid;}
     #giftCtaWrap button{
       pointer-events:auto;
       font: inherit;
       cursor:pointer;
       border-radius:18px;
       padding:16px 18px;
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,209,102,.22), rgba(255,209,102,.10));
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,211,140,.28), rgba(255,211,140,.10));
       color:var(--text);
       font-weight:1000;
       letter-spacing:.4px;
       text-transform:uppercase;
-      box-shadow: 0 20px 60px rgba(0,0,0,.40);
+      box-shadow: 0 22px 70px rgba(0,0,0,.40);
       transition: transform .08s ease, filter .08s ease;
       touch-action: manipulation;
+      backdrop-filter: blur(10px);
     }
     #giftCtaWrap button:hover{filter:brightness(1.08)}
     #giftCtaWrap button:active{transform:translateY(2px)}
@@ -92,16 +96,16 @@
     .pill{
       pointer-events:none;
       padding:10px 12px;
-      border:1px solid var(--stroke);
+      border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      box-shadow: 0 14px 40px var(--shadow);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      box-shadow: 0 14px 40px rgba(0,0,0,.34);
       backdrop-filter: blur(10px);
-      font-weight:800;
+      font-weight:850;
       font-size:13px;
       display:flex; align-items:center; gap:8px;
     }
-    .pill small{font-weight:700; color:var(--muted)}
+    .pill small{font-weight:750; color:var(--muted)}
 
     .toast{
       position:absolute; left:50%;
@@ -109,15 +113,15 @@
       transform:translateX(-50%);
       width:min(920px, 92vw);
       padding:12px 14px;
-      border:1px solid var(--stroke);
+      border:1px solid rgba(255,255,255,.14);
       border-radius:16px;
-      background: linear-gradient(180deg, rgba(18,26,52,.55), rgba(10,14,28,.55));
+      background: linear-gradient(180deg, rgba(18,26,52,.55), rgba(10,14,28,.48));
       box-shadow: 0 20px 60px rgba(0,0,0,.35);
       backdrop-filter: blur(10px);
       pointer-events:none;
       opacity:0;
       transition:.18s ease;
-      font-weight:900;
+      font-weight:950;
       font-size:13px;
       text-align:center;
       z-index:40;
@@ -132,8 +136,8 @@
       width:min(980px, 92vw);
       padding:16px 16px 14px;
       border-radius:18px;
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(18,26,52,.62), rgba(10,14,28,.62));
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(18,26,52,.60), rgba(10,14,28,.50));
       box-shadow: 0 24px 80px rgba(0,0,0,.40);
       backdrop-filter: blur(12px);
       pointer-events:auto;
@@ -147,7 +151,7 @@
 
     .titleCard .left{display:flex; flex-direction:column; gap:6px; min-width:0;}
     .titleCard .left .hint{
-      font-weight:750;
+      font-weight:780;
       color:var(--muted);
       font-size:13px;
       line-height:1.35;
@@ -160,21 +164,22 @@
       cursor:pointer;
       border-radius:14px;
       padding:12px 14px;
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(70,255,210,.18), rgba(70,255,210,.06));
+      border:1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(147,231,214,.22), rgba(147,231,214,.08));
       color:var(--text);
-      font-weight:900;
+      font-weight:950;
       box-shadow: 0 16px 40px rgba(0,0,0,.30);
       transition: transform .08s ease, filter .08s ease;
       pointer-events:auto;
       touch-action: manipulation;
+      backdrop-filter: blur(10px);
     }
     button:hover{filter:brightness(1.07)}
     button:active{transform:translateY(2px)}
     .secondary{
       background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
       color:var(--muted);
-      font-weight:850;
+      font-weight:900;
     }
 
     .controls{
@@ -200,13 +205,14 @@
     .pad{
       width:56px; height:56px;
       border-radius:16px;
-      border:1px solid var(--stroke);
+      border:1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
       display:grid; place-items:center;
       color:var(--text);
-      font-weight:900;
+      font-weight:950;
       user-select:none;
       touch-action:none;
+      backdrop-filter: blur(10px);
     }
     .pad:active{transform:translateY(2px)}
     .padGhost{opacity:0}
@@ -216,13 +222,12 @@
       max-width: 320px;
       text-align:right;
       font-size:12px;
-      font-weight:850;
+      font-weight:880;
       color:var(--muted);
       line-height:1.35;
       text-shadow: 0 2px 0 rgba(0,0,0,.25);
     }
 
-    /* Center overlay: TRY AGAIN / FINALLY TOGETHER */
     #centerOverlay{
       position:absolute; inset:0;
       display:none;
@@ -237,7 +242,7 @@
       padding:14px 18px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(18,26,52,.65), rgba(10,14,28,.65));
+      background: linear-gradient(180deg, rgba(18,26,52,.62), rgba(10,14,28,.55));
       box-shadow: 0 28px 90px rgba(0,0,0,.45);
       backdrop-filter: blur(14px);
       cursor:pointer;
@@ -254,18 +259,13 @@
     .centerText .sub{
       margin-top:10px;
       font-size: 13px;
-      font-weight: 850;
+      font-weight: 900;
       color: var(--muted);
     }
-    .blink90{ animation: blink 0.38s steps(2,end) infinite; }
+    .blink90{ animation: blink 0.42s steps(2,end) infinite; }
 
-    /* Quiz overlay */
-    #quiz{
-      position:absolute; inset:0;
-      display:none;
-      pointer-events:auto;
-      z-index:45;
-    }
+    /* Quiz */
+    #quiz{position:absolute; inset:0; display:none; pointer-events:auto; z-index:45;}
     body.state-quiz #quiz{display:block}
 
     .quizCard{
@@ -274,39 +274,40 @@
       left:50%; top:50%;
       transform:translate(-50%,-50%);
       width:min(980px, 92vw);
-      border-radius:20px;
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(18,26,52,.70), rgba(10,14,28,.70));
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(18,26,52,.66), rgba(10,14,28,.56));
       box-shadow: 0 28px 90px rgba(0,0,0,.45);
       backdrop-filter: blur(14px);
       padding:16px;
     }
     .quizHead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
     .quizHead h2{margin:0; font-size:18px; letter-spacing:.2px;}
-    .quizHead .meta{color:var(--muted); font-weight:850; font-size:13px;}
+    .quizHead .meta{color:var(--muted); font-weight:900; font-size:13px;}
 
     .quizTitleWrap{display:flex; flex-direction:column; gap:4px; min-width:220px;}
-    .qsub{font-size:12px; font-weight:850; color:var(--muted); opacity:.95; letter-spacing:.2px;}
+    .qsub{font-size:12px; font-weight:900; color:var(--muted); opacity:.95; letter-spacing:.2px;}
 
-    .qtext{margin:10px 0 12px; font-size:16px; font-weight:900; line-height:1.35;}
+    .qtext{margin:10px 0 12px; font-size:16px; font-weight:950; line-height:1.35;}
     .options{display:grid; grid-template-columns:1fr; gap:10px;}
     @media (min-width: 760px){ .options{grid-template-columns: 1fr 1fr 1fr;} }
     .opt{
       text-align:left;
-      font-weight:900;
+      font-weight:950;
       border-radius:16px;
       padding:14px 14px;
-      border:1px solid var(--stroke);
+      border:1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
       color:var(--text);
+      backdrop-filter: blur(10px);
     }
     .opt:hover{filter:brightness(1.06)}
-    .bar{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-weight:850; font-size:13px; flex-wrap:wrap;}
-    .meter{width:min(280px, 60vw); height:12px; border-radius:999px; border:1px solid var(--stroke); background: rgba(0,0,0,.22); overflow:hidden;}
-    .fill{height:100%; width:100%; transform-origin:left center; background: linear-gradient(90deg, rgba(70,255,210,.9), rgba(255,209,102,.9), rgba(255,77,109,.9));}
+    .bar{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-weight:900; font-size:13px; flex-wrap:wrap;}
+    .meter{width:min(280px, 60vw); height:12px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.22); overflow:hidden;}
+    .fill{height:100%; width:100%; transform-origin:left center; background: linear-gradient(90deg, rgba(147,231,214,.92), rgba(255,211,140,.92), rgba(255,107,138,.92));}
     .danger{color:var(--pink)}
     #retry{display:none; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.12); text-align:center; width:100%;}
-    #retry .msg{color:var(--amber); font-weight:900; margin: 0 0 10px; line-height:1.35;}
+    #retry .msg{color:var(--amber); font-weight:950; margin: 0 0 10px; line-height:1.35;}
 
     @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
 
@@ -324,158 +325,336 @@
 
     <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="Ettore & Patry game">
       <defs>
+        <!-- SKY (dusk watercolor) -->
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#1B2C6A"/>
-          <stop offset=".55" stop-color="#0B1230"/>
-          <stop offset="1" stop-color="#070A16"/>
+          <stop offset="0"   stop-color="#3A3E73"/>
+          <stop offset=".52" stop-color="#2B3562"/>
+          <stop offset="1"   stop-color="#14162B"/>
         </linearGradient>
+        <radialGradient id="horizonGlow" cx="50%" cy="62%" r="60%">
+          <stop offset="0" stop-color="rgba(255,211,140,.26)"/>
+          <stop offset="1" stop-color="rgba(255,211,140,0)"/>
+        </radialGradient>
+
+        <!-- “paint wash” texture -->
+        <filter id="paintWash" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
 
         <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(0,0,0,.45)"/>
+          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(0,0,0,.42)"/>
+        </filter>
+
+        <filter id="softLift" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="rgba(0,0,0,.34)"/>
         </filter>
 
         <filter id="glowAqua" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(70,255,210,.45)"/>
+          <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="rgba(147,231,214,.22)"/>
         </filter>
 
         <filter id="glowPink" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="rgba(255,77,109,.45)"/>
+          <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="rgba(255,107,138,.22)"/>
         </filter>
 
-        <pattern id="plaid" width="24" height="24" patternUnits="userSpaceOnUse">
-          <rect width="24" height="24" fill="#B12B3B"/>
-          <rect x="0" y="9" width="24" height="4" fill="rgba(255,255,255,.14)"/>
-          <rect x="9" y="0" width="4" height="24" fill="rgba(255,255,255,.14)"/>
-          <rect x="0" y="16" width="24" height="3" fill="rgba(0,0,0,.12)"/>
-          <rect x="16" y="0" width="3" height="24" fill="rgba(0,0,0,.12)"/>
-        </pattern>
+        <!-- gradients -->
+        <radialGradient id="skinGrad" cx="45%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#FFE0CB"/>
+          <stop offset="1" stop-color="#E9B18F"/>
+        </radialGradient>
+        <linearGradient id="hairGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#2A2221"/>
+          <stop offset="1" stop-color="#161112"/>
+        </linearGradient>
+        <linearGradient id="hairGradWarm" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#3A2A25"/>
+          <stop offset="1" stop-color="#1A1111"/>
+        </linearGradient>
+        <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,.95)"/>
+          <stop offset="1" stop-color="rgba(255,255,255,.78)"/>
+        </linearGradient>
+        <linearGradient id="sweaterGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8F8FA6"/>
+          <stop offset="1" stop-color="#6B6E86"/>
+        </linearGradient>
 
+        <!-- eyes -->
+        <radialGradient id="eyeBrown" cx="40%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#6B4B3E"/>
+          <stop offset="1" stop-color="#2C1D18"/>
+        </radialGradient>
+        <radialGradient id="eyeGreen" cx="40%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#6DE2B0"/>
+          <stop offset="1" stop-color="#1B6A50"/>
+        </radialGradient>
+
+        <!-- heart -->
         <path id="heartPath" d="M 0 -16 C 0 -28 -16 -32 -26 -20 C -36 -8 -28 6 0 22 C 28 6 36 -8 26 -20 C 16 -32 0 -28 0 -16 Z"/>
 
-        <g id="ettoreDef">
-          <rect x="24" y="18" width="72" height="70" rx="24" fill="#F2C9A0"/>
-          <path d="M22 34 C 26 8 94 8 98 34 L98 44 C 92 24 28 24 22 44 Z" fill="#2A1F1A"/>
-          <circle cx="102" cy="38" r="12" fill="#2A1F1A"/>
-          <rect x="30" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-          <rect x="66" y="44" width="24" height="16" rx="7" fill="none" stroke="#111" stroke-width="3"/>
-          <line x1="54" y1="52" x2="66" y2="52" stroke="#111" stroke-width="3"/>
-          <path d="M32 66 C 40 92 80 92 88 66 C 90 92 78 104 60 104 C 42 104 30 92 32 66 Z" fill="#3B2A22"/>
-          <rect x="18" y="92" width="84" height="78" rx="18" fill="url(#plaid)"/>
-          <rect x="30" y="170" width="60" height="44" rx="16" fill="#223255"/>
-          <path d="M12 112 C 2 126 8 154 22 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
-          <path d="M108 112 C 118 126 112 154 98 164" stroke="#F2C9A0" stroke-width="12" stroke-linecap="round"/>
+        <!-- Characters: “storybook anime watercolor” -->
+        <g id="ettoreDef" filter="url(#softLift)">
+          <!-- shadow -->
+          <ellipse cx="60" cy="210" rx="40" ry="10" fill="rgba(0,0,0,.18)"/>
+
+          <!-- hair (curly mass) -->
+          <path d="M18 62
+                   C10 40, 20 22, 40 16
+                   C54 8, 78 8, 94 18
+                   C112 30, 116 52, 106 70
+                   C106 70, 100 48, 78 44
+                   C64 42, 50 44, 40 54
+                   C30 66, 24 76, 24 92
+                   C16 86, 14 74, 18 62 Z"
+                fill="url(#hairGrad)" stroke="rgba(0,0,0,.26)" stroke-width="2" stroke-linejoin="round"/>
+
+          <!-- loose curls -->
+          <path d="M22 80 C10 84, 10 98, 22 104" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M102 78 C114 84, 114 98, 102 104" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- head -->
+          <path d="M34 60
+                   C34 38, 86 38, 86 60
+                   L86 98
+                   C86 120, 34 120, 34 98 Z"
+                fill="url(#skinGrad)" stroke="rgba(0,0,0,.26)" stroke-width="2" />
+
+          <!-- ears -->
+          <circle cx="30" cy="86" r="10" fill="url(#skinGrad)" stroke="rgba(0,0,0,.22)" stroke-width="2"/>
+          <circle cx="90" cy="86" r="10" fill="url(#skinGrad)" stroke="rgba(0,0,0,.22)" stroke-width="2"/>
+
+          <!-- blush -->
+          <ellipse cx="46" cy="98" rx="10" ry="6" fill="rgba(255,107,138,.18)"/>
+          <ellipse cx="74" cy="98" rx="10" ry="6" fill="rgba(255,107,138,.18)"/>
+
+          <!-- eyes -->
+          <ellipse cx="50" cy="84" rx="8.5" ry="10" fill="rgba(255,255,255,.92)"/>
+          <ellipse cx="70" cy="84" rx="8.5" ry="10" fill="rgba(255,255,255,.92)"/>
+          <circle cx="50" cy="86" r="5.2" fill="url(#eyeBrown)"/>
+          <circle cx="70" cy="86" r="5.2" fill="url(#eyeBrown)"/>
+          <circle cx="52" cy="83" r="1.6" fill="rgba(255,255,255,.95)"/>
+          <circle cx="72" cy="83" r="1.6" fill="rgba(255,255,255,.95)"/>
+
+          <!-- brows -->
+          <path d="M42 74 C47 70, 54 70, 58 74" fill="none" stroke="rgba(0,0,0,.26)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M62 74 C66 70, 73 70, 78 74" fill="none" stroke="rgba(0,0,0,.26)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- glasses -->
+          <circle cx="50" cy="86" r="13" fill="rgba(255,255,255,.05)" stroke="rgba(30,26,40,.55)" stroke-width="2.2"/>
+          <circle cx="70" cy="86" r="13" fill="rgba(255,255,255,.05)" stroke="rgba(30,26,40,.55)" stroke-width="2.2"/>
+          <path d="M63 86 L57 86" stroke="rgba(30,26,40,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M36 84 C28 82, 26 80, 22 76" stroke="rgba(30,26,40,.35)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M84 84 C92 82, 94 80, 98 76" stroke="rgba(30,26,40,.35)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- nose + mouth -->
+          <path d="M60 90 C58 94, 60 98, 62 100" fill="none" stroke="rgba(0,0,0,.20)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M50 106 C56 110, 64 110, 70 106" fill="none" stroke="rgba(80,45,45,.55)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- beard -->
+          <path d="M38 104
+                   C40 126, 80 126, 82 104
+                   C84 132, 74 146, 60 146
+                   C46 146, 36 132, 38 104 Z"
+                fill="rgba(50,34,30,.92)" stroke="rgba(0,0,0,.20)" stroke-width="2" />
+
+          <!-- neck -->
+          <rect x="52" y="118" width="16" height="18" rx="7"
+                fill="url(#skinGrad)" stroke="rgba(0,0,0,.20)" stroke-width="2"/>
+
+          <!-- shirt -->
+          <path d="M24 140
+                   C30 132, 40 128, 60 128
+                   C80 128, 90 132, 96 140
+                   L104 182
+                   C106 196, 98 206, 86 210
+                   L34 210
+                   C22 206, 14 196, 16 182 Z"
+                fill="url(#shirtGrad)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
+
+          <!-- subtle logo dot -->
+          <circle cx="86" cy="170" r="4.5" fill="rgba(255,107,138,.22)"/>
         </g>
 
-        <g id="patryDef">
-          <path d="M30 16 C 12 24 10 54 20 70 C 16 72 12 84 22 90 C 36 96 76 96 90 88 C 98 84 96 72 92 70 C 102 52 96 24 78 16 C 70 10 38 10 30 16 Z"
-                fill="#1A1A1D"/>
-          <rect x="28" y="26" width="64" height="62" rx="22" fill="#F3C8A1"/>
-          <rect x="34" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-          <rect x="64" y="46" width="22" height="14" rx="6" fill="none" stroke="#111" stroke-width="3"/>
-          <line x1="56" y1="53" x2="64" y2="53" stroke="#111" stroke-width="3"/>
-          <circle cx="45" cy="56" r="3.2" fill="#2CFF88"/>
-          <circle cx="75" cy="56" r="3.2" fill="#2CFF88"/>
-          <path d="M34 92 C 34 130 86 130 86 92 L86 118 C 86 146 34 146 34 118 Z" fill="#4B3B92"/>
-          <path d="M20 98 C 10 106 12 122 22 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
-          <path d="M100 98 C 110 106 108 122 98 128" stroke="#F3C8A1" stroke-width="10" stroke-linecap="round"/>
+        <g id="patryDef" filter="url(#softLift)">
+          <!-- shadow -->
+          <ellipse cx="60" cy="214" rx="42" ry="10" fill="rgba(0,0,0,.18)"/>
+
+          <!-- hair (wavy) -->
+          <path d="M20 70
+                   C14 34, 42 18, 60 18
+                   C78 18, 106 34, 100 70
+                   C96 48, 84 40, 60 40
+                   C36 40, 24 48, 20 70 Z"
+                fill="url(#hairGradWarm)" stroke="rgba(0,0,0,.26)" stroke-width="2" stroke-linejoin="round"/>
+
+          <path d="M18 88
+                   C10 120, 22 170, 44 208
+                   C34 186, 34 150, 40 130
+                   C28 132, 18 110, 18 88 Z"
+                fill="url(#hairGradWarm)" opacity=".96" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linejoin="round"/>
+
+          <path d="M102 88
+                   C110 120, 98 170, 76 208
+                   C86 186, 86 150, 80 130
+                   C92 132, 102 110, 102 88 Z"
+                fill="url(#hairGradWarm)" opacity=".96" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linejoin="round"/>
+
+          <!-- head -->
+          <path d="M34 66
+                   C34 44, 86 44, 86 66
+                   L86 104
+                   C86 128, 34 128, 34 104 Z"
+                fill="url(#skinGrad)" stroke="rgba(0,0,0,.26)" stroke-width="2"/>
+
+          <!-- ears -->
+          <circle cx="30" cy="92" r="9.5" fill="url(#skinGrad)" stroke="rgba(0,0,0,.22)" stroke-width="2"/>
+          <circle cx="90" cy="92" r="9.5" fill="url(#skinGrad)" stroke="rgba(0,0,0,.22)" stroke-width="2"/>
+
+          <!-- blush -->
+          <ellipse cx="46" cy="106" rx="11" ry="6.5" fill="rgba(255,107,138,.18)"/>
+          <ellipse cx="74" cy="106" rx="11" ry="6.5" fill="rgba(255,107,138,.18)"/>
+
+          <!-- eyes (greenish like ref vibe) -->
+          <ellipse cx="50" cy="92" rx="9.2" ry="11" fill="rgba(255,255,255,.92)"/>
+          <ellipse cx="70" cy="92" rx="9.2" ry="11" fill="rgba(255,255,255,.92)"/>
+          <circle cx="50" cy="95" r="5.5" fill="url(#eyeGreen)"/>
+          <circle cx="70" cy="95" r="5.5" fill="url(#eyeGreen)"/>
+          <circle cx="52" cy="91" r="1.7" fill="rgba(255,255,255,.95)"/>
+          <circle cx="72" cy="91" r="1.7" fill="rgba(255,255,255,.95)"/>
+
+          <!-- brows + lashes -->
+          <path d="M40 82 C46 78, 54 78, 60 82" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M60 82 C66 78, 74 78, 80 82" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M43 100 L40 98" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M77 100 L80 98" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- glasses -->
+          <circle cx="50" cy="95" r="13" fill="rgba(255,255,255,.05)" stroke="rgba(30,26,40,.52)" stroke-width="2.2"/>
+          <circle cx="70" cy="95" r="13" fill="rgba(255,255,255,.05)" stroke="rgba(30,26,40,.52)" stroke-width="2.2"/>
+          <path d="M63 95 L57 95" stroke="rgba(30,26,40,.52)" stroke-width="2.2" stroke-linecap="round"/>
+
+          <!-- mouth -->
+          <path d="M52 114 C58 118, 62 118, 68 114" fill="none" stroke="rgba(80,45,45,.45)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- neck -->
+          <rect x="52" y="126" width="16" height="18" rx="7"
+                fill="url(#skinGrad)" stroke="rgba(0,0,0,.20)" stroke-width="2"/>
+
+          <!-- sweater (turtleneck) -->
+          <path d="M28 142
+                   C34 134, 44 130, 60 130
+                   C76 130, 86 134, 92 142
+                   L102 210
+                   L18 210 Z"
+                fill="url(#sweaterGrad)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
+
+          <path d="M42 138
+                   C46 150, 74 150, 78 138
+                   C78 164, 42 164, 42 138 Z"
+                fill="rgba(255,255,255,.10)" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
+
+          <!-- tiny earring -->
+          <circle cx="92" cy="104" r="3.3" fill="rgba(255,211,140,.85)" stroke="rgba(0,0,0,.15)" stroke-width="1.4"/>
         </g>
       </defs>
 
       <!-- BACKGROUND -->
-      <g id="bg">
+      <g id="bg" filter="url(#paintWash)">
         <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-        <g id="stars" opacity=".45"></g>
-        <g id="skylineFar" opacity=".22">
-          <path d="M0 440 L0 420 L40 420 L40 398 L70 398 L70 430 L110 430 L110 410 L145 410 L145 392 L190 392 L190 430 L240 430 L240 402 L270 402 L270 430 L320 430 L320 390 L360 390 L360 440 Z" fill="#000"/>
-          <path d="M360 440 L360 410 L400 410 L400 380 L430 380 L430 420 L470 420 L470 400 L510 400 L510 360 L540 360 L540 420 L585 420 L585 398 L620 398 L620 430 L660 430 L660 390 L710 390 L710 440 Z" fill="#000"/>
-          <path d="M710 440 L710 410 L750 410 L750 380 L790 380 L790 420 L830 420 L830 395 L880 395 L880 430 L920 430 L920 390 L970 390 L970 440 Z" fill="#000"/>
+        <rect x="0" y="0" width="1000" height="600" fill="url(#horizonGlow)" opacity=".9"/>
+
+        <!-- clouds -->
+        <g opacity=".18">
+          <path d="M80 140 C140 110, 220 110, 280 140 C320 160, 340 190, 300 205 C240 230, 150 225, 96 206 C56 192, 48 160, 80 140 Z"
+                fill="rgba(255,255,255,.75)"/>
+          <path d="M620 120 C700 90, 800 100, 860 130 C900 150, 920 180, 880 196 C820 220, 720 214, 650 194 C604 182, 592 150, 620 120 Z"
+                fill="rgba(255,255,255,.65)"/>
         </g>
+
+        <g id="stars" opacity=".55"></g>
+
+        <!-- skyline: più “pittorico” -->
+        <g id="skylineFar" opacity=".22">
+          <path d="M0 440 L0 415 L38 415 L38 396 L70 396 L70 430 L110 430 L110 405 L150 405 L150 388 L190 388 L190 432 L240 432 L240 402 L280 402 L280 432 L320 432 L320 392 L360 392 L360 440 Z" fill="#0A0A10"/>
+          <path d="M360 440 L360 408 L402 408 L402 374 L432 374 L432 420 L474 420 L474 394 L514 394 L514 354 L546 354 L546 422 L590 422 L590 398 L625 398 L625 432 L665 432 L665 390 L712 390 L712 440 Z" fill="#0A0A10"/>
+          <path d="M712 440 L712 410 L752 410 L752 382 L792 382 L792 422 L832 422 L832 396 L882 396 L882 432 L922 432 L922 392 L972 392 L972 440 Z" fill="#0A0A10"/>
+        </g>
+
+        <!-- warm ground -->
         <rect x="0" y="430" width="1000" height="170" fill="rgba(0,0,0,.25)"/>
+
+        <!-- little fireflies -->
+        <g opacity=".25">
+          <circle cx="140" cy="520" r="3.5" fill="rgba(255,211,140,.9)"/>
+          <circle cx="260" cy="548" r="2.8" fill="rgba(147,231,214,.9)"/>
+          <circle cx="820" cy="540" r="3.2" fill="rgba(255,107,138,.9)"/>
+          <circle cx="720" cy="510" r="2.6" fill="rgba(255,211,140,.9)"/>
+        </g>
+
         <path d="M60 520 C 240 470 360 470 520 520 C 680 570 800 570 940 520"
-              stroke="rgba(70,255,210,.14)" stroke-width="6" stroke-linecap="round" fill="none"/>
+              stroke="rgba(147,231,214,.18)" stroke-width="6" stroke-linecap="round" fill="none"/>
       </g>
 
       <!-- TITLE LAYER -->
       <g id="titleLayer">
-        <g id="twoTowers" filter="url(#softShadow)">
-          <path d="M160 510 C 280 470 420 458 500 458 C 580 458 720 470 840 510 L840 560 L160 560 Z"
-                fill="rgba(0,0,0,.25)"/>
-          <g transform="translate(430 140)">
-            <path d="M40 0 L100 0 L120 360 L20 360 Z" fill="#1A1F2E"/>
-            <path d="M40 0 L100 0" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-            <g fill="#1A1F2E">
-              <rect x="38" y="-14" width="16" height="14" rx="3"/>
-              <rect x="60" y="-14" width="16" height="14" rx="3"/>
-              <rect x="82" y="-14" width="16" height="14" rx="3"/>
-            </g>
-            <g opacity=".55" fill="rgba(70,255,210,.35)">
-              <rect x="52" y="40" width="10" height="18" rx="3"/>
-              <rect x="78" y="40" width="10" height="18" rx="3"/>
-              <rect x="52" y="85" width="10" height="18" rx="3"/>
-              <rect x="78" y="85" width="10" height="18" rx="3"/>
-              <rect x="52" y="130" width="10" height="18" rx="3"/>
-              <rect x="78" y="130" width="10" height="18" rx="3"/>
-              <rect x="52" y="175" width="10" height="18" rx="3"/>
-              <rect x="78" y="175" width="10" height="18" rx="3"/>
-              <rect x="52" y="220" width="10" height="18" rx="3"/>
-              <rect x="78" y="220" width="10" height="18" rx="3"/>
-            </g>
-          </g>
+        <!-- soft poster vignette -->
+        <rect x="90" y="58" width="820" height="210" rx="26"
+              fill="rgba(0,0,0,.18)" stroke="rgba(255,255,255,.12)" stroke-width="2"
+              filter="url(#softShadow)"/>
 
-          <g transform="translate(575 220) rotate(-6)">
-            <path d="M0 0 L72 0 L92 280 L-18 280 Z" fill="#171C2A"/>
-            <g fill="#171C2A">
-              <rect x="-2" y="-14" width="16" height="14" rx="3"/>
-              <rect x="18" y="-14" width="16" height="14" rx="3"/>
-              <rect x="38" y="-14" width="16" height="14" rx="3"/>
-              <rect x="58" y="-14" width="16" height="14" rx="3"/>
-            </g>
-            <g opacity=".45" fill="rgba(70,255,210,.30)">
-              <rect x="10" y="50" width="10" height="18" rx="3"/>
-              <rect x="32" y="50" width="10" height="18" rx="3"/>
-              <rect x="54" y="50" width="10" height="18" rx="3"/>
-              <rect x="10" y="100" width="10" height="18" rx="3"/>
-              <rect x="32" y="100" width="10" height="18" rx="3"/>
-              <rect x="54" y="100" width="10" height="18" rx="3"/>
-              <rect x="10" y="150" width="10" height="18" rx="3"/>
-              <rect x="32" y="150" width="10" height="18" rx="3"/>
-              <rect x="54" y="150" width="10" height="18" rx="3"/>
-            </g>
-          </g>
-
-          <path d="M200 510 C 310 485 420 476 500 476 C 580 476 690 485 800 510"
-                stroke="rgba(70,255,210,.22)" stroke-width="3" fill="none" filter="url(#glowAqua)"/>
+        <!-- moon glow -->
+        <g opacity=".35" filter="url(#glowAqua)">
+          <circle cx="820" cy="120" r="56" fill="rgba(255,255,255,.26)"/>
+          <circle cx="820" cy="120" r="28" fill="rgba(255,255,255,.22)"/>
         </g>
 
-        <!-- Personaggi in title screen -->
+        <!-- “scene” base -->
         <g filter="url(#softShadow)">
-          <g transform="translate(210 330) scale(0.62)">
+          <path d="M150 510 C 280 470 420 458 500 458 C 580 458 720 470 850 510 L850 560 L150 560 Z"
+                fill="rgba(0,0,0,.22)"/>
+          <path d="M180 510 C 320 485 430 476 500 476 C 570 476 680 485 820 510"
+                stroke="rgba(255,211,140,.18)" stroke-width="4" fill="none" filter="url(#glowPink)"/>
+        </g>
+
+        <!-- Characters on title screen -->
+        <g filter="url(#softShadow)">
+          <g transform="translate(210 332) scale(0.64)">
             <use href="#ettoreDef"/>
           </g>
-          <g transform="translate(760 330) scale(0.62)">
+          <g transform="translate(760 332) scale(0.64)">
             <use href="#patryDef"/>
             <g transform="translate(-180 18) scale(1.35)">
-              <rect x="0" y="0" width="160" height="66" rx="14" fill="rgba(255,255,255,.95)" stroke="rgba(0,0,0,.18)"/>
+              <rect x="0" y="0" width="160" height="66" rx="16" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.16)"/>
               <text x="80" y="28" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PROVA A</text>
               <text x="80" y="50" text-anchor="middle" font-size="15" font-weight="1000" fill="#111">PRENDERMI</text>
             </g>
           </g>
         </g>
 
-        <g id="titleText" font-weight="900" text-anchor="middle" filter="url(#softShadow)">
-          <text x="500" y="70" font-size="44" fill="rgba(255,255,255,.92)">5 YEARS: SURVIVAL</text>
-          <text x="500" y="114" font-size="36" fill="rgba(255,255,255,.86)">ANNIVERSARY MODE</text>
-          <text id="glitchA" class="blink" x="500" y="70" font-size="44" fill="rgba(70,255,210,.50)" filter="url(#glowAqua)">5 YEARS: SURVIVAL</text>
-          <text id="glitchB" class="blink" x="500" y="70" font-size="44" fill="rgba(255,77,109,.45)" filter="url(#glowPink)">5 YEARS: SURVIVAL</text>
+        <!-- Title text -->
+        <g id="titleText" font-weight="1000" text-anchor="middle">
+          <text x="500" y="120" font-size="44" fill="rgba(255,255,255,.92)" filter="url(#softShadow)">5 YEARS: SURVIVAL</text>
+          <text x="500" y="160" font-size="34" fill="rgba(255,255,255,.82)" filter="url(#softShadow)">ANNIVERSARY MODE</text>
+          <text x="500" y="120" font-size="44" fill="rgba(147,231,214,.22)" filter="url(#glowAqua)" opacity=".8">5 YEARS: SURVIVAL</text>
         </g>
 
         <g id="pressStart" class="blink clickable" text-anchor="middle" filter="url(#glowPink)">
-          <text x="500" y="520" font-size="26" fill="rgba(255,209,102,.95)" font-weight="1000">PRESS START</text>
+          <text x="500" y="520" font-size="26" fill="rgba(255,211,140,.95)" font-weight="1000">PRESS START</text>
+        </g>
+
+        <!-- START button spotlight -->
+        <g opacity=".35">
+          <radialGradient id="spotStart" cx="50%" cy="50%" r="60%">
+            <stop offset="0" stop-color="rgba(255,211,140,.55)"/>
+            <stop offset="1" stop-color="rgba(255,211,140,0)"/>
+          </radialGradient>
+          <circle cx="500" cy="457" r="170" fill="url(#spotStart)"/>
         </g>
 
         <g id="startButton" class="clickable pulse" filter="url(#softShadow)">
           <rect x="360" y="420" width="280" height="74" rx="22"
-                fill="rgba(70,255,210,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+                fill="rgba(147,231,214,.14)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
           <text x="500" y="468" text-anchor="middle" font-size="30" font-weight="1000"
                 fill="rgba(255,255,255,.92)">START</text>
         </g>
@@ -486,86 +665,84 @@
         <g id="olds"></g>
         <g id="baguettes"></g>
 
-        <!-- Patry -->
         <g id="patry" filter="url(#softShadow)">
           <use href="#patryDef"/>
           <g id="sign" transform="translate(-190 10) scale(1.40)" filter="url(#softShadow)">
-            <rect x="0" y="0" width="170" height="70" rx="14" fill="rgba(255,255,255,.96)" stroke="rgba(0,0,0,.18)"/>
+            <rect x="0" y="0" width="170" height="70" rx="16" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.16)"/>
             <text x="85" y="30" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PROVA A</text>
             <text x="85" y="54" text-anchor="middle" font-size="16" font-weight="1000" fill="#111">PRENDERMI</text>
           </g>
         </g>
 
-        <!-- Ettore -->
         <g id="ettore" filter="url(#softShadow)">
           <use href="#ettoreDef"/>
         </g>
 
-        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(70,255,210,.18)" stroke-width="3" stroke-linecap="round"/>
+        <line id="targetLine" x1="0" y1="0" x2="0" y2="0" stroke="rgba(147,231,214,.18)" stroke-width="3" stroke-linecap="round"/>
       </g>
 
       <!-- QUIZ BACKGROUND LAYER -->
       <g id="quizBgLayer" opacity="0">
         <g id="qbg0" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-          <g opacity=".22">
-            <circle cx="170" cy="210" r="90" fill="rgba(70,255,210,.45)"/>
-            <circle cx="850" cy="260" r="120" fill="rgba(255,77,109,.35)"/>
+          <g opacity=".18">
+            <circle cx="170" cy="210" r="90" fill="rgba(147,231,214,.35)"/>
+            <circle cx="850" cy="260" r="120" fill="rgba(255,107,138,.26)"/>
           </g>
-          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Primo Date</text>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.22)" stroke="rgba(255,255,255,.12)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(147,231,214,.92)" filter="url(#glowAqua)">Primo Date</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">coordinate segrete…</text>
         </g>
 
         <g id="qbg1" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-          <g opacity=".18">
-            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.55)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <g opacity=".16">
+            <path d="M140 440 C 240 360 360 360 460 440 C 560 520 680 520 860 380" stroke="rgba(255,255,255,.50)" stroke-width="14" stroke-linecap="round" fill="none"/>
           </g>
-          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,209,102,.95)" filter="url(#glowPink)">Allarme Rosso</text>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.22)" stroke="rgba(255,255,255,.12)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,211,140,.92)" filter="url(#glowPink)">Allarme Rosso</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">segnali sottili…</text>
         </g>
 
         <g id="qbg2" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-          <g opacity=".22">
+          <g opacity=".18">
             <rect x="120" y="340" width="760" height="180" rx="26" fill="rgba(255,255,255,.08)"/>
-            <g stroke="rgba(255,255,255,.20)" stroke-width="6">
+            <g stroke="rgba(255,255,255,.18)" stroke-width="6">
               <line x1="160" y1="380" x2="840" y2="380"/>
               <line x1="160" y1="430" x2="840" y2="430"/>
               <line x1="160" y1="480" x2="840" y2="480"/>
             </g>
           </g>
-          <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Rottura scampata</text>
+          <rect x="200" y="170" width="600" height="140" rx="22" fill="rgba(0,0,0,.22)" stroke="rgba(255,255,255,.12)"/>
+          <text x="500" y="225" text-anchor="middle" font-size="30" font-weight="1000" fill="rgba(255,107,138,.92)" filter="url(#glowPink)">Rottura scampata</text>
           <text x="500" y="265" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">timeline alternativa…</text>
         </g>
 
         <g id="qbg3" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-          <g opacity=".28">
-            <circle cx="260" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
-            <rect x="240" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
-            <circle cx="500" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
-            <rect x="480" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
-            <circle cx="740" cy="420" r="44" fill="rgba(255,209,102,.65)"/>
-            <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,77,109,.55)"/>
+          <g opacity=".24">
+            <circle cx="260" cy="420" r="44" fill="rgba(255,211,140,.55)"/>
+            <rect x="240" y="380" width="40" height="26" rx="8" fill="rgba(255,107,138,.45)"/>
+            <circle cx="500" cy="420" r="44" fill="rgba(255,211,140,.55)"/>
+            <rect x="480" y="380" width="40" height="26" rx="8" fill="rgba(255,107,138,.45)"/>
+            <circle cx="740" cy="420" r="44" fill="rgba(255,211,140,.55)"/>
+            <rect x="720" y="380" width="40" height="26" rx="8" fill="rgba(255,107,138,.45)"/>
           </g>
-          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(70,255,210,.95)" filter="url(#glowAqua)">Tiramisù</text>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.22)" stroke="rgba(255,255,255,.12)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(147,231,214,.92)" filter="url(#glowAqua)">Tiramisù</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">buff dolce…</text>
         </g>
 
         <g id="qbg4" opacity="0">
           <rect x="0" y="0" width="1000" height="600" fill="url(#sky)"/>
-          <g opacity=".25">
-            <g transform="translate(180 240) scale(2.2)"><use href="#heartPath" fill="rgba(255,77,109,.55)"/></g>
-            <g transform="translate(820 300) scale(2.8)"><use href="#heartPath" fill="rgba(255,77,109,.35)"/></g>
-            <g transform="translate(560 460) scale(3.4)"><use href="#heartPath" fill="rgba(255,77,109,.28)"/></g>
+          <g opacity=".20">
+            <g transform="translate(180 240) scale(2.2)"><use href="#heartPath" fill="rgba(255,107,138,.42)"/></g>
+            <g transform="translate(820 300) scale(2.8)"><use href="#heartPath" fill="rgba(255,107,138,.26)"/></g>
+            <g transform="translate(560 460) scale(3.4)"><use href="#heartPath" fill="rgba(255,107,138,.22)"/></g>
           </g>
-          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.14)"/>
-          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,77,109,.95)" filter="url(#glowPink)">Nickname del cuore</text>
+          <rect x="220" y="190" width="560" height="120" rx="22" fill="rgba(0,0,0,.22)" stroke="rgba(255,255,255,.12)"/>
+          <text x="500" y="245" text-anchor="middle" font-size="34" font-weight="1000" fill="rgba(255,107,138,.92)" filter="url(#glowPink)">Nickname del cuore</text>
           <text x="500" y="280" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(255,255,255,.80)">accesso riservato…</text>
         </g>
       </g>
@@ -574,52 +751,53 @@
       <g id="giftLayer" opacity="0">
         <rect x="0" y="0" width="1000" height="600" fill="rgba(0,0,0,.10)"/>
         <g opacity=".16">
-          <circle cx="170" cy="210" r="110" fill="rgba(70,255,210,.55)"/>
-          <circle cx="860" cy="260" r="140" fill="rgba(255,77,109,.40)"/>
+          <circle cx="170" cy="210" r="110" fill="rgba(147,231,214,.40)"/>
+          <circle cx="860" cy="260" r="140" fill="rgba(255,107,138,.28)"/>
         </g>
 
         <g id="giftHint" opacity="1" filter="url(#glowPink)">
-          <text x="500" y="120" text-anchor="middle" font-size="26" font-weight="1000" fill="rgba(255,209,102,.95)">PREMIO SBLOCCATO 🎁</text>
+          <text x="500" y="120" text-anchor="middle" font-size="26" font-weight="1000" fill="rgba(255,211,140,.95)">PREMIO SBLOCCATO 🎁</text>
         </g>
 
+        <!-- Gift box “storybook” -->
         <g id="giftBox" class="clickable" filter="url(#softShadow)">
-          <rect x="390" y="330" width="220" height="150" rx="20" fill="rgba(255,77,109,.20)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-          <rect x="492" y="330" width="16" height="150" rx="8" fill="rgba(255,209,102,.95)"/>
-          <rect x="390" y="392" width="220" height="16" rx="8" fill="rgba(255,209,102,.95)"/>
-          <rect x="402" y="456" width="196" height="10" rx="5" fill="rgba(0,0,0,.14)"/>
+          <rect x="390" y="330" width="220" height="150" rx="22" fill="rgba(255,107,138,.18)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+          <rect x="492" y="330" width="16" height="150" rx="8" fill="rgba(255,211,140,.92)"/>
+          <rect x="390" y="392" width="220" height="16" rx="8" fill="rgba(255,211,140,.92)"/>
+          <rect x="402" y="456" width="196" height="10" rx="5" fill="rgba(0,0,0,.12)"/>
 
           <g id="giftLid">
-            <rect x="380" y="285" width="240" height="62" rx="18" fill="rgba(70,255,210,.16)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
-            <rect x="492" y="285" width="16" height="62" rx="8" fill="rgba(255,209,102,.95)"/>
-            <rect x="380" y="312" width="240" height="16" rx="8" fill="rgba(255,209,102,.95)"/>
-            <path d="M500 312 C 470 280 440 284 452 314 C 462 338 488 330 500 312 Z" fill="rgba(255,209,102,.95)" opacity=".95"/>
-            <path d="M500 312 C 530 280 560 284 548 314 C 538 338 512 330 500 312 Z" fill="rgba(255,209,102,.95)" opacity=".95"/>
+            <rect x="380" y="285" width="240" height="62" rx="18" fill="rgba(147,231,214,.14)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+            <rect x="492" y="285" width="16" height="62" rx="8" fill="rgba(255,211,140,.92)"/>
+            <rect x="380" y="312" width="240" height="16" rx="8" fill="rgba(255,211,140,.92)"/>
+            <path d="M500 312 C 470 280 440 284 452 314 C 462 338 488 330 500 312 Z" fill="rgba(255,211,140,.92)" opacity=".95"/>
+            <path d="M500 312 C 530 280 560 284 548 314 C 538 338 512 330 500 312 Z" fill="rgba(255,211,140,.92)" opacity=".95"/>
           </g>
         </g>
 
-        <!-- Coppia + cuore (sempre a destra, non sopra il certificato) -->
+        <!-- Coppia + cuore a destra -->
         <g id="giftCouple" opacity="0">
           <g id="giftEttore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
           <g id="giftPatry" filter="url(#softShadow)"><use href="#patryDef"/></g>
 
           <g id="giftHeart" opacity="0" filter="url(#glowPink)">
             <g id="giftHeartInner" transform="translate(860 280) scale(0.1)">
-              <use href="#heartPath" fill="#FF4D6D"/>
+              <use href="#heartPath" fill="#FF6B8A"/>
             </g>
           </g>
 
           <g id="giftTBC" opacity="0" class="blink" filter="url(#glowAqua)">
-            <text x="500" y="560" text-anchor="middle" font-size="28" font-weight="1000" fill="rgba(70,255,210,.95)">TO BE CONTINUED...</text>
+            <text x="500" y="560" text-anchor="middle" font-size="28" font-weight="1000" fill="rgba(147,231,214,.95)">TO BE CONTINUED...</text>
           </g>
         </g>
 
-        <!-- Certificato (sempre sopra: massimo leggibile) -->
+        <!-- Certificato (sempre leggibile) -->
         <g id="giftScroll" opacity="0" filter="url(#softShadow)">
           <g id="giftScrollInner" transform="translate(0 44)">
-            <rect x="250" y="140" width="500" height="230" rx="24" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
-            <rect x="250" y="140" width="500" height="44" rx="22" fill="rgba(255,209,102,.65)" opacity=".55"/>
-            <circle cx="260" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
-            <circle cx="740" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
+            <rect x="250" y="140" width="500" height="230" rx="26" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.16)" stroke-width="2"/>
+            <rect x="250" y="140" width="500" height="44" rx="22" fill="rgba(255,211,140,.62)" opacity=".55"/>
+            <circle cx="260" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.16)" stroke-width="2"/>
+            <circle cx="740" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.16)" stroke-width="2"/>
 
             <text x="500" y="200" text-anchor="middle" font-size="18" font-weight="1000" fill="#111">CERTIFICATO DI SOPRAVVIVENZA</text>
 
@@ -640,9 +818,7 @@
       </g>
 
       <style>
-        .blink{ animation: blink 0.38s steps(2,end) infinite; }
-        #glitchA{ animation-duration: 0.65s; transform: translate(2px, -1px); opacity:.65; }
-        #glitchB{ animation-duration: 0.65s; animation-delay: 0.12s; transform: translate(-2px, 1px); opacity:.55; }
+        .blink{ animation: blink 0.42s steps(2,end) infinite; }
         .pulse{ animation: pulse 1.25s ease-in-out infinite; transform-origin: 500px 457px; }
         .clickable{ cursor:pointer; pointer-events: all; }
         #startButton:hover rect{ filter: brightness(1.14); }
@@ -727,7 +903,6 @@
   const body = document.body;
   const svg = document.getElementById('svg');
 
-  // Responsive camera (fit viewBox)
   function fitViewBox(){
     if(!svg) return;
     const baseW = 1000, baseH = 600;
@@ -753,7 +928,6 @@
     window.visualViewport.addEventListener('resize', () => requestAnimationFrame(fitViewBox));
   }
 
-  // DOM
   const stars = document.getElementById('stars');
   const titleLayer = document.getElementById('titleLayer');
   const chaseLayer = document.getElementById('chaseLayer');
@@ -778,11 +952,9 @@
   const centerBig = document.getElementById('centerBig');
   const centerSub = document.getElementById('centerSub');
 
-  // Gift CTA (HTML)
   const giftCtaWrap = document.getElementById('giftCtaWrap');
   const giftCtaBtn  = document.getElementById('giftCtaBtn');
 
-  // Quiz UI
   const qtitle = document.getElementById('qtitle');
   const qsub   = document.getElementById('qsub');
   const qindexEl = document.getElementById('qindex');
@@ -802,7 +974,6 @@
     document.getElementById('qbg4'),
   ];
 
-  // Gift SVG
   const giftBox = document.getElementById('giftBox');
   const giftLid = document.getElementById('giftLid');
   const giftHint = document.getElementById('giftHint');
@@ -815,7 +986,6 @@
   const giftHeartInner = document.getElementById('giftHeartInner');
   const giftTBC = document.getElementById('giftTBC');
 
-  // Helpers
   const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
   const rand = (a,b) => a + Math.random()*(b-a);
   const pick = (arr) => arr[(Math.random()*arr.length)|0];
@@ -824,7 +994,6 @@
   function setOpacity(el, v){ if(el) el.setAttribute('opacity', String(v)); }
   function setTransformScale(el, x, y, s){ if(el) el.setAttribute('transform', `translate(${x} ${y}) scale(${s})`); }
 
-  // Collision con tolleranza (hitbox più stretta)
   function rectsOverlap(a,b, padA=0, padB=0){
     const ax = a.x + padA;
     const ay = a.y + padA;
@@ -839,7 +1008,6 @@
     return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
   }
 
-  // Audio
   let audioOn = true;
   let audioCtx = null;
   function beep(freq=440, dur=0.08, type='sine', gain=0.03){
@@ -862,7 +1030,6 @@
     }
   }
 
-  // Toast
   let toastTimer = 0;
   function showToast(msg, ms=1400){
     toast.textContent = msg;
@@ -870,7 +1037,6 @@
     toastTimer = ms;
   }
 
-  // State
   const State = { TITLE:'title', CHASE:'chase', QUIZ:'quiz', GIFT:'gift' };
   let state = State.TITLE;
 
@@ -893,31 +1059,29 @@
     }
   }
 
-  // Stars
   function buildStars(group, count){
     if(!group) return;
     group.innerHTML = '';
     for(let i=0;i<count;i++){
       const cx = rand(0, 1000), cy = rand(0, 420);
-      const r = rand(0.7, 1.8);
+      const r = rand(0.9, 2.2);
       const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
       c.setAttribute('cx', cx);
       c.setAttribute('cy', cy);
       c.setAttribute('r', r);
-      c.setAttribute('fill', 'rgba(255,255,255,.85)');
-      c.setAttribute('opacity', String(rand(0.25, 0.9)));
+      c.setAttribute('fill', 'rgba(255,255,255,.88)');
+      c.setAttribute('opacity', String(rand(0.22, 0.85)));
       group.appendChild(c);
     }
   }
-  buildStars(stars, 110);
+  buildStars(stars, 120);
 
   // -------------------------------
-  // CHASE GAME (3 vecchi + lenti)
+  // CHASE GAME
   // -------------------------------
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // Hitbox (più stretta = collisione più "diretta")
   const HIT_PLAYER = 18;
   const HIT_OLD    = 14;
   const HIT_BAG    = 6;
@@ -934,20 +1098,28 @@
     g.setAttribute('filter','url(#softShadow)');
     g.innerHTML = `
       <g>
-        <rect x="18" y="20" width="56" height="54" rx="18" fill="#EBC6A1"/>
-        <path d="M18 44 C 22 16 74 16 74 44" fill="#B9B9B9"/>
-        <circle cx="32" cy="44" r="3" fill="#111"/>
-        <circle cx="60" cy="44" r="3" fill="#111"/>
-        <path d="M36 58 C 44 64 54 64 62 58" stroke="#6B3B2A" stroke-width="6" stroke-linecap="round"/>
-        <path d="M10 74 C 10 60 82 60 82 74 L82 118 C 82 130 74 140 60 140 L32 140 C 18 140 10 130 10 118 Z"
-              fill="rgba(255,209,102,.18)" stroke="rgba(255,209,102,.35)" stroke-width="2"/>
-        <path d="M18 104 L30 90 L38 110 L48 92 L58 112 L68 96 L76 112"
-              stroke="rgba(0,0,0,.22)" stroke-width="4" stroke-linecap="round" fill="none"/>
-        <path d="M6 88 C -2 98 2 116 12 126" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
-        <path d="M80 90 C 92 92 98 104 94 116 C 92 124 86 130 78 134" stroke="#EBC6A1" stroke-width="10" stroke-linecap="round"/>
-        <rect x="92" y="100" width="18" height="5" rx="2.5" fill="#F2F2F2"/>
-        <rect x="108" y="100" width="5" height="5" rx="2.5" fill="#FF4D6D"/>
-        <path d="M110 92 C 116 86 120 78 116 70" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <ellipse cx="56" cy="150" rx="34" ry="8" fill="rgba(0,0,0,.16)"/>
+        <path d="M26 58 C26 38 86 38 86 58 L86 96 C86 118 26 118 26 96 Z"
+              fill="url(#skinGrad)" stroke="rgba(0,0,0,.22)" stroke-width="2"/>
+        <path d="M22 62 C18 42 30 24 52 22 C72 20 92 32 90 62"
+              fill="rgba(200,200,206,.95)" stroke="rgba(0,0,0,.18)" stroke-width="2" stroke-linejoin="round"/>
+        <ellipse cx="44" cy="78" rx="8.2" ry="10" fill="rgba(255,255,255,.92)"/>
+        <ellipse cx="68" cy="78" rx="8.2" ry="10" fill="rgba(255,255,255,.92)"/>
+        <circle cx="44" cy="80" r="4.8" fill="rgba(40,28,22,.85)"/>
+        <circle cx="68" cy="80" r="4.8" fill="rgba(40,28,22,.85)"/>
+        <path d="M46 98 C52 104 60 104 66 98" fill="none" stroke="rgba(80,45,45,.55)" stroke-width="3" stroke-linecap="round"/>
+
+        <path d="M20 108 C28 100 84 100 92 108 L98 150
+                 C100 170 88 188 70 196 L42 196
+                 C24 188 12 170 14 150 Z"
+              fill="rgba(255,211,140,.16)" stroke="rgba(0,0,0,.16)" stroke-width="2"/>
+
+        <path d="M22 140 L34 128 L42 146 L52 130 L62 150 L74 136 L82 150"
+              stroke="rgba(0,0,0,.18)" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+        <rect x="92" y="120" width="18" height="5" rx="2.5" fill="#F2F2F2"/>
+        <rect x="108" y="120" width="5" height="5" rx="2.5" fill="#FF6B8A"/>
+        <path d="M110 112 C 118 104 122 92 116 82" stroke="rgba(255,255,255,.30)" stroke-width="3" stroke-linecap="round" fill="none"/>
       </g>
     `;
     return g;
@@ -969,9 +1141,10 @@
     g.setAttribute('filter','url(#softShadow)');
     g.innerHTML = `
       <g transform="rotate(-8)">
-        <rect x="0" y="0" width="90" height="26" rx="13" fill="#E7C178"/>
+        <rect x="0" y="0" width="90" height="26" rx="13"
+              fill="rgba(255,211,140,.92)" stroke="rgba(0,0,0,.14)" stroke-width="2"/>
         <path d="M16 8 L24 18 M34 8 L42 18 M52 8 L60 18 M70 8 L78 18"
-              stroke="rgba(120,70,20,.35)" stroke-width="4" stroke-linecap="round"/>
+              stroke="rgba(120,70,20,.28)" stroke-width="4" stroke-linecap="round"/>
       </g>`;
     return g;
   }
@@ -996,7 +1169,7 @@
         x: spawns[i].x,
         y: spawns[i].y,
         w: 68, h: 110,
-        speed: rand(45, 65), // più lenti
+        speed: rand(45, 65),
         wob: rand(0, 10),
         el: null,
       });
@@ -1007,14 +1180,11 @@
     setTransformScale(patry, girl.x, girl.y, SCALE_P);
   }
 
-  // Input
   const keys = {up:false,down:false,left:false,right:false};
 
   window.addEventListener('keydown', (e)=>{
     const k = e.key.toLowerCase();
-    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' '){
-      e.preventDefault();
-    }
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || k===' ') e.preventDefault();
     if(k==='arrowup' || k==='w') keys.up=true;
     if(k==='arrowdown'|| k==='s') keys.down=true;
     if(k==='arrowleft'|| k==='a') keys.left=true;
@@ -1047,7 +1217,6 @@
     keys.right = activeDirs.has('right');
   }
 
-  // Center overlay
   let overlayMode = 'none'; // none | try | win
   let winTimer = 0;
 
@@ -1082,7 +1251,6 @@
     }
   }, {passive:false});
 
-  // Game flow
   function restartChase(){
     hideOverlay();
     buildLevel();
@@ -1132,26 +1300,9 @@
   ];
 
   const questions = [
-    {
-      title:"Primo Date",
-      sub:"Coordinate segrete: solo noi le sappiamo — firmato: Patry",
-      bg:0,
-      q:"Il posto del primo date?",
-      opts:["Casa del popolo","Carmentown","Bar dell'ombra"],
-      correct:1
-    },
-    {
-      title:"Allarme Rosso",
-      sub:"Protocollo attivo: leggere tra le righe — firmato: Patry",
-      bg:1,
-      q:"Cosa fa Patry quando è scocciata da qualcosa?",
-      opts:["Sbuffino","Agita i pugni in aria","Fa bibi"],
-      correct:0
-    },
-    {
-      title:"Rottura scampata",
-      sub:"Timeline alternativa annullata in extremis — firmato: Patry",
-      bg:2,
+    { title:"Primo Date", sub:"Coordinate segrete: solo noi le sappiamo — firmato: Patry", bg:0, q:"Il posto del primo date?", opts:["Casa del popolo","Carmentown","Bar dell'ombra"], correct:1 },
+    { title:"Allarme Rosso", sub:"Protocollo attivo: leggere tra le righe — firmato: Patry", bg:1, q:"Cosa fa Patry quando è scocciata da qualcosa?", opts:["Sbuffino","Agita i pugni in aria","Fa bibi"], correct:0 },
+    { title:"Rottura scampata", sub:"Timeline alternativa annullata in extremis — firmato: Patry", bg:2,
       q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
       opts:[
         "Quando siamo rimasti quasi bloccati per due giorni con la macchina nel parcheggio di Almacube",
@@ -1160,21 +1311,11 @@
       ],
       correct:0
     },
-    {
-      title:"Tiramisù",
-      sub:"Buff dolce: morale +10 (non chiedere come) — firmato: Patry",
-      bg:3,
-      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?",
-      opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"],
-      correct:0
+    { title:"Tiramisù", sub:"Buff dolce: morale +10 (non chiedere come) — firmato: Patry", bg:3,
+      q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?", opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"], correct:0
     },
-    {
-      title:"Nickname del cuore",
-      sub:"Codice privato: accesso negato ai curiosi — firmato: Patry",
-      bg:4,
-      q:"Il nomignolo più usato per chiamarci?",
-      opts:["Bubo/a","Cucci","Tesoro"],
-      correct:0
+    { title:"Nickname del cuore", sub:"Codice privato: accesso negato ai curiosi — firmato: Patry", bg:4,
+      q:"Il nomignolo più usato per chiamarci?", opts:["Bubo/a","Cucci","Tesoro"], correct:0
     },
   ];
 
@@ -1182,9 +1323,7 @@
   let qTime = 10.0;
   let qRunning = false;
 
-  function showQuizBg(i){
-    qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0'));
-  }
+  function showQuizBg(i){ qbg.forEach((g, idx)=> g.setAttribute('opacity', idx===i ? '1' : '0')); }
   function updateQuizMeter(){
     tleftEl.textContent = Math.ceil(qTime).toString();
     const ratio = clamp(qTime/10, 0, 1);
@@ -1195,7 +1334,6 @@
     const item = questions[qIndex];
     qtitle.textContent = `${item.title} — 10s`;
     qsub.textContent = item.sub;
-
     qindexEl.textContent = (qIndex+1).toString();
     qtextEl.textContent = item.q;
 
@@ -1255,30 +1393,19 @@
   }
 
   // -------------------------------
-  // GIFT (certificato sempre leggibile)
+  // GIFT
   // -------------------------------
-  const GIFT = {
-    stage: 0, // 0 waiting click, 1 opening lid, 2 scroll reveal, 3 couple walk, 4 heart, 5 end
-    lid: 0,
-    t: 0,
-    couple: 0,
-    heartT: 0,
-  };
+  const GIFT = { stage:0, lid:0, t:0, couple:0, heartT:0 };
 
-  // Layout premio: coppia + cuore a destra (mai sopra la pergamena)
   const GIFT_LAYOUT = {
     coupleScale: 0.48,
     y: 372,
-
     ettoreStartX: 760,
     patryStartX:  870,
-
     ettoreEndX:   805,
     patryEndX:    840,
-
     heartX: 860,
     heartY: 280,
-
     heartMin: 0.12,
     heartMax: 2.6
   };
@@ -1301,11 +1428,9 @@
     if(giftLid) giftLid.setAttribute('transform', `rotate(0 500 285)`);
     if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 44)`);
 
-    // Coppia a destra (più piccola)
     setTransformScale(giftEttore, GIFT_LAYOUT.ettoreStartX, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
     setTransformScale(giftPatry,  GIFT_LAYOUT.patryStartX,  GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
 
-    // Cuore a destra (piccolo)
     if(giftHeartInner) giftHeartInner.setAttribute(
       'transform',
       `translate(${GIFT_LAYOUT.heartX} ${GIFT_LAYOUT.heartY}) scale(${GIFT_LAYOUT.heartMin})`
@@ -1328,51 +1453,36 @@
     beep(820, .08, 'triangle', .04);
   }
 
-  // Bottone HTML (garantito)
-  giftCtaBtn?.addEventListener('click', (e)=>{
-    e.preventDefault();
-    startGiftOpen();
-  });
-
-  // Click sul regalo (opzionale)
-  giftBox?.addEventListener('click', (e)=>{
-    if(state !== State.GIFT) return;
-    e.preventDefault();
-    startGiftOpen();
-  });
+  giftCtaBtn?.addEventListener('click', (e)=>{ e.preventDefault(); startGiftOpen(); });
+  giftBox?.addEventListener('click', (e)=>{ if(state!==State.GIFT) return; e.preventDefault(); startGiftOpen(); });
 
   function updateGift(dt){
     if(GIFT.stage === 0) return;
 
-    // Apri coperchio
     if(GIFT.stage === 1){
       GIFT.lid = Math.min(72, GIFT.lid + dt * 140);
       if(giftLid) giftLid.setAttribute('transform', `rotate(${-GIFT.lid} 500 285)`);
       if(GIFT.lid >= 72){
-        GIFT.stage = 2;
-        GIFT.t = 0;
-        setOpacity(giftScroll, 1);     // certificato appare
+        GIFT.stage = 2; GIFT.t = 0;
+        setOpacity(giftScroll, 1);
         beep(600, .07, 'triangle', .03);
       }
       return;
     }
 
-    // Pergamena "scende"
     if(GIFT.stage === 2){
       GIFT.t += dt;
       const r = clamp(GIFT.t / 0.6, 0, 1);
-      const y = 44 - r * 26; // 44 -> 18
+      const y = 44 - r * 26;
       if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 ${y.toFixed(2)})`);
       if(GIFT.t >= 0.9){
-        GIFT.stage = 3;
-        GIFT.couple = 0;
+        GIFT.stage = 3; GIFT.couple = 0;
         setOpacity(giftCouple, 1);
         beep(660, .07, 'triangle', .03);
       }
       return;
     }
 
-    // Coppia si avvicina (a destra)
     if(GIFT.stage === 3){
       GIFT.couple = Math.min(1, GIFT.couple + dt / 1.25);
       const ease = (x)=> (1 - Math.pow(1-x, 3));
@@ -1393,12 +1503,9 @@
       return;
     }
 
-    // Cuore cresce (sempre a destra, piccolo)
     if(GIFT.stage === 4){
       GIFT.heartT += dt;
-
-      const s = GIFT_LAYOUT.heartMin
-        + (GIFT_LAYOUT.heartMax - GIFT_LAYOUT.heartMin) * (1 - Math.exp(-GIFT.heartT * 4.5));
+      const s = GIFT_LAYOUT.heartMin + (GIFT_LAYOUT.heartMax - GIFT_LAYOUT.heartMin) * (1 - Math.exp(-GIFT.heartT * 4.5));
       const sClamped = clamp(s, GIFT_LAYOUT.heartMin, GIFT_LAYOUT.heartMax);
 
       if(giftHeartInner) giftHeartInner.setAttribute(
@@ -1406,7 +1513,6 @@
         `translate(${GIFT_LAYOUT.heartX} ${GIFT_LAYOUT.heartY}) scale(${sClamped.toFixed(3)})`
       );
 
-      // "bacio" (resta a destra)
       if(GIFT.heartT >= 0.35){
         setTransformScale(giftEttore, GIFT_LAYOUT.ettoreEndX, GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
         setTransformScale(giftPatry,  GIFT_LAYOUT.patryEndX,  GIFT_LAYOUT.y, GIFT_LAYOUT.coupleScale);
@@ -1422,7 +1528,7 @@
   }
 
   // -------------------------------
-  // Main loop
+  // Loop
   // -------------------------------
   let t = 0;
   let last = now();
@@ -1433,11 +1539,12 @@
       if(toastTimer <= 0) toast.classList.remove('show');
     }
 
-    const drift = Math.sin(t*0.0002)*6;
+    // gentle parallax
+    const drift = Math.sin(t*0.00018)*5;
     const skylineFar = document.getElementById('skylineFar');
     if(skylineFar) skylineFar.setAttribute('transform', `translate(${drift} 0)`);
 
-    // Overlay timing
+    // win/try overlay
     if(overlayMode === 'win'){
       winTimer -= dt;
       if(winTimer <= 0){
@@ -1450,7 +1557,6 @@
       return;
     }
 
-    // CHASE
     if(state === State.CHASE){
       let dx=0, dy=0;
       const sp = player.speed;
@@ -1466,7 +1572,6 @@
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
-      // Vecchi inseguono
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1492,14 +1597,12 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        // TRY AGAIN solo su collisione diretta
         if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
         }
       }
 
-      // Spawn baguettes
       baguetteSpawn -= dt;
       if(baguetteSpawn <= 0){
         baguetteSpawn = rand(0.70, 1.10);
@@ -1528,7 +1631,6 @@
         return true;
       });
 
-      // TRY AGAIN solo su collisione diretta con baguette
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox, HIT_PLAYER, HIT_BAG)){
@@ -1537,11 +1639,9 @@
         }
       }
 
-      // Render characters
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // Target line
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1549,7 +1649,6 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
@@ -1557,7 +1656,6 @@
       }
     }
 
-    // QUIZ
     if(state === State.QUIZ){
       if(qRunning){
         qTime -= dt;
@@ -1571,7 +1669,6 @@
       }
     }
 
-    // GIFT
     if(state === State.GIFT){
       updateGift(dt);
     }
@@ -1586,7 +1683,6 @@
     requestAnimationFrame(frame);
   }
 
-  // Init
   setState(State.TITLE);
   requestAnimationFrame(frame);
 })();
