@@ -45,6 +45,9 @@
       display:flex; flex-direction:column;
     }
 
+    /* ✅ FIX: in modalità regalo la UI non deve bloccare i click sull'SVG */
+    body.state-gift .ui{ pointer-events:none; }
+
     .topbar{
       display:flex; gap:10px; align-items:center;
       padding:12px;
@@ -546,7 +549,6 @@
 
       <!-- GIFT LAYER -->
       <g id="giftLayer" opacity="0">
-        <!-- vignette -->
         <rect x="0" y="0" width="1000" height="600" fill="rgba(0,0,0,.10)"/>
         <g opacity=".16">
           <circle cx="170" cy="210" r="110" fill="rgba(70,255,210,.55)"/>
@@ -557,32 +559,25 @@
           <text x="500" y="120" text-anchor="middle" font-size="26" font-weight="1000" fill="rgba(255,209,102,.95)">CLICCA IL REGALO 🎁</text>
         </g>
 
-        <!-- Gift box -->
         <g id="giftBox" class="clickable" filter="url(#softShadow)">
-          <!-- base -->
           <rect x="390" y="330" width="220" height="150" rx="20" fill="rgba(255,77,109,.20)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
           <rect x="492" y="330" width="16" height="150" rx="8" fill="rgba(255,209,102,.95)"/>
           <rect x="390" y="392" width="220" height="16" rx="8" fill="rgba(255,209,102,.95)"/>
-          <!-- shadow line -->
           <rect x="402" y="456" width="196" height="10" rx="5" fill="rgba(0,0,0,.14)"/>
 
-          <!-- lid -->
           <g id="giftLid">
             <rect x="380" y="285" width="240" height="62" rx="18" fill="rgba(70,255,210,.16)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
             <rect x="492" y="285" width="16" height="62" rx="8" fill="rgba(255,209,102,.95)"/>
             <rect x="380" y="312" width="240" height="16" rx="8" fill="rgba(255,209,102,.95)"/>
-            <!-- bow -->
             <path d="M500 312 C 470 280 440 284 452 314 C 462 338 488 330 500 312 Z" fill="rgba(255,209,102,.95)" opacity=".95"/>
             <path d="M500 312 C 530 280 560 284 548 314 C 538 338 512 330 500 312 Z" fill="rgba(255,209,102,.95)" opacity=".95"/>
           </g>
         </g>
 
-        <!-- Scroll / certificate -->
         <g id="giftScroll" opacity="0" filter="url(#softShadow)">
           <g id="giftScrollInner" transform="translate(0 18)">
             <rect x="250" y="140" width="500" height="230" rx="24" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
             <rect x="250" y="140" width="500" height="44" rx="22" fill="rgba(255,209,102,.65)" opacity=".55"/>
-            <!-- little rolls -->
             <circle cx="260" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
             <circle cx="740" cy="255" r="18" fill="rgba(255,255,255,.92)" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
 
@@ -599,11 +594,10 @@
               </tspan>
             </text>
 
-            <text x="500" y="352" text-anchor="middle" font-size="12" font-weight="900" fill="rgba(0,0,0,.55)">— firmato: Patry (e la Lore) —</text>
+            <text x="500" y="352" text-anchor="middle" font-size="12" font-weight="900" fill="rgba(0,0,0,.55)">— firmato: Patry —</text>
           </g>
         </g>
 
-        <!-- Couple + heart -->
         <g id="giftCouple" opacity="0">
           <g id="giftEttore" filter="url(#softShadow)"><use href="#ettoreDef"/></g>
           <g id="giftPatry" filter="url(#softShadow)"><use href="#patryDef"/></g>
@@ -887,7 +881,7 @@
   const SCALE_E = 0.55;
   const SCALE_P = 0.55;
 
-  // hitbox tighten (aumenta per rendere più permissivo)
+  // hitbox tighten (aumenta = più permissivo)
   const HIT_PLAYER = 18;
   const HIT_OLD    = 14;
   const HIT_BAG    = 6;
@@ -954,7 +948,7 @@
     baguettesG.innerHTML = '';
     baguetteSpawn = 0.35;
 
-    // SOLO 3 vecchi + rallentati
+    // ✅ SOLO 3 vecchi + più lenti
     const spawns = [
       {x: 260, y: 320},
       {x: 520, y: 520},
@@ -1044,9 +1038,7 @@
 
   centerOverlay.addEventListener('click', (e)=>{
     e.preventDefault();
-    if(overlayMode === 'try'){
-      restartChase();
-    }
+    if(overlayMode === 'try') restartChase();
   });
   window.addEventListener('keydown', (e)=>{
     if(overlayMode === 'try' && (e.key === 'Enter' || e.key === ' ')){
@@ -1101,13 +1093,13 @@
   const wrongMessages = [
     "❌ NOPE. Per farti perdonare: offrire il sushi. Ora ritenta il quiz!",
     "❌ SBAGLIATO. Punizione: pulire i piatti per un mese senza lamentarsi. Ritenta!",
-    "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritenta!"
+    "❌ AHI. Ti tocca: comprare una pianta grandissima da mettere in soggiorno (e curarla!). Ritentaitenta!"
   ];
 
   const questions = [
     {
       title:"Primo Date",
-      sub:"Coordinate segrete: solo noi due",
+      sub:"Coordinate segrete: solo noi le sappiamo — firmato: Patry",
       bg:0,
       q:"Il posto del primo date?",
       opts:["Casa del popolo","Carmentown","Bar dell'ombra"],
@@ -1115,7 +1107,7 @@
     },
     {
       title:"Allarme Rosso",
-      sub:"Protocollo attivo: sangue freddo",
+      sub:"Protocollo attivo: leggere tra le righe — firmato: Patry",
       bg:1,
       q:"Cosa fa Patry quando è scocciata da qualcosa?",
       opts:["Sbuffino","Agita i pugni in aria","Fa bibi"],
@@ -1123,7 +1115,7 @@
     },
     {
       title:"Rottura scampata",
-      sub:"Timeline alternativa evitata ✅",
+      sub:"Una timeline alternativa cancellata in tempo — firmato: Patry",
       bg:2,
       q:"La volta in cui ho rischiato molto di non festeggiare questo anniversario?",
       opts:[
@@ -1135,7 +1127,7 @@
     },
     {
       title:"Tiramisù",
-      sub:"Buff dolce: morale +10",
+      sub:"Buff dolce: morale +10 (non chiedere come) — firmato: Patry",
       bg:3,
       q:"Qual è il dessert coccola che ci regaliamo quando siamo giù?",
       opts:["San Salvatore","Pudding di chia","Gelato d'Azeglio"],
@@ -1143,7 +1135,7 @@
     },
     {
       title:"Nickname del cuore",
-      sub:"Codice privato: non divulgare",
+      sub:"Codice privato: accesso negato ai curiosi — firmato: Patry",
       bg:4,
       q:"Il nomignolo più usato per chiamarci?",
       opts:["Bubo/a","Cucci","Tesoro"],
@@ -1234,22 +1226,16 @@
     stage: 0, // 0 waiting click, 1 opening lid, 2 scroll reveal, 3 couple walk, 4 heart, 5 end
     lid: 0,
     t: 0,
-    scroll: 0,
     couple: 0,
     heartT: 0,
-    tbc: 0,
-    ePos: {x: 210, y: 360},
-    pPos: {x: 710, y: 360},
   };
 
   function resetGift(){
     GIFT.stage = 0;
     GIFT.lid = 0;
     GIFT.t = 0;
-    GIFT.scroll = 0;
     GIFT.couple = 0;
     GIFT.heartT = 0;
-    GIFT.tbc = 0;
 
     setOpacity(giftHint, 1);
     setOpacity(giftScroll, 0);
@@ -1257,14 +1243,12 @@
     setOpacity(giftHeart, 0);
     setOpacity(giftTBC, 0);
 
-    // lid closed
     if(giftLid) giftLid.setAttribute('transform', `rotate(0 500 285)`);
-    // scroll reset
-    if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 18)`);
-    // couple reset
-    setTransformScale(giftEttore, GIFT.ePos.x, GIFT.ePos.y, 0.62);
-    setTransformScale(giftPatry,  GIFT.pPos.x, GIFT.pPos.y, 0.62);
-    // heart tiny
+    if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 44)`);
+
+    setTransformScale(giftEttore, 210, 360, 0.62);
+    setTransformScale(giftPatry,  710, 360, 0.62);
+
     if(giftHeartInner) giftHeartInner.setAttribute('transform', `translate(500 270) scale(0.1)`);
   }
 
@@ -1280,23 +1264,15 @@
     e.preventDefault();
     if(GIFT.stage === 0){
       GIFT.stage = 1;
-      GIFT.t = 0;
       setOpacity(giftHint, 0);
       beep(820, .08, 'triangle', .04);
     }
   });
 
-  // -------------------------------
-  // Main loop
-  // -------------------------------
-  let t = 0;
-  let last = now();
-
   function updateGift(dt){
     if(GIFT.stage === 0) return;
 
     if(GIFT.stage === 1){
-      // open lid
       GIFT.lid = Math.min(72, GIFT.lid + dt * 140);
       if(giftLid) giftLid.setAttribute('transform', `rotate(${-GIFT.lid} 500 285)`);
       if(GIFT.lid >= 72){
@@ -1309,36 +1285,26 @@
     }
 
     if(GIFT.stage === 2){
-      // reveal scroll (slide up gently)
       GIFT.t += dt;
       const r = clamp(GIFT.t / 0.6, 0, 1);
-      const y = 18 + (1 - r) * 26; // from 44 down to 18
+      const y = 44 - r * 26; // 44 -> 18
       if(giftScrollInner) giftScrollInner.setAttribute('transform', `translate(0 ${y.toFixed(2)})`);
       if(GIFT.t >= 0.9){
         GIFT.stage = 3;
         GIFT.couple = 0;
         setOpacity(giftCouple, 1);
-        // reset couple start
-        GIFT.ePos = {x: 210, y: 360};
-        GIFT.pPos = {x: 710, y: 360};
-        setTransformScale(giftEttore, GIFT.ePos.x, GIFT.ePos.y, 0.62);
-        setTransformScale(giftPatry,  GIFT.pPos.x, GIFT.pPos.y, 0.62);
         beep(660, .07, 'triangle', .03);
       }
       return;
     }
 
     if(GIFT.stage === 3){
-      // couple walk together
       GIFT.couple = Math.min(1, GIFT.couple + dt / 1.25);
       const ease = (x)=> (1 - Math.pow(1-x, 3));
       const k = ease(GIFT.couple);
 
-      const eStart = {x:210, y:360}, eEnd = {x:420, y:360};
-      const pStart = {x:710, y:360}, pEnd = {x:520, y:360};
-
-      const ex = eStart.x + (eEnd.x - eStart.x) * k;
-      const px = pStart.x + (pEnd.x - pStart.x) * k;
+      const ex = 210 + (420 - 210) * k;
+      const px = 710 + (520 - 710) * k;
 
       setTransformScale(giftEttore, ex, 360, 0.62);
       setTransformScale(giftPatry,  px, 360, 0.62);
@@ -1353,14 +1319,12 @@
     }
 
     if(GIFT.stage === 4){
-      // heart pop + end text
       GIFT.heartT += dt;
-      const s = 0.35 + 5.2 * (1 - Math.exp(-GIFT.heartT * 4.5)); // pops quickly
+      const s = 0.35 + 5.2 * (1 - Math.exp(-GIFT.heartT * 4.5));
       const sClamped = clamp(s, 0.35, 6.2);
       if(giftHeartInner) giftHeartInner.setAttribute('transform', `translate(500 270) scale(${sClamped.toFixed(3)})`);
 
       if(GIFT.heartT >= 0.35){
-        // tiny "kiss" micro-jitter
         setTransformScale(giftEttore, 424, 360, 0.62);
         setTransformScale(giftPatry,  516, 360, 0.62);
       }
@@ -1373,6 +1337,12 @@
       return;
     }
   }
+
+  // -------------------------------
+  // Main loop
+  // -------------------------------
+  let t = 0;
+  let last = now();
 
   function update(dt){
     if(toastTimer > 0){
@@ -1410,11 +1380,9 @@
       player.x += dx;
       player.y += dy;
 
-      // Bounds
       player.x = clamp(player.x, 10, 930);
       player.y = clamp(player.y, 40, 520);
 
-      // Old smokers chase
       const pCx = player.x + player.w/2;
       const pCy = player.y + player.h/2;
 
@@ -1440,7 +1408,7 @@
 
         if(o.el) setTransformScale(o.el, o.x, o.y, 0.62);
 
-        // TRY AGAIN solo collisione "diretta"
+        // ✅ TRY AGAIN solo collisione "diretta"
         if(rectsOverlap(player, o, HIT_PLAYER, HIT_OLD)){
           showTryAgain();
           return;
@@ -1476,7 +1444,7 @@
         return true;
       });
 
-      // Hit baguette -> TRY AGAIN (hitbox più stretta)
+      // ✅ TRY AGAIN solo collisione diretta baguette (hitbox stretta)
       for(const bq of baguettes){
         const bBox = {x:bq.x, y:bq.y, w:bq.w, h:bq.h};
         if(rectsOverlap(player, bBox, HIT_PLAYER, HIT_BAG)){
@@ -1485,11 +1453,9 @@
         }
       }
 
-      // Render characters
       setTransformScale(ettore, player.x, player.y, SCALE_E);
       setTransformScale(patry, girl.x, girl.y, SCALE_P);
 
-      // Target line
       const px = player.x + player.w/2, py = player.y + player.h/2;
       const gx = girl.x + girl.w/2, gy = girl.y + girl.h/2;
       targetLine.setAttribute('x1', px);
@@ -1497,7 +1463,6 @@
       targetLine.setAttribute('x2', gx);
       targetLine.setAttribute('y2', gy);
 
-      // Win condition
       const gBox = {x:girl.x, y:girl.y, w:girl.w, h:girl.h};
       if(rectsOverlap(player, gBox)){
         showFinallyTogether();
